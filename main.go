@@ -8,7 +8,8 @@ import (
 	"fmt"
 )
 
-/*当标识符（包括常量、变量、类型、函数名、结构字段等等）以一个大写字母开头，如：Group1，
+/*
+当标识符（包括常量、变量、类型、函数名、结构字段等等）以一个大写字母开头，如：Group1，
 那么使用这种形式的标识符的对象就可以被外部包的代码所使用（客户端程序需要先导入这个包），
 这被称为导出（像面向对象语言中的 public）；
 标识符如果以小写字母开头，则对包外是不可见的，
@@ -20,8 +21,6 @@ func main() {
 	fmt.Printf("Hello and welcome, %s!\n", s)
 
 	for i := 1; i <= 5; i++ {
-		//TIP <p>To start your debugging session, right-click your code in the editor and select the Debug option.</p> <p>We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-		// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.</p>
 		fmt.Println("i =", 100/i)
 	}
 }
