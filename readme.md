@@ -6,6 +6,8 @@
 要的命令：go mod init（一次）→ go get（一次）→ go generate ./ports/marketplaceapi（每次改规范后）。
 流程：写 spec → 配置生成 → 跑生成 → 实现接口 → 起服务测通。
 
+坑点 oapi-codegen v2， oapi-config等要遵守V2规范
+
 ## 生成所需文件、命令与流程（简要）
 
 要的文件：
