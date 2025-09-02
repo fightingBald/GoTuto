@@ -1,7 +1,7 @@
 package: marketplaceapi
 generate:
-  models: true
-  chi-server: true
-  strict-server: true    # 给你生成带参数struct的接口签名，写实现更省心
-  embedded-spec: true
+  - types          # 生成 models (OpenAPI schemas → Go structs)
+  - chi-server     # 生成 chi server 接口
+  - strict-server  # 生成严格 server 接口（带类型安全）
+  - spec           # 生成 embedded swagger spec
 output: openapi.gen.go
