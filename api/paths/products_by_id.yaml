@@ -1,6 +1,5 @@
 get:
   operationId: GetProductByID
-  summary: Get a product by ID
   parameters:
     - in: path
       name: id
@@ -8,11 +7,14 @@ get:
       schema:
         type: integer
         format: int64
-        minimum: 1
   responses:
     '200':
-      $ref: '../responses/ProductResponse.yaml'
+      description: Single product
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
     '400':
-      $ref: '../responses/ErrorResponse.yaml'
+      $ref: '#/components/responses/ErrorResponse'
     '404':
-      $ref: '../responses/ErrorResponse.yaml'
+      $ref: '#/components/responses/ErrorResponse'

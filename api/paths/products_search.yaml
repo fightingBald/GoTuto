@@ -1,6 +1,5 @@
 get:
   operationId: SearchProducts
-  summary: Search products
   parameters:
     - in: query
       name: q
@@ -11,17 +10,18 @@ get:
       name: page
       schema:
         type: integer
-        minimum: 1
         default: 1
     - in: query
       name: pageSize
       schema:
         type: integer
-        minimum: 1
-        maximum: 100
         default: 20
   responses:
     '200':
-      $ref: '../responses/ProductListResponse.yaml'
+      description: List of products
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductList'
     '400':
-      $ref: '../responses/ErrorResponse.yaml'
+      $ref: '#/components/responses/ErrorResponse'
