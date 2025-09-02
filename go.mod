@@ -1,10 +1,9 @@
-module GoTuto
+module github.com/fightingBald/GoTuto
 
 go 1.24
 
 require (
 	github.com/fightingBald/py-ds v0.0.0-20250831150602-c5c0c6149b30
-	github.com/getkin/kin-openapi v0.133.0
 	github.com/go-chi/chi/v5 v5.2.3
 	github.com/oapi-codegen/runtime v1.1.2
 )
@@ -12,6 +11,7 @@ require (
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect
+	github.com/getkin/kin-openapi v0.133.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect

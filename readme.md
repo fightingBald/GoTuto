@@ -31,3 +31,10 @@
 5. 启动服务并通过集成/端到端测试验证
 
 说明：把生成步骤封装到 Makefile 或 generate.sh，有利于团队复现；关键生成产物（如 pb.go、marketplace.gen.go 等）可以考虑纳入版本控制或在 CI 中强制生成并校验差异。
+
+## 详细说明
+启动
+```shell
+go run ./cmd/server     
+```
+
