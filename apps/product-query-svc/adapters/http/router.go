@@ -1,4 +1,4 @@
-package httpadp
+package httpadapter
 
 import (
 	"net/http"

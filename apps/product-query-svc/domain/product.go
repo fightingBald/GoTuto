@@ -1,9 +1,23 @@
 package domain
 
-import dd "github.com/fightingBald/GoTuto/internal/domain"
+type Product struct {
+	ID    int64
+	Name  string
+	Price int64 // 分为单位，别玩浮点
+	Tags  []string
+}
 
-// 该包是新目录的领域层外观（facade）。为了最小化重复实现，我们将原有 internal/domain 类型作别名导出。
+func (p *Product) Validate() error {
+	if p.Name == "" {
+		return Err("name required")
+	}
+	if p.Price < 0 {
+		return Err("price must be >= 0")
+	}
+	return nil
+}
 
-type Product = dd.Product
+type domainErr string
 
-// 额外的领域相关类型可以在此扩展。
+func (e domainErr) Error() string { return string(e) }
+func Err(msg string) error        { return domainErr(msg) }

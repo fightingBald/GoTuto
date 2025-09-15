@@ -1,8 +1,8 @@
-package internal
+package service
 
 import (
-	"github.com/fightingBald/GoTuto/internal/domain"
-	"github.com/fightingBald/GoTuto/internal/ports"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 )
 
 type ProductService struct {
