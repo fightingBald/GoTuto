@@ -1,14 +1,14 @@
 package app
 
 import (
-	appsports "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 	"github.com/fightingBald/GoTuto/internal/domain"
+	"github.com/fightingBald/GoTuto/internal/ports"
 )
 
 // ProductManager 可用于事务/上下文/跨服务协调（占位实现）
-type ProductManager struct{ svc appsports.ProductQueryPort }
+type ProductManager struct{ svc ports.ProductService }
 
-func NewProductManager(svc appsports.ProductQueryPort) *ProductManager {
+func NewProductManager(svc ports.ProductService) *ProductManager {
 	return &ProductManager{svc: svc}
 }
 

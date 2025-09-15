@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	appsports "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 	httpadp "github.com/fightingBald/GoTuto/internal/adapters/http"
+	"github.com/fightingBald/GoTuto/internal/ports"
 )
 
-type Server struct{ svc appsports.ProductQueryPort }
+type Server struct{ svc ports.ProductService }
 
-func NewServer(s appsports.ProductQueryPort) *Server { return &Server{svc: s} }
+func NewServer(s ports.ProductService) *Server { return &Server{svc: s} }
 
 func (s *Server) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
 	p, err := s.svc.GetProduct(id)
