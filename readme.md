@@ -5,9 +5,9 @@
 ---
 
 ## 前置条件
-- Go >= 1.22
+- Go == 1.24
 - Docker
-- 可选：kubectl、helm、tilt、psql 客户端、IDE（如 GoLand）
+- kubectl、helm、tilt、psql 客户端、IDE（
 
 ---
 
