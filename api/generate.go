@@ -1,2 +1,2 @@
-//go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest -generate types,chi-server -package marketplaceapi -o marketplace.gen.go ../../api/openapi.yaml
+//go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest -config ./oapi-config.yaml ./openapi.yaml
 package marketplaceapi

@@ -1,80 +1,82 @@
-package marketplaceapi
+//go:build ignore
+// +build ignore
+
+package httpadp
+
+// NOTE: 该文件被标记为被构建忽略，保留为历史/参考。实际运行使用 apps/ 下的 adapters/http 实现。
+
+/*
+package httpadp
 
 import (
 	"encoding/json"
 	"net/http"
-	"sort"
-	"strings"
+
+	"github.com/fightingBald/GoTuto/internal/domain"
+	"github.com/fightingBald/GoTuto/internal/ports"
 )
 
-type Server struct {
-	products map[int64]Product
-}
+type Server struct{ svc ports.ProductService }
 
-func NewServer() *Server {
-	return &Server{
-		products: map[int64]Product{
-			1: {Id: 1, Name: "Apple", Price: 1.23},
-			2: {Id: 2, Name: "Pen", Price: 2.50},
-			3: {Id: 3, Name: "Pencil", Price: 0.99},
-		},
+func NewServer(s ports.ProductService) *Server { return &Server{svc: s} }
+
+// helper: convert domain.Product -> generated Product
+func toProduct(p domain.Product) Product {
+	return Product{
+		Id:    p.ID,
+		Name:  p.Name,
+		Price: float32(p.Price) / 100.0,
 	}
 }
 
-func writeJSON(w http.ResponseWriter, status int, v any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	_ = json.NewEncoder(w).Encode(v)
-}
-
-// operationId: GetProductByID
+// 假设你的 openapi 有 /products/{id} 和 /products/search
 func (s *Server) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
-	p, ok := s.products[id]
-	if !ok {
-		writeJSON(w, http.StatusNotFound, Error{Code: "NOT_FOUND", Message: "product not found"})
+	p, err := s.svc.GetProduct(id)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		_ = json.NewEncoder(w).Encode(Error{Code: "NOT_FOUND", Message: err.Error()})
 		return
 	}
-	writeJSON(w, http.StatusOK, p) // 直接回 Product（你的 spec 就是这样定义的）
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(toProduct(*p))
 }
 
-// operationId: SearchProducts
 func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params SearchProductsParams) {
+	page := 1
+	if params.Page != nil {
+		page = *params.Page
+	}
+	pageSize := 20
+	if params.PageSize != nil {
+		pageSize = *params.PageSize
+	}
 	q := ""
 	if params.Q != nil {
 		q = *params.Q
 	}
-	page := 1
-	if params.Page != nil && *params.Page > 0 {
-		page = *params.Page
-	}
-	pageSize := 10
-	if params.PageSize != nil && *params.PageSize > 0 {
-		pageSize = *params.PageSize
-	}
 
-	// 过滤 + 稳定排序
-	var all []Product
-	for _, p := range s.products {
-		if q == "" || strings.Contains(strings.ToLower(p.Name), strings.ToLower(q)) {
-			all = append(all, p)
-		}
+	items, err := s.svc.SearchProducts(q, page, pageSize)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		_ = json.NewEncoder(w).Encode(Error{Code: "INTERNAL", Message: err.Error()})
+		return
 	}
-	sort.Slice(all, func(i, j int) bool { return all[i].Id < all[j].Id })
-
-	total := len(all)
-	start := (page - 1) * pageSize
-	if start > total {
-		start = total
+	// convert
+	var out []Product
+	for _, it := range items {
+		out = append(out, toProduct(it))
 	}
-	end := start + pageSize
-	if end > total {
-		end = total
-	}
-
-	writeJSON(w, http.StatusOK, ProductList{
-		Items:    all[start:end],
-		Page:     page,
-		PageSize: pageSize,
-		Total:    total,
-	})
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(ProductList{Items: out, Page: page, PageSize: pageSize, Total: len(out)})
 }
+
+// 可选：健康检查（非 openapi 路由）
+func (s *Server) Health(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(200)
+	_, _ = w.Write([]byte("ok"))
+}
+*/
