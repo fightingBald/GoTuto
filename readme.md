@@ -62,15 +62,20 @@ tilt up
 ```
 
 - 访问服务：
-  - Tilt 端口转发：http://localhost:8080
-  - 可选 NodePort（若在 kind 配置中映射）：http://localhost:30080
+  - 通过 Tilt 端口转发访问：http://localhost:8080
+  - 如果 kind 配置了 NodePort，也可以用：http://localhost:30080
 
 - 连接数据库：
-
-```sh
-psql "postgres://app:app_password@localhost:5432/productdb"
-```
-
+  - Tilt 会自动为 postgres 做端口转发（Tiltfile 里有 `port_forwards = [5432]`），本机可直接用 `localhost:5432` 访问数据库。
+  - 数据库连接信息（与 Secret 保持一致）：user=app，password=app_password，database=productdb。
+  - 如需手动端口转发，可执行：
+    ```sh
+    kubectl -n marketplace-dev port-forward svc/postgres 5432:5432
+    ```
+  - 然后用 psql 连接：
+    ```sh
+    psql "postgres://app:app_password@localhost:5432/productdb"
+    ```
 ---
 
 ## 使用 Helm
@@ -105,7 +110,6 @@ go generate ./api
 # 或者根据 generate.go 的 //go:generate 指定路径
 ```
 
-- 建议：将生成步骤写入 Makefile 或 CI，团队协同时要约定是否把生成产物纳入版本控制（两种策略均可）。
 
 </details>
 
