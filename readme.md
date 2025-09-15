@@ -111,15 +111,6 @@ go generate ./api
 
 ---
 
-## 两个 main 的说明（prod vs dev）
-- backend/cmd/marketplace/product-query-svc/main.go
-  - 用于容器/生产路径。支持 --db-dsn 与 --migrate，连接 pgx 池并可运行嵌入迁移。
-- cmd/server/main.go
-  - 简化的本地开发入口，默认使用 in-memory repo，便于快速调试。
-
-建议：保留两者以分离 dev/production 流程，或将 dev 入口重命名为 cmd/dev-server 以消除歧义。
-
----
 
 ## 分批提交建议（用于展示搭建进度）
 将改动分为小而原子的一系列 commit，以下为推荐批次。点击展开查看每个批次应包含的文件及示例 commit message。
@@ -194,27 +185,4 @@ go generate ./api
 
 </details>
 
----
 
-## 清理建议（可折叠）
-<details>
-<summary>哪些文件通常应从仓库中移除 / 忽略</summary>
-
-- macOS / IDE 临时文件：.DS_Store、.idea/
-- 生成产物（若团队决定不跟踪）：internal/adapters/http/marketplaceapi.gen.go、ports/... 的 generated 文件
-- 重复配置文件（例如如果 kind.yaml 与 kind/kind-cluster.yaml 重复，保留一个）
-
-建议操作：创建分支，更新 .gitignore，使用 git rm --cached 删除已跟踪的临时/生成文件，再提交。
-
-</details>
-
----
-
-## 下一步建议（简短）
-- 选择是否保留两个 main（建议重命名 dev main 为 cmd/dev-server），并把该决定写进 README。
-- 修复 Tiltfile 报错（如果需要，我可以替你逐项修复）。
-- 根据上面的分批提交建议把改动按批次提交并推到远端。
-
----
-
-最后：如需我直接在仓库里按上述建议执行分批提交或清理（创建分支、修改 .gitignore、提交），告诉我 "请开始执行" 即可。
