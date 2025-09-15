@@ -1,0 +1,9 @@
+# Ignore build and IDE files
+/bin
+/.git
+/vendor
+*.log
+*.exe
+*.test
+.DS_Store
+
