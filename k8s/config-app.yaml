@@ -16,5 +16,5 @@ metadata:
 data:
   LOG_LEVEL: debug
   HTTP_ADDRESS: ":8080"
-  DB_DSN: "postgres://app:app_password@postgres.marketplace-dev.svc.cluster.local:5432/productdb?sslmode=disable"
+  DATABASE_URL: "postgres://app:app_password@postgres.marketplace-dev.svc.cluster.local:5432/productdb?sslmode=disable"
 

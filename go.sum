@@ -8,8 +8,6 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/dprotaso/go-yit v0.0.0-20191028211022-135eb7262960/go.mod h1:9HQzr9D/0PGwMEbC3d5AB7oi67+h4TsQqItC1GVYG58=
 github.com/dprotaso/go-yit v0.0.0-20250909171706-0a81c39169bc h1:YxqE1wh+qGVXQFinuRq5lT77h6baDtBnAVh61LlXp1o=
 github.com/dprotaso/go-yit v0.0.0-20250909171706-0a81c39169bc/go.mod h1:5NQLChvz4dnEIQ8WcHIFbZ1bp0GEUZHiBH+EpTZ4lBc=
-github.com/fightingBald/py-ds v0.0.0-20250908121954-c22acc86ecc3 h1:1wpXeu/xl1XjIkAsKvb2VaZurKaLAxiPOtrFxoIbUmI=
-github.com/fightingBald/py-ds v0.0.0-20250908121954-c22acc86ecc3/go.mod h1:IX18WGB2tbjhMznN+bkTy4GH1L/4liOn3Kr3TYalWR0=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/fsnotify/fsnotify v1.9.0 h1:2Ml+OJNzbYCTzsxtv8vKSFD9PbJjmhYF14k/jKC7S9k=
 github.com/fsnotify/fsnotify v1.9.0/go.mod h1:8jBTzvmWwFyi3Pb8djgCCO5IBqzKJ/Jwo8TRcHyHii0=

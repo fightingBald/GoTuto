@@ -1,15 +1,12 @@
 module github.com/fightingBald/GoTuto
 
-go 1.24.0
-
-toolchain go1.24.5
+go 1.22
 
 require (
-	github.com/fightingBald/py-ds v0.0.0-20250908121954-c22acc86ecc3
-	github.com/getkin/kin-openapi v0.133.0
-	github.com/go-chi/chi/v5 v5.2.3
-	github.com/jackc/pgx/v5 v5.5.4
-	github.com/oapi-codegen/runtime v1.1.2
+        github.com/getkin/kin-openapi v0.133.0
+        github.com/go-chi/chi/v5 v5.2.3
+        github.com/jackc/pgx/v5 v5.5.4
+        github.com/oapi-codegen/runtime v1.1.2
 )
 
 require (
