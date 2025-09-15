@@ -1,0 +1,1937 @@
+tj888@pc9d03879:~/Downloads/github.com/Deutsche-Boerse/dbp/backend/internal/marketplace ($b)$ tree
+.
+├── api
+│   ├── common
+│   │   └── schemas
+│   │       ├── ErrorDetail.yaml
+│   │       └── Error.yaml
+│   ├── marketplace-admin-api-v1
+│   │   ├── build
+│   │   │   └── openapi.yaml
+│   │   ├── openapi.yaml
+│   │   ├── paths
+│   │   │   ├── accounts
+│   │   │   │   ├── accounts_companies.yaml
+│   │   │   │   ├── accounts.yaml
+│   │   │   │   ├── account.yaml
+│   │   │   │   ├── entitled_products.yaml
+│   │   │   │   ├── entitlements.yaml
+│   │   │   │   ├── identities
+│   │   │   │   │   ├── identities.yaml
+│   │   │   │   │   ├── identity.yaml
+│   │   │   │   │   └── roles
+│   │   │   │   │       └── roles.yaml
+│   │   │   │   ├── information
+│   │   │   │   │   └── countries
+│   │   │   │   │       ├── countries.yaml
+│   │   │   │   │       └── country.yaml
+│   │   │   │   ├── roles
+│   │   │   │   │   └── roles.yaml
+│   │   │   │   └── state.yaml
+│   │   │   ├── consumer_products
+│   │   │   │   ├── consumer_product_entitled_accounts.yaml
+│   │   │   │   ├── consumer_product_entitlements_disable.yaml
+│   │   │   │   ├── consumer_product_entitlements.yaml
+│   │   │   │   ├── consumer_product_package_entitled_accounts.yaml
+│   │   │   │   ├── consumer_product_package_entitlements_disable.yaml
+│   │   │   │   ├── consumer_product_package_entitlements.yaml
+│   │   │   │   ├── consumer_products.yaml
+│   │   │   │   └── consumer_product.yaml
+│   │   │   ├── entitlements
+│   │   │   │   ├── entitlements.yaml
+│   │   │   │   ├── entitlement.yaml
+│   │   │   │   └── state.yaml
+│   │   │   ├── identities
+│   │   │   │   ├── identities.yaml
+│   │   │   │   ├── identity.yaml
+│   │   │   │   └── state.yaml
+│   │   │   ├── orders
+│   │   │   │   ├── completion.yaml
+│   │   │   │   ├── confirmation.yaml
+│   │   │   │   ├── created_entitlements.yaml
+│   │   │   │   ├── order_consumer_products.yaml
+│   │   │   │   ├── orders.yaml
+│   │   │   │   ├── order.yaml
+│   │   │   │   ├── rejection.yaml
+│   │   │   │   └── suggested_entitlements.yaml
+│   │   │   ├── sessions
+│   │   │   │   └── current_session.yaml
+│   │   │   └── subscriptions
+│   │   │       ├── subscribed_consumer_accounts.yaml
+│   │   │       ├── subscribed_consumer_products.yaml
+│   │   │       ├── subscriptions.yaml
+│   │   │       └── subscription.yaml
+│   │   ├── responses
+│   │   │   ├── accounts
+│   │   │   │   ├── identities
+│   │   │   │   │   ├── ListResponse.yaml
+│   │   │   │   │   └── Response.yaml
+│   │   │   │   ├── information
+│   │   │   │   │   └── countries
+│   │   │   │   │       ├── CountryListResponse.yaml
+│   │   │   │   │       └── Response.yaml
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   ├── Response.yaml
+│   │   │   │   └── roles
+│   │   │   │       └── ListResponse.yaml
+│   │   │   ├── BadRequestError.yaml
+│   │   │   ├── common
+│   │   │   │   └── SimplifiedConsumerProductListResponse.yaml
+│   │   │   ├── consumer_products
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   ├── List.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── Empty.yaml
+│   │   │   ├── entitlements
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── ForbiddenError.yaml
+│   │   │   ├── identities
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── _index.yaml
+│   │   │   ├── NotFoundError.yaml
+│   │   │   ├── orders
+│   │   │   │   ├── entitlements
+│   │   │   │   │   ├── OrderEntitlementsResponse.yaml
+│   │   │   │   │   └── SuggestedEntitlementsResponse.yaml
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── sessions
+│   │   │   │   └── Response.yaml
+│   │   │   ├── subscriptions
+│   │   │   │   ├── accounts
+│   │   │   │   │   └── ListResponse.yaml
+│   │   │   │   ├── ConsumerProductListResponse.yaml
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   └── UnauthorizedError.yaml
+│   │   └── schemas
+│   │       ├── accounts
+│   │       │   ├── AccountList.yaml
+│   │       │   ├── AccountState.yaml
+│   │       │   ├── Account.yaml
+│   │       │   ├── ExistingAccountSeed.yaml
+│   │       │   ├── identities
+│   │       │   │   ├── AccountIdentityList.yaml
+│   │       │   │   ├── AccountIdentity.yaml
+│   │       │   │   └── AddIdentityToAccountSeed.yaml
+│   │       │   ├── information
+│   │       │   │   ├── Address.yaml
+│   │       │   │   ├── ContactInformation.yaml
+│   │       │   │   ├── countries
+│   │       │   │   │   ├── FullCountryList.yaml
+│   │       │   │   │   └── FullCountry.yaml
+│   │       │   │   ├── Information.yaml
+│   │       │   │   └── PhoneNumber.yaml
+│   │       │   ├── roles
+│   │       │   │   ├── AccountRoleList.yaml
+│   │       │   │   └── AccountRole.yaml
+│   │       │   └── SimpleAccount.yaml
+│   │       ├── common
+│   │       │   ├── DateRange.yaml
+│   │       │   ├── PackageType.yaml
+│   │       │   ├── PricingUnit.yaml
+│   │       │   ├── SimplifiedConsumerPackage.yaml
+│   │       │   ├── SimplifiedConsumerProductList.yaml
+│   │       │   ├── SimplifiedConsumerProduct.yaml
+│   │       │   └── UserIdentity.yaml
+│   │       ├── consumer_products
+│   │       │   ├── ConsumerProductList.yaml
+│   │       │   ├── ConsumerProduct.yaml
+│   │       │   ├── documentation
+│   │       │   │   └── ConsumerDocumentation.yaml
+│   │       │   └── packaging
+│   │       │       ├── ConsumerPackageDelivery.yaml
+│   │       │       ├── ConsumerPackage.yaml
+│   │       │       ├── ConsumerPackaging.yaml
+│   │       │       ├── EntitlementInstructions.yaml
+│   │       │       └── PlatformProductGroupID.yaml
+│   │       ├── entitlements
+│   │       │   ├── EntitlementList.yaml
+│   │       │   ├── EntitlementPackageParameters.yaml
+│   │       │   ├── EntitlementSeed.yaml
+│   │       │   ├── EntitlementState.yaml
+│   │       │   ├── Entitlement.yaml
+│   │       │   ├── ExistingEntitlementSeed.yaml
+│   │       │   ├── NewEntitlementSeedList.yaml
+│   │       │   ├── NewEntitlementSeed.yaml
+│   │       │   ├── OrderEntitlementList.yaml
+│   │       │   ├── OrderEntitlement.yaml
+│   │       │   ├── SuggestedEntitlementList.yaml
+│   │       │   ├── SuggestedEntitlement.yaml
+│   │       │   ├── TrackingInformationSeed.yaml
+│   │       │   └── TrackingInformation.yaml
+│   │       ├── identities
+│   │       │   ├── IdentityDomain.yaml
+│   │       │   ├── IdentityList.yaml
+│   │       │   ├── IdentityState.yaml
+│   │       │   └── Identity.yaml
+│   │       ├── _index.yaml
+│   │       ├── orders
+│   │       │   ├── OrderedPackageParameters.yaml
+│   │       │   ├── OrderedPackagePricing.yaml
+│   │       │   ├── OrderedPackage.yaml
+│   │       │   ├── OrderList.yaml
+│   │       │   ├── OrderPaymentMethod.yaml
+│   │       │   ├── OrderPayment.yaml
+│   │       │   ├── OrderPricingVATInfo.yaml
+│   │       │   ├── OrderPricing.yaml
+│   │       │   ├── OrderState.yaml
+│   │       │   └── Order.yaml
+│   │       ├── sessions
+│   │       │   ├── SessionAccount.yaml
+│   │       │   └── Session.yaml
+│   │       └── subscriptions
+│   │           ├── accounts
+│   │           │   ├── AccountList.yaml
+│   │           │   └── Account.yaml
+│   │           ├── ExistingSubscriptionSeed.yaml
+│   │           ├── NewSubscriptionSeed.yaml
+│   │           ├── SubscripionEntitlementSeed.yaml
+│   │           ├── SubscriptionList.yaml
+│   │           └── Subscription.yaml
+│   ├── marketplace-api-v1
+│   │   ├── build
+│   │   │   └── openapi.yaml
+│   │   ├── openapi.yaml
+│   │   ├── paths
+│   │   │   ├── account_invitations
+│   │   │   │   └── invitation.yaml
+│   │   │   ├── accounts
+│   │   │   │   ├── account.yaml
+│   │   │   │   ├── identities
+│   │   │   │   │   ├── identities.yaml
+│   │   │   │   │   ├── identity.yaml
+│   │   │   │   │   └── roles
+│   │   │   │   │       └── roles.yaml
+│   │   │   │   ├── information
+│   │   │   │   │   ├── countries
+│   │   │   │   │   │   ├── countries.yaml
+│   │   │   │   │   │   └── country.yaml
+│   │   │   │   │   └── information.yaml
+│   │   │   │   ├── invitations
+│   │   │   │   │   ├── invitations.yaml
+│   │   │   │   │   └── invitation.yaml
+│   │   │   │   ├── purchases
+│   │   │   │   │   ├── isin_reports.yaml
+│   │   │   │   │   ├── orders.yaml
+│   │   │   │   │   ├── order.yaml
+│   │   │   │   │   ├── subscriptions.yaml
+│   │   │   │   │   └── subscription.yaml
+│   │   │   │   └── roles
+│   │   │   │       └── roles.yaml
+│   │   │   ├── api_credentials
+│   │   │   │   ├── api_credentials_clients.yaml
+│   │   │   │   ├── api_credentials_client.yaml
+│   │   │   │   └── client_secret
+│   │   │   │       └── client_secret.yaml
+│   │   │   ├── baskets
+│   │   │   │   └── basket.yaml
+│   │   │   ├── consumer_products
+│   │   │   │   ├── classification
+│   │   │   │   │   ├── business_categories.yaml
+│   │   │   │   │   ├── companies.yaml
+│   │   │   │   │   └── delivery_methods.yaml
+│   │   │   │   ├── consumer_products.yaml
+│   │   │   │   ├── consumer_product.yaml
+│   │   │   │   ├── documentation
+│   │   │   │   │   └── files
+│   │   │   │   │       ├── download_url.yaml
+│   │   │   │   │       └── technical_download_url.yaml
+│   │   │   │   └── pricing
+│   │   │   │       └── pricing.yaml
+│   │   │   ├── entitled_products
+│   │   │   │   ├── entitled_products.yaml
+│   │   │   │   ├── entitled_special_products.yaml
+│   │   │   │   └── filesets
+│   │   │   │       ├── filesets.yaml
+│   │   │   │       └── fileset.yaml
+│   │   │   ├── isin_reports
+│   │   │   │   └── isin_reports.yaml
+│   │   │   ├── orders
+│   │   │   │   └── orders.yaml
+│   │   │   ├── pricing_models
+│   │   │   │   ├── name
+│   │   │   │   │   └── name.yaml
+│   │   │   │   ├── pricing_models.yaml
+│   │   │   │   └── pricing_model.yaml
+│   │   │   ├── products
+│   │   │   │   ├── classification
+│   │   │   │   │   ├── business_categories.yaml
+│   │   │   │   │   ├── companies.yaml
+│   │   │   │   │   ├── delivery_methods.yaml
+│   │   │   │   │   └── tags.yaml
+│   │   │   │   ├── data_shop
+│   │   │   │   │   ├── products.yaml
+│   │   │   │   │   └── product.yaml
+│   │   │   │   ├── documentation
+│   │   │   │   │   ├── documentation_classification.yaml
+│   │   │   │   │   ├── documentation_contact_details.yaml
+│   │   │   │   │   ├── documentation_files.yaml
+│   │   │   │   │   ├── documentation_links.yaml
+│   │   │   │   │   ├── documentation.yaml
+│   │   │   │   │   ├── files
+│   │   │   │   │   │   ├── download_url.yaml
+│   │   │   │   │   │   ├── technical_download_url.yaml
+│   │   │   │   │   │   ├── technical_upload_url.yaml
+│   │   │   │   │   │   ├── technical_validation.yaml
+│   │   │   │   │   │   ├── upload_url.yaml
+│   │   │   │   │   │   └── validation.yaml
+│   │   │   │   │   ├── technical_documentation_files.yaml
+│   │   │   │   │   ├── technical_documentation_links.yaml
+│   │   │   │   │   └── technical_documentation.yaml
+│   │   │   │   ├── name
+│   │   │   │   │   └── name.yaml
+│   │   │   │   ├── packaging
+│   │   │   │   │   └── packaging.yaml
+│   │   │   │   ├── platform_product_groups
+│   │   │   │   │   ├── platform_product_groups.yaml
+│   │   │   │   │   └── platform_product_group.yaml
+│   │   │   │   ├── platforms
+│   │   │   │   │   └── platforms.yaml
+│   │   │   │   ├── products.yaml
+│   │   │   │   ├── product.yaml
+│   │   │   │   ├── publications
+│   │   │   │   │   └── publications.yaml
+│   │   │   │   └── visibility
+│   │   │   │       └── visibility.yaml
+│   │   │   └── subscription_requests
+│   │   │       ├── subscription_requests.yaml
+│   │   │       └── subscription_request.yaml
+│   │   ├── responses
+│   │   │   ├── accounts
+│   │   │   │   ├── identities
+│   │   │   │   │   └── ListResponse.yaml
+│   │   │   │   ├── information
+│   │   │   │   │   └── countries
+│   │   │   │   │       ├── CountryListResponse.yaml
+│   │   │   │   │       └── Response.yaml
+│   │   │   │   ├── invitations
+│   │   │   │   │   ├── ListResponse.yaml
+│   │   │   │   │   └── Response.yaml
+│   │   │   │   ├── purchases
+│   │   │   │   │   └── isin_reports
+│   │   │   │   │       └── ListResponse.yaml
+│   │   │   │   ├── Response.yaml
+│   │   │   │   └── roles
+│   │   │   │       └── ListResponse.yaml
+│   │   │   ├── api_credentials
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── BadRequestError.yaml
+│   │   │   ├── baskets
+│   │   │   │   └── Response.yaml
+│   │   │   ├── consumer_products
+│   │   │   │   ├── classification
+│   │   │   │   │   ├── ConsumerBusinessCategoryListResponse.yaml
+│   │   │   │   │   ├── ConsumerCompanyListResponse.yaml
+│   │   │   │   │   └── ConsumerDeliveryMethodListResponse.yaml
+│   │   │   │   ├── documentation
+│   │   │   │   │   └── files
+│   │   │   │   │       └── DownloadURLResponse.yaml
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   ├── pricing
+│   │   │   │   │   └── Response.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── Empty.yaml
+│   │   │   ├── entitled_products
+│   │   │   │   ├── filesets
+│   │   │   │   │   ├── ListResponse.yaml
+│   │   │   │   │   └── Response.yaml
+│   │   │   │   └── ListResponse.yaml
+│   │   │   ├── entitled_special_products
+│   │   │   │   └── ListResponse.yaml
+│   │   │   ├── ForbiddenError.yaml
+│   │   │   ├── _index.yaml
+│   │   │   ├── isin_reports
+│   │   │   │   └── ListResponse.yaml
+│   │   │   ├── NotFoundError.yaml
+│   │   │   ├── orders
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── pricing_models
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── products
+│   │   │   │   ├── data_shop
+│   │   │   │   │   ├── ProductListResponse.yaml
+│   │   │   │   │   └── ProductResponse.yaml
+│   │   │   │   ├── documentation
+│   │   │   │   │   ├── classification
+│   │   │   │   │   │   ├── BusinessCategoryListResponse.yaml
+│   │   │   │   │   │   ├── CompanyListResponse.yaml
+│   │   │   │   │   │   ├── DeliveryMethodListResponse.yaml
+│   │   │   │   │   │   └── TagListResponse.yaml
+│   │   │   │   │   ├── files
+│   │   │   │   │   │   ├── DownloadURLResponse.yaml
+│   │   │   │   │   │   ├── TechnicalUploadURLResponse.yaml
+│   │   │   │   │   │   ├── TechnicalValidateResponse.yaml
+│   │   │   │   │   │   ├── UploadURLResponse.yaml
+│   │   │   │   │   │   └── ValidateResponse.yaml
+│   │   │   │   │   └── Response.yaml
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   ├── platform_product_groups
+│   │   │   │   │   ├── ListResponse.yaml
+│   │   │   │   │   └── Response.yaml
+│   │   │   │   ├── platforms
+│   │   │   │   │   ├── ListResponse.yaml
+│   │   │   │   │   └── PlatformResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── subscription_requests
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── subscriptions
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   └── UnauthorizedError.yaml
+│   │   └── schemas
+│   │       ├── accounts
+│   │       │   ├── Account.yaml
+│   │       │   ├── identities
+│   │       │   │   ├── AccountIdentityList.yaml
+│   │       │   │   ├── AccountIdentity.yaml
+│   │       │   │   └── roles
+│   │       │   │       └── RolesListSeed.yaml
+│   │       │   ├── information
+│   │       │   │   ├── AddressSeed.yaml
+│   │       │   │   ├── Address.yaml
+│   │       │   │   ├── ContactInformationSeed.yaml
+│   │       │   │   ├── ContactInformation.yaml
+│   │       │   │   ├── countries
+│   │       │   │   │   ├── FullCountryList.yaml
+│   │       │   │   │   └── FullCountry.yaml
+│   │       │   │   ├── InformationSeed.yaml
+│   │       │   │   ├── Information.yaml
+│   │       │   │   ├── PhoneNumberSeed.yaml
+│   │       │   │   └── PhoneNumber.yaml
+│   │       │   ├── invitations
+│   │       │   │   ├── AccountInvitationList.yaml
+│   │       │   │   ├── AccountInvitation.yaml
+│   │       │   │   ├── InvitationSeed.yaml
+│   │       │   │   └── UpdateInvitationSeed.yaml
+│   │       │   └── roles
+│   │       │       ├── AccountRoleList.yaml
+│   │       │       └── AccountRole.yaml
+│   │       ├── api_credentials
+│   │       │   ├── APICredentialClientList.yaml
+│   │       │   └── APICredentialClient.yaml
+│   │       ├── baskets
+│   │       │   ├── BasketPackageListSeed.yaml
+│   │       │   ├── BasketPackageList.yaml
+│   │       │   ├── BasketPackageParametersAffiliateParamsSeed.yaml
+│   │       │   ├── BasketPackageParametersAffiliateParams.yaml
+│   │       │   ├── BasketPackageParametersSeed.yaml
+│   │       │   ├── BasketPackageParameters.yaml
+│   │       │   ├── BasketPackagePricing.yaml
+│   │       │   ├── BasketPackageSeed.yaml
+│   │       │   ├── BasketPackage.yaml
+│   │       │   ├── BasketPricing.yaml
+│   │       │   ├── BasketSeed.yaml
+│   │       │   └── Basket.yaml
+│   │       ├── common
+│   │       │   ├── DataPeriod.yaml
+│   │       │   ├── DateRange.yaml
+│   │       │   ├── documentation
+│   │       │   │   ├── classification
+│   │       │   │   │   ├── BusinessCategoryList.yaml
+│   │       │   │   │   ├── BusinessCategory.yaml
+│   │       │   │   │   ├── CompanyList.yaml
+│   │       │   │   │   ├── Company.yaml
+│   │       │   │   │   ├── DeliveryMethodList.yaml
+│   │       │   │   │   ├── DeliveryMethod.yaml
+│   │       │   │   │   ├── FullBusinessCategoryList.yaml
+│   │       │   │   │   ├── FullBusinessCategory.yaml
+│   │       │   │   │   ├── FullCompanyList.yaml
+│   │       │   │   │   ├── FullCompany.yaml
+│   │       │   │   │   ├── FullDeliveryMethodList.yaml
+│   │       │   │   │   ├── FullDeliveryMethod.yaml
+│   │       │   │   │   └── TagList.yaml
+│   │       │   │   └── files
+│   │       │   │       ├── FileType.yaml
+│   │       │   │       └── TechnicalFileType.yaml
+│   │       │   ├── EntitlementInstructionsSeed.yaml
+│   │       │   ├── EntitlementInstructions.yaml
+│   │       │   ├── FileInformation.yaml
+│   │       │   ├── PackageDeliveryMethodList.yaml
+│   │       │   ├── PackageDeliveryMethod.yaml
+│   │       │   ├── PackageTypeList.yaml
+│   │       │   ├── PackageType.yaml
+│   │       │   ├── PaginationInformation.yaml
+│   │       │   ├── PlatformID.yaml
+│   │       │   ├── PlatformList.yaml
+│   │       │   ├── PlatformProductGroupDeliveryConfig.yaml
+│   │       │   ├── PlatformProductGroupID.yaml
+│   │       │   ├── PlatformProductGroupList.yaml
+│   │       │   ├── PlatformProductGroupPricingConfig.yaml
+│   │       │   ├── PlatformProductGroup.yaml
+│   │       │   ├── Platform.yaml
+│   │       │   ├── PricingUnitList.yaml
+│   │       │   ├── PricingUnit.yaml
+│   │       │   ├── PricingVATInfo.yaml
+│   │       │   ├── ScaleList.yaml
+│   │       │   ├── Scale.yaml
+│   │       │   ├── SimplifiedConsumerPackage.yaml
+│   │       │   └── UserIdentity.yaml
+│   │       ├── consumer_products
+│   │       │   ├── consumer_documentation
+│   │       │   │   ├── consumer_classification
+│   │       │   │   │   └── ConsumerClassification.yaml
+│   │       │   │   ├── consumer_contact_details
+│   │       │   │   │   └── ConsumerContactDetails.yaml
+│   │       │   │   ├── ConsumerDocumentation.yaml
+│   │       │   │   ├── consumer_files
+│   │       │   │   │   ├── ConsumerFileList.yaml
+│   │       │   │   │   ├── ConsumerFile.yaml
+│   │       │   │   │   ├── ConsumerTechnicalFileList.yaml
+│   │       │   │   │   └── ConsumerTechnicalFile.yaml
+│   │       │   │   ├── consumer_links
+│   │       │   │   │   ├── ConsumerLinkList.yaml
+│   │       │   │   │   └── ConsumerLink.yaml
+│   │       │   │   └── ConsumerTechnicalDocumentation.yaml
+│   │       │   ├── consumer_packaging
+│   │       │   │   ├── ConsumerAdditionalAffiliateConfig.yaml
+│   │       │   │   ├── ConsumerExternalProductConfig.yaml
+│   │       │   │   ├── ConsumerPackageDelivery.yaml
+│   │       │   │   ├── ConsumerPackageList.yaml
+│   │       │   │   ├── ConsumerPackagePricingSinglePrice.yaml
+│   │       │   │   ├── ConsumerPackagePricingSlidingScales.yaml
+│   │       │   │   ├── ConsumerPackagePricing.yaml
+│   │       │   │   ├── ConsumerPackage.yaml
+│   │       │   │   └── ConsumerPackaging.yaml
+│   │       │   ├── ConsumerProductList.yaml
+│   │       │   ├── ConsumerProduct.yaml
+│   │       │   └── pricing
+│   │       │       └── Pricing.yaml
+│   │       ├── data_shop
+│   │       │   ├── DataShopProductList.yaml
+│   │       │   └── DataShopProduct.yaml
+│   │       ├── entitled_products
+│   │       │   ├── documentation
+│   │       │   │   └── EntitledProductDocumentation.yaml
+│   │       │   ├── entitled_package
+│   │       │   │   ├── EntitledPackageDelivery.yaml
+│   │       │   │   ├── EntitledPackageList.yaml
+│   │       │   │   └── EntitledPackage.yaml
+│   │       │   ├── EntitledProductList.yaml
+│   │       │   ├── EntitledProduct.yaml
+│   │       │   ├── EntitledSpecialProductList.yaml
+│   │       │   ├── EntitledSpecialProduct.yaml
+│   │       │   ├── filesets
+│   │       │   │   ├── files
+│   │       │   │   │   ├── FileList.yaml
+│   │       │   │   │   ├── File.yaml
+│   │       │   │   │   └── PaginationInformation.yaml
+│   │       │   │   ├── FilesetList.yaml
+│   │       │   │   └── Fileset.yaml
+│   │       │   └── SpecialProductID.yaml
+│   │       ├── _index.yaml
+│   │       ├── isin_reports
+│   │       │   ├── CompletedISINReportList.yaml
+│   │       │   ├── ISINReportCreationSeed.yaml
+│   │       │   ├── ISINReportList.yaml
+│   │       │   ├── ISINReportPricing.yaml
+│   │       │   └── ISINReport.yaml
+│   │       ├── orders
+│   │       │   ├── OrderedPackageParameters.yaml
+│   │       │   ├── OrderedPackagePricing.yaml
+│   │       │   ├── OrderedPackageSeedParameters.yaml
+│   │       │   ├── OrderedPackageSeed.yaml
+│   │       │   ├── OrderedPackage.yaml
+│   │       │   ├── OrderList.yaml
+│   │       │   ├── OrderPaymentMethod.yaml
+│   │       │   ├── OrderPayment.yaml
+│   │       │   ├── OrderPricingVATInfo.yaml
+│   │       │   ├── OrderPricing.yaml
+│   │       │   ├── OrderSeedPayment.yaml
+│   │       │   ├── OrderSeed.yaml
+│   │       │   ├── OrderState.yaml
+│   │       │   └── Order.yaml
+│   │       ├── pricing_models
+│   │       │   ├── AdditionalAffiliateConfigSeed.yaml
+│   │       │   ├── AdditionalAffiliateConfig.yaml
+│   │       │   ├── PricingModelList.yaml
+│   │       │   ├── PricingModelSeed.yaml
+│   │       │   ├── PricingModelUpdateSeed.yaml
+│   │       │   ├── PricingModel.yaml
+│   │       │   ├── ScaleSeed.yaml
+│   │       │   ├── SlidingScalesSeed.yaml
+│   │       │   └── SlidingScales.yaml
+│   │       ├── products
+│   │       │   ├── documentation
+│   │       │   │   ├── classification
+│   │       │   │   │   └── Classification.yaml
+│   │       │   │   ├── contact_details
+│   │       │   │   │   └── ContactDetails.yaml
+│   │       │   │   ├── DocumentationSeed.yaml
+│   │       │   │   ├── Documentation.yaml
+│   │       │   │   ├── files
+│   │       │   │   │   ├── FileList.yaml
+│   │       │   │   │   ├── FileSeedList.yaml
+│   │       │   │   │   ├── FileSeed.yaml
+│   │       │   │   │   ├── FileUploadSeed.yaml
+│   │       │   │   │   ├── FileUploadState.yaml
+│   │       │   │   │   ├── FileUploadValidationRequest.yaml
+│   │       │   │   │   ├── FileUpload.yaml
+│   │       │   │   │   ├── File.yaml
+│   │       │   │   │   ├── TechnicalFileList.yaml
+│   │       │   │   │   ├── TechnicalFileSeedList.yaml
+│   │       │   │   │   ├── TechnicalFileSeed.yaml
+│   │       │   │   │   ├── TechnicalFileUploadSeed.yaml
+│   │       │   │   │   ├── TechnicalFileUploadValidationRequest.yaml
+│   │       │   │   │   ├── TechnicalFileUpload.yaml
+│   │       │   │   │   └── TechnicalFile.yaml
+│   │       │   │   ├── links
+│   │       │   │   │   ├── LinkList.yaml
+│   │       │   │   │   └── Link.yaml
+│   │       │   │   ├── TechnicalDocumentationSeed.yaml
+│   │       │   │   └── TechnicalDocumentation.yaml
+│   │       │   ├── packaging
+│   │       │   │   ├── ExistingPackageSeed.yaml
+│   │       │   │   ├── ExternalProductConfig.yaml
+│   │       │   │   ├── NewPackageSeed.yaml
+│   │       │   │   ├── PackageDeliverySeed.yaml
+│   │       │   │   ├── PackageDelivery.yaml
+│   │       │   │   ├── PackageListSeed.yaml
+│   │       │   │   ├── PackageList.yaml
+│   │       │   │   ├── PackagePricingBillingSeed.yaml
+│   │       │   │   ├── PackagePricingBilling.yaml
+│   │       │   │   ├── PackagePricingSeed.yaml
+│   │       │   │   ├── PackagePricingSinglePriceSeed.yaml
+│   │       │   │   ├── PackagePricingSinglePrice.yaml
+│   │       │   │   ├── PackagePricing.yaml
+│   │       │   │   ├── PackageSeed.yaml
+│   │       │   │   ├── Package.yaml
+│   │       │   │   ├── PackagingSeed.yaml
+│   │       │   │   └── Packaging.yaml
+│   │       │   ├── ProductList.yaml
+│   │       │   ├── ProductPending.yaml
+│   │       │   ├── ProductSeed.yaml
+│   │       │   ├── ProductState.yaml
+│   │       │   ├── Product.yaml
+│   │       │   └── visibility
+│   │       │       ├── VisibilitySeed.yaml
+│   │       │       └── Visibility.yaml
+│   │       ├── subscription_requests
+│   │       │   ├── RequestedPackageParametersAffiliateParamsSeed.yaml
+│   │       │   ├── RequestedPackageParametersAffiliateParams.yaml
+│   │       │   ├── RequestedPackageParameters.yaml
+│   │       │   ├── RequestedPackagePricing.yaml
+│   │       │   ├── RequestedPackageSeedParameters.yaml
+│   │       │   ├── RequestedPackageSeed.yaml
+│   │       │   ├── RequestedPackage.yaml
+│   │       │   ├── SubscriptionRequestList.yaml
+│   │       │   ├── SubscriptionRequestPricing.yaml
+│   │       │   ├── SubscriptionRequestSeed.yaml
+│   │       │   ├── SubscriptionRequestState.yaml
+│   │       │   └── SubscriptionRequest.yaml
+│   │       └── subscriptions
+│   │           ├── SubscriptionList.yaml
+│   │           └── Subscription.yaml
+│   ├── marketplace-auth-api-v1
+│   │   ├── build
+│   │   │   └── openapi.yaml
+│   │   ├── openapi.yaml
+│   │   ├── paths
+│   │   │   ├── account_invitations
+│   │   │   │   ├── accept
+│   │   │   │   │   └── invitation.yaml
+│   │   │   │   ├── invitations.yaml
+│   │   │   │   └── reject
+│   │   │   │       └── invitation.yaml
+│   │   │   ├── accounts
+│   │   │   │   ├── accounts.yaml
+│   │   │   │   └── leave
+│   │   │   │       └── account.yaml
+│   │   │   └── sessions
+│   │   │       ├── current_session.yaml
+│   │   │       ├── sessions.yaml
+│   │   │       └── session.yaml
+│   │   ├── responses
+│   │   │   ├── account_invitations
+│   │   │   │   └── ListResponse.yaml
+│   │   │   ├── accounts
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   ├── BadRequestError.yaml
+│   │   │   ├── Empty.yaml
+│   │   │   ├── ForbiddenError.yaml
+│   │   │   ├── _index.yaml
+│   │   │   ├── NotFoundError.yaml
+│   │   │   ├── sessions
+│   │   │   │   ├── ListResponse.yaml
+│   │   │   │   └── Response.yaml
+│   │   │   └── UnauthorizedError.yaml
+│   │   └── schemas
+│   │       ├── account_invitations
+│   │       │   ├── AccountInvitationList.yaml
+│   │       │   └── AccountInvitation.yaml
+│   │       ├── accounts
+│   │       │   ├── AccountList.yaml
+│   │       │   ├── Account.yaml
+│   │       │   └── ExternalConsumerAccountSeed.yaml
+│   │       ├── identities
+│   │       │   └── Identity.yaml
+│   │       ├── _index.yaml
+│   │       └── sessions
+│   │           ├── SessionAccount.yaml
+│   │           ├── SessionList.yaml
+│   │           ├── SessionSeed.yaml
+│   │           └── Session.yaml
+│   └── proto
+│       └── file-upload
+│           ├── file_upload.proto
+│           └── service.proto
+├── apps
+│   ├── file-upload-svc
+│   │   ├── adapters
+│   │   │   ├── sha256_signer.go
+│   │   │   └── sha256_signer_test.go
+│   │   ├── app
+│   │   │   └── application.go
+│   │   ├── domain
+│   │   │   ├── file_upload.go
+│   │   │   ├── file_upload_seed.go
+│   │   │   ├── file_upload_url.go
+│   │   │   ├── log.go
+│   │   │   ├── manager.go
+│   │   │   ├── mocks
+│   │   │   │   └── signer.go
+│   │   │   ├── op_accept_file_upload.go
+│   │   │   ├── op_accept_file_upload_test.go
+│   │   │   ├── op_generate_download_url.go
+│   │   │   ├── op_generate_download_url_test.go
+│   │   │   ├── op_generate_upload_url.go
+│   │   │   ├── op_generate_upload_url_test.go
+│   │   │   ├── op_validate_file_upload.go
+│   │   │   ├── op_validate_file_upload_test.go
+│   │   │   ├── signer.go
+│   │   │   ├── storage.go
+│   │   │   └── testdata
+│   │   │       ├── invalid_openapi_v3.json
+│   │   │       ├── invalid_openapi_v3.yaml
+│   │   │       ├── invalid-simple-jupyter-example-python-kernel
+│   │   │       ├── oiSample.zip
+│   │   │       ├── Product-sheet_High_Precision_Timestamps.pdf
+│   │   │       ├── PROPRIS_Global_Securities_Report_sample.csv
+│   │   │       ├── simple-jupyter-example-python-kernel.ipynb
+│   │   │       ├── swagger.json
+│   │   │       └── swagger.yaml
+│   │   ├── ports
+│   │   │   └── rpc.go
+│   │   └── service
+│   │       ├── manager.go
+│   │       └── service.go
+│   ├── marketplace-be
+│   │   ├── app
+│   │   │   └── application.go
+│   │   ├── common
+│   │   │   ├── adapters
+│   │   │   │   ├── datashop_dto.go
+│   │   │   │   ├── datashop.go
+│   │   │   │   ├── datashop_test.go
+│   │   │   │   ├── event_repository.go
+│   │   │   │   ├── iam_component_iam_service.go
+│   │   │   │   └── session_component_session_svc.go
+│   │   │   ├── domain
+│   │   │   │   ├── identity.go
+│   │   │   │   ├── platform.go
+│   │   │   │   ├── session.go
+│   │   │   │   ├── session_service.go
+│   │   │   │   └── special_product.go
+│   │   │   └── task
+│   │   │       └── sender.go
+│   │   ├── components
+│   │   │   ├── account
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   ├── marketplace_session_provider.go
+│   │   │   │   │   └── postgres
+│   │   │   │   │       ├── account.go
+│   │   │   │   │       ├── account_information.go
+│   │   │   │   │       ├── account_invitation.go
+│   │   │   │   │       ├── account_invitation_roles.go
+│   │   │   │   │       ├── account_platform.go
+│   │   │   │   │       ├── migrations
+│   │   │   │   │       │   ├── 000000_model.sql
+│   │   │   │   │       │   ├── 000010_model.sql
+│   │   │   │   │       │   └── 000020_model.sql
+│   │   │   │   │       ├── migrations.go
+│   │   │   │   │       ├── repository.go
+│   │   │   │   │       └── repository_test.go
+│   │   │   │   ├── docs
+│   │   │   │   │   ├── data_model.png
+│   │   │   │   │   └── data_model.xml
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── account.go
+│   │   │   │   │   ├── account_information.go
+│   │   │   │   │   ├── account_role.go
+│   │   │   │   │   ├── country.go
+│   │   │   │   │   ├── domaintest
+│   │   │   │   │   │   ├── test_account.go
+│   │   │   │   │   │   ├── test_account_invitation.go
+│   │   │   │   │   │   ├── test_helpers_account.go
+│   │   │   │   │   │   ├── test_helpers_account_invitation.go
+│   │   │   │   │   │   ├── test_helpers.go
+│   │   │   │   │   │   └── test_helpers_repo.go
+│   │   │   │   │   ├── event_repository.go
+│   │   │   │   │   ├── helpers_test.go
+│   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   ├── identity.go
+│   │   │   │   │   ├── invitation.go
+│   │   │   │   │   ├── manager.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── account_manager.go
+│   │   │   │   │   │   ├── account_repository.go
+│   │   │   │   │   │   ├── event_repository.go
+│   │   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   │   └── session_context_provider.go
+│   │   │   │   │   ├── op_account_create.go
+│   │   │   │   │   ├── op_account_create_test.go
+│   │   │   │   │   ├── op_account_identity_list.go
+│   │   │   │   │   ├── op_account_identity_list_test.go
+│   │   │   │   │   ├── op_account_identity_remove.go
+│   │   │   │   │   ├── op_account_identity_remove_test.go
+│   │   │   │   │   ├── op_account_identity_update_roles.go
+│   │   │   │   │   ├── op_account_identity_update_roles_test.go
+│   │   │   │   │   ├── op_account_invitation_accept.go
+│   │   │   │   │   ├── op_account_invitation_accept_test.go
+│   │   │   │   │   ├── op_account_invitation_cancel.go
+│   │   │   │   │   ├── op_account_invitation_cancel_test.go
+│   │   │   │   │   ├── op_account_invitation_create.go
+│   │   │   │   │   ├── op_account_invitation_create_test.go
+│   │   │   │   │   ├── op_account_invitation_list.go
+│   │   │   │   │   ├── op_account_invitation_list_own_pending.go
+│   │   │   │   │   ├── op_account_invitation_list_own_pending_test.go
+│   │   │   │   │   ├── op_account_invitation_list_test.go
+│   │   │   │   │   ├── op_account_invitation_read.go
+│   │   │   │   │   ├── op_account_invitation_read_test.go
+│   │   │   │   │   ├── op_account_invitation_reject.go
+│   │   │   │   │   ├── op_account_invitation_reject_test.go
+│   │   │   │   │   ├── op_account_invitation_update.go
+│   │   │   │   │   ├── op_account_invitation_update_test.go
+│   │   │   │   │   ├── op_account_leave.go
+│   │   │   │   │   ├── op_account_leave_test.go
+│   │   │   │   │   ├── op_account_read.go
+│   │   │   │   │   ├── op_account_read_test.go
+│   │   │   │   │   ├── op_account_roles_list.go
+│   │   │   │   │   ├── op_account_roles_list_test.go
+│   │   │   │   │   ├── op_account_update_information.go
+│   │   │   │   │   ├── op_account_update_information_test.go
+│   │   │   │   │   ├── op_admin_account_add_identity.go
+│   │   │   │   │   ├── op_admin_account_add_identity_test.go
+│   │   │   │   │   ├── op_admin_account_create.go
+│   │   │   │   │   ├── op_admin_account_create_test.go
+│   │   │   │   │   ├── op_admin_account_identity_update_roles.go
+│   │   │   │   │   ├── op_admin_account_identity_update_roles_test.go
+│   │   │   │   │   ├── op_admin_account_list.go
+│   │   │   │   │   ├── op_admin_account_list_identities.go
+│   │   │   │   │   ├── op_admin_account_list_identities_test.go
+│   │   │   │   │   ├── op_admin_account_list_test.go
+│   │   │   │   │   ├── op_admin_account_read.go
+│   │   │   │   │   ├── op_admin_account_read_test.go
+│   │   │   │   │   ├── op_admin_account_remove_identity.go
+│   │   │   │   │   ├── op_admin_account_remove_identity_test.go
+│   │   │   │   │   ├── op_admin_account_roles_list.go
+│   │   │   │   │   ├── op_admin_account_roles_list_test.go
+│   │   │   │   │   ├── op_admin_accounts_company_names_list.go
+│   │   │   │   │   ├── op_admin_accounts_company_names_list_test.go
+│   │   │   │   │   ├── op_admin_account_state.go
+│   │   │   │   │   ├── op_admin_account_state_test.go
+│   │   │   │   │   ├── op_admin_account_update.go
+│   │   │   │   │   ├── op_admin_account_update_test.go
+│   │   │   │   │   ├── op_bootstrap_demo.go
+│   │   │   │   │   ├── op_country_list.go
+│   │   │   │   │   ├── op_country_list_test.go
+│   │   │   │   │   ├── op_country_read.go
+│   │   │   │   │   ├── op_country_read_test.go
+│   │   │   │   │   ├── op_create_account_invitations_from_file.go
+│   │   │   │   │   ├── op_create_accounts_from_file.go
+│   │   │   │   │   ├── op_create_mds_account.go
+│   │   │   │   │   ├── repository.go
+│   │   │   │   │   ├── session_provider.go
+│   │   │   │   │   └── validation.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── api-credentials
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── hydra_oauth2_client_service.go
+│   │   │   │   │   ├── marketplace_session_provider.go
+│   │   │   │   │   └── postgres
+│   │   │   │   │       ├── client.go
+│   │   │   │   │       ├── migrations
+│   │   │   │   │       │   └── 000000_model.sql
+│   │   │   │   │       ├── migrations.go
+│   │   │   │   │       ├── repository.go
+│   │   │   │   │       └── repository_test.go
+│   │   │   │   ├── docs
+│   │   │   │   │   ├── data_model.png
+│   │   │   │   │   └── data_model.xml
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── client.go
+│   │   │   │   │   ├── helpers_test.go
+│   │   │   │   │   ├── manager.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── api_credential_manager.go
+│   │   │   │   │   │   ├── client_repository.go
+│   │   │   │   │   │   ├── o_auth2_client_service.go
+│   │   │   │   │   │   └── session_context_provider.go
+│   │   │   │   │   ├── oauth2_client_service.go
+│   │   │   │   │   ├── op_client_create.go
+│   │   │   │   │   ├── op_client_create_test.go
+│   │   │   │   │   ├── op_client_delete.go
+│   │   │   │   │   ├── op_client_delete_test.go
+│   │   │   │   │   ├── op_client_list.go
+│   │   │   │   │   ├── op_client_list_test.go
+│   │   │   │   │   ├── op_client_read_by_ext_client_id.go
+│   │   │   │   │   ├── op_client_read_by_ext_client_id_test.go
+│   │   │   │   │   ├── op_client_read.go
+│   │   │   │   │   ├── op_client_read_test.go
+│   │   │   │   │   ├── op_client_reset_secret.go
+│   │   │   │   │   ├── op_client_reset_secret_test.go
+│   │   │   │   │   ├── repository.go
+│   │   │   │   │   ├── session_provider.go
+│   │   │   │   │   └── validation.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── authentication
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── azure_jwt_verifier.go
+│   │   │   │   │   ├── demo_jwt_verifier.go
+│   │   │   │   │   ├── forgerock_am_jwt_verifier.go
+│   │   │   │   │   ├── iam_component_iam_service.go
+│   │   │   │   │   ├── marketplace_session_provider.go
+│   │   │   │   │   └── session_component_session_svc.go
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── authentication.go
+│   │   │   │   │   ├── iam.go
+│   │   │   │   │   ├── iam_helpers.go
+│   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   ├── iam_test.go
+│   │   │   │   │   ├── jwt_verifier.go
+│   │   │   │   │   ├── log.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   │   ├── jwt_verifier.go
+│   │   │   │   │   │   └── session_service.go
+│   │   │   │   │   ├── op_account_list.go
+│   │   │   │   │   ├── op_account_list_test.go
+│   │   │   │   │   ├── op_create.go
+│   │   │   │   │   ├── op_create_test.go
+│   │   │   │   │   ├── op_delete_current.go
+│   │   │   │   │   ├── op_delete_current_test.go
+│   │   │   │   │   ├── op_delete.go
+│   │   │   │   │   ├── op_delete_test.go
+│   │   │   │   │   ├── op_list.go
+│   │   │   │   │   ├── op_list_test.go
+│   │   │   │   │   ├── op_read_current.go
+│   │   │   │   │   ├── op_read_current_test.go
+│   │   │   │   │   ├── op_read.go
+│   │   │   │   │   ├── op_read_test.go
+│   │   │   │   │   ├── session.go
+│   │   │   │   │   ├── session_helpers.go
+│   │   │   │   │   ├── session_service.go
+│   │   │   │   │   └── test_helpers_test.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── entitlement
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── account_component_account_service.go
+│   │   │   │   │   ├── consumer_products_service.go
+│   │   │   │   │   ├── fake_datashop_service.go
+│   │   │   │   │   ├── marketplace_session_provider.go
+│   │   │   │   │   └── postgres
+│   │   │   │   │       ├── common.go
+│   │   │   │   │       ├── entitlement.go
+│   │   │   │   │       ├── migrations
+│   │   │   │   │       │   ├── 000000_model.sql
+│   │   │   │   │       │   └── 000010_model.sql
+│   │   │   │   │       ├── migrations.go
+│   │   │   │   │       ├── repository.go
+│   │   │   │   │       └── repository_test.go
+│   │   │   │   ├── docs
+│   │   │   │   │   ├── data_model.png
+│   │   │   │   │   └── data_model.xml
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── account.go
+│   │   │   │   │   ├── account_service.go
+│   │   │   │   │   ├── consumer_product.go
+│   │   │   │   │   ├── consumer_product_service.go
+│   │   │   │   │   ├── datashop_service.go
+│   │   │   │   │   ├── date_range.go
+│   │   │   │   │   ├── domaintest
+│   │   │   │   │   │   └── test_helpers.go
+│   │   │   │   │   ├── entitlement.go
+│   │   │   │   │   ├── entitlement_tracking_information.go
+│   │   │   │   │   ├── helpers_test.go
+│   │   │   │   │   ├── manager.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── account_service.go
+│   │   │   │   │   │   ├── consumer_product_service.go
+│   │   │   │   │   │   ├── data_shop_service.go
+│   │   │   │   │   │   ├── entitlement_manager.go
+│   │   │   │   │   │   ├── entitlement_repository.go
+│   │   │   │   │   │   └── session_context_provider.go
+│   │   │   │   │   ├── op_admin_account_entitled_products_list.go
+│   │   │   │   │   ├── op_admin_account_entitled_products_list_test.go
+│   │   │   │   │   ├── op_admin_account_entitlements_list.go
+│   │   │   │   │   ├── op_admin_account_entitlements_list_test.go
+│   │   │   │   │   ├── op_admin_entitlement_delete.go
+│   │   │   │   │   ├── op_admin_entitlement_delete_test.go
+│   │   │   │   │   ├── op_admin_entitlement_read.go
+│   │   │   │   │   ├── op_admin_entitlement_read_test.go
+│   │   │   │   │   ├── op_admin_entitlements_create.go
+│   │   │   │   │   ├── op_admin_entitlements_create_test.go
+│   │   │   │   │   ├── op_admin_entitlement_seed_validate_for_order.go
+│   │   │   │   │   ├── op_admin_entitlement_seed_validate_for_order_test.go
+│   │   │   │   │   ├── op_admin_entitlement_state.go
+│   │   │   │   │   ├── op_admin_entitlement_state_test.go
+│   │   │   │   │   ├── op_admin_entitlement_update.go
+│   │   │   │   │   ├── op_admin_entitlement_update_test.go
+│   │   │   │   │   ├── op_admin_package_entitled_account_list.go
+│   │   │   │   │   ├── op_admin_package_entitled_account_list_test.go
+│   │   │   │   │   ├── op_admin_package_entitlements_delete.go
+│   │   │   │   │   ├── op_admin_package_entitlements_delete_test.go
+│   │   │   │   │   ├── op_admin_package_entitlements_disable.go
+│   │   │   │   │   ├── op_admin_package_entitlements_disable_test.go
+│   │   │   │   │   ├── op_admin_product_entitled_account_list.go
+│   │   │   │   │   ├── op_admin_product_entitled_account_list_test.go
+│   │   │   │   │   ├── op_admin_product_entitlements_delete.go
+│   │   │   │   │   ├── op_admin_product_entitlements_delete_test.go
+│   │   │   │   │   ├── op_admin_product_entitlements_disable.go
+│   │   │   │   │   ├── op_admin_product_entitlements_disable_test.go
+│   │   │   │   │   ├── op_admin_subscription_entitlements_delete.go
+│   │   │   │   │   ├── op_admin_subscription_entitlements_delete_test.go
+│   │   │   │   │   ├── op_admin_subscription_entitlements_list.go
+│   │   │   │   │   ├── op_admin_subscription_entitlements_list_test.go
+│   │   │   │   │   ├── op_admin_subscription_entitlements_update.go
+│   │   │   │   │   ├── op_admin_subscription_entitlements_update_test.go
+│   │   │   │   │   ├── op_list_account_entitled_product_entitlements.go
+│   │   │   │   │   ├── op_list_account_entitled_product_entitlements_test.go
+│   │   │   │   │   ├── op_list_account_entitled_products.go
+│   │   │   │   │   ├── op_list_account_entitled_products_test.go
+│   │   │   │   │   ├── op_list_account_entitled_special_products.go
+│   │   │   │   │   ├── op_list_account_entitled_special_products_test.go
+│   │   │   │   │   ├── op_read_account_entitled_product_entitlement.go
+│   │   │   │   │   ├── op_read_account_entitled_product_entitlement_test.go
+│   │   │   │   │   ├── repository.go
+│   │   │   │   │   ├── session_provider.go
+│   │   │   │   │   └── validation.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── iam
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── account_service.go
+│   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   ├── postgres
+│   │   │   │   │   │   ├── migrations
+│   │   │   │   │   │   │   ├── 000000_model.sql
+│   │   │   │   │   │   │   ├── 000010_role_migrations.sql
+│   │   │   │   │   │   │   ├── 000020_role_migrations.sql
+│   │   │   │   │   │   │   ├── 000030_role_operator_account_update.sql
+│   │   │   │   │   │   │   ├── 000040_role_admin_list_account_identity.sql
+│   │   │   │   │   │   │   ├── 000050_role_isin_reports.sql
+│   │   │   │   │   │   │   ├── 000060_role_isin_reports.sql
+│   │   │   │   │   │   │   ├── 000070_role_list_orders.sql
+│   │   │   │   │   │   │   ├── 000080_template_migrations.sql
+│   │   │   │   │   │   │   ├── 000090_role_admin_edit_account_identity.sql
+│   │   │   │   │   │   │   ├── 000100_role_read_order.sql
+│   │   │   │   │   │   │   ├── 000110_role_admin_identity.sql
+│   │   │   │   │   │   │   ├── 000120_role_admin_consumer_product.sql
+│   │   │   │   │   │   │   ├── 000130_role_read_subscription.sql
+│   │   │   │   │   │   │   └── 000140_role_update_visibility_product.sql
+│   │   │   │   │   │   └── migrations.go
+│   │   │   │   │   └── session
+│   │   │   │   │       ├── app_context_builder.go
+│   │   │   │   │       ├── marketplace_session_provider.go
+│   │   │   │   │       └── session_provider.go
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── account.go
+│   │   │   │   │   ├── account_service.go
+│   │   │   │   │   ├── helpers_test.go
+│   │   │   │   │   ├── iam_svc_service.go
+│   │   │   │   │   ├── identity_domain.go
+│   │   │   │   │   ├── identity_domain_test.go
+│   │   │   │   │   ├── identity.go
+│   │   │   │   │   ├── manager.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── account_service.go
+│   │   │   │   │   │   ├── iam_manager.go
+│   │   │   │   │   │   └── iam_service.go
+│   │   │   │   │   ├── op_admin_identity_list.go
+│   │   │   │   │   ├── op_admin_identity_list_test.go
+│   │   │   │   │   ├── op_admin_identity_read.go
+│   │   │   │   │   ├── op_admin_identity_read_test.go
+│   │   │   │   │   ├── op_admin_identity_state.go
+│   │   │   │   │   ├── op_admin_identity_state_test.go
+│   │   │   │   │   ├── op_admin_indentity_delete.go
+│   │   │   │   │   ├── op_admin_indentity_delete_test.go
+│   │   │   │   │   └── session_provider.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── isinreport
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── account_component_account_service.go
+│   │   │   │   │   ├── consumer_products_service.go
+│   │   │   │   │   ├── entitlement_service.go
+│   │   │   │   │   ├── fake_datashop_service.go
+│   │   │   │   │   ├── internal_teams_provider.go
+│   │   │   │   │   ├── isin_report_pricing_work_publisher.go
+│   │   │   │   │   ├── marketplace_session_provider.go
+│   │   │   │   │   ├── postgres
+│   │   │   │   │   │   ├── common.go
+│   │   │   │   │   │   ├── isin_report_pricing.go
+│   │   │   │   │   │   ├── migrations
+│   │   │   │   │   │   │   ├── 000000_model.sql
+│   │   │   │   │   │   │   ├── 000010_isin_report_pricing_processed_isins.sql
+│   │   │   │   │   │   │   ├── 000010_isin_report_pricing_request_date.sql
+│   │   │   │   │   │   │   ├── 000020_isin_report_pricing_request_date.sql
+│   │   │   │   │   │   │   └── 000030_isin_report_pricing_data_date.sql
+│   │   │   │   │   │   ├── migrations.go
+│   │   │   │   │   │   ├── repository.go
+│   │   │   │   │   │   └── repository_test.go
+│   │   │   │   │   └── subscription_service.go
+│   │   │   │   ├── docs
+│   │   │   │   │   ├── data_model.png
+│   │   │   │   │   └── data_model.xml
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── account_service.go
+│   │   │   │   │   ├── consumer_product.go
+│   │   │   │   │   ├── consumer_product_service.go
+│   │   │   │   │   ├── datashop_service.go
+│   │   │   │   │   ├── date_range.go
+│   │   │   │   │   ├── domaintest
+│   │   │   │   │   │   └── test_isin_reports.go
+│   │   │   │   │   ├── entitlement.go
+│   │   │   │   │   ├── entitlement_service.go
+│   │   │   │   │   ├── event_repository.go
+│   │   │   │   │   ├── helpers_test.go
+│   │   │   │   │   ├── internal_teams_provider.go
+│   │   │   │   │   ├── isin_report.go
+│   │   │   │   │   ├── isin_reports_pricing_work_publisher.go
+│   │   │   │   │   ├── isin_requests_report.go
+│   │   │   │   │   ├── manager.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── account_service.go
+│   │   │   │   │   │   ├── consumer_product_service.go
+│   │   │   │   │   │   ├── data_shop_service.go
+│   │   │   │   │   │   ├── entitlement_service.go
+│   │   │   │   │   │   ├── event_repository.go
+│   │   │   │   │   │   ├── internal_teams_provider.go
+│   │   │   │   │   │   ├── isin_report_manager.go
+│   │   │   │   │   │   ├── isin_report_pricing_repository.go
+│   │   │   │   │   │   ├── isin_reports_pricing_work_publisher.go
+│   │   │   │   │   │   ├── session_context_provider.go
+│   │   │   │   │   │   └── subscription_service.go
+│   │   │   │   │   ├── op_isin_report_create.go
+│   │   │   │   │   ├── op_isin_report_create_test.go
+│   │   │   │   │   ├── op_isin_report_list_completed.go
+│   │   │   │   │   ├── op_isin_report_list_completed_test.go
+│   │   │   │   │   ├── op_isin_report_list.go
+│   │   │   │   │   ├── op_isin_report_list_test.go
+│   │   │   │   │   ├── op_on_isin_report_pricing_work.go
+│   │   │   │   │   ├── op_on_isin_report_pricing_work_test.go
+│   │   │   │   │   ├── op_on_isin_reports_pricing_trigger.go
+│   │   │   │   │   ├── op_on_isin_requests_report_trigger.go
+│   │   │   │   │   ├── op_on_isin_requests_report_trigger_test.go
+│   │   │   │   │   ├── repository.go
+│   │   │   │   │   ├── session_provider.go
+│   │   │   │   │   ├── subscription.go
+│   │   │   │   │   ├── subscription_service.go
+│   │   │   │   │   └── validation.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── order
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── account_component_account_service.go
+│   │   │   │   │   ├── entitlement_component_entitlement_service.go
+│   │   │   │   │   ├── iam_component_iam_service.go
+│   │   │   │   │   ├── internal_teams_provider.go
+│   │   │   │   │   ├── marketplace_session_provider.go
+│   │   │   │   │   ├── postgres
+│   │   │   │   │   │   ├── migrations
+│   │   │   │   │   │   │   ├── 000000_model.sql
+│   │   │   │   │   │   │   ├── 000001_model.sql
+│   │   │   │   │   │   │   ├── 000002_model.sql
+│   │   │   │   │   │   │   ├── 000003_model.sql
+│   │   │   │   │   │   │   └── 000004_model.sql
+│   │   │   │   │   │   ├── migrations.go
+│   │   │   │   │   │   ├── order.go
+│   │   │   │   │   │   ├── repository.go
+│   │   │   │   │   │   ├── repository_test.go
+│   │   │   │   │   │   ├── subscription.go
+│   │   │   │   │   │   └── subscription_request.go
+│   │   │   │   │   └── product_component_consumer_products_service.go
+│   │   │   │   ├── docs
+│   │   │   │   │   ├── data_model.png
+│   │   │   │   │   └── data_model.xml
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── account.go
+│   │   │   │   │   ├── account_service.go
+│   │   │   │   │   ├── basket.go
+│   │   │   │   │   ├── basket_package.go
+│   │   │   │   │   ├── consumer_package_delivery.go
+│   │   │   │   │   ├── consumer_package.go
+│   │   │   │   │   ├── consumer_package_pricing.go
+│   │   │   │   │   ├── consumer_product.go
+│   │   │   │   │   ├── consumer_product_service.go
+│   │   │   │   │   ├── domaintest
+│   │   │   │   │   │   └── test_helpers.go
+│   │   │   │   │   ├── entitlement.go
+│   │   │   │   │   ├── entitlement_service.go
+│   │   │   │   │   ├── event_repository.go
+│   │   │   │   │   ├── helpers_test.go
+│   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   ├── internal_teams_provider.go
+│   │   │   │   │   ├── manager.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── account_service.go
+│   │   │   │   │   │   ├── consumer_product_service.go
+│   │   │   │   │   │   ├── entitlement_service.go
+│   │   │   │   │   │   ├── event_repository.go
+│   │   │   │   │   │   ├── iam_service.go
+│   │   │   │   │   │   ├── internal_teams_provider.go
+│   │   │   │   │   │   ├── order_manager.go
+│   │   │   │   │   │   ├── order_repository.go
+│   │   │   │   │   │   ├── session_context_provider.go
+│   │   │   │   │   │   ├── subscription_manager.go
+│   │   │   │   │   │   ├── subscription_repository.go
+│   │   │   │   │   │   ├── subscription_request_manager.go
+│   │   │   │   │   │   └── subscription_request_repository.go
+│   │   │   │   │   ├── op_admin_consumer_products_list_subscribed.go
+│   │   │   │   │   ├── op_admin_consumer_products_list_subscribed_test.go
+│   │   │   │   │   ├── op_admin_order_complete.go
+│   │   │   │   │   ├── op_admin_order_complete_test.go
+│   │   │   │   │   ├── op_admin_order_confirm.go
+│   │   │   │   │   ├── op_admin_order_confirm_test.go
+│   │   │   │   │   ├── op_admin_order_consumer_product_list.go
+│   │   │   │   │   ├── op_admin_order_consumer_product_list_test.go
+│   │   │   │   │   ├── op_admin_order_entitlement_list.go
+│   │   │   │   │   ├── op_admin_order_entitlement_list_test.go
+│   │   │   │   │   ├── op_admin_order_list.go
+│   │   │   │   │   ├── op_admin_order_list_test.go
+│   │   │   │   │   ├── op_admin_order_read.go
+│   │   │   │   │   ├── op_admin_order_read_test.go
+│   │   │   │   │   ├── op_admin_order_reject.go
+│   │   │   │   │   ├── op_admin_order_reject_test.go
+│   │   │   │   │   ├── op_admin_order_suggested_entitlement_list.go
+│   │   │   │   │   ├── op_admin_order_suggested_entitlement_list_test.go
+│   │   │   │   │   ├── op_admin_subscribed_consumer_account_list.go
+│   │   │   │   │   ├── op_admin_subscribed_consumer_account_list_test.go
+│   │   │   │   │   ├── op_admin_subscription_create.go
+│   │   │   │   │   ├── op_admin_subscription_create_test.go
+│   │   │   │   │   ├── op_admin_subscription_delete.go
+│   │   │   │   │   ├── op_admin_subscription_delete_test.go
+│   │   │   │   │   ├── op_admin_subscription_list.go
+│   │   │   │   │   ├── op_admin_subscription_list_test.go
+│   │   │   │   │   ├── op_admin_subscription_read.go
+│   │   │   │   │   ├── op_admin_subscription_read_test.go
+│   │   │   │   │   ├── op_admin_subscription_update.go
+│   │   │   │   │   ├── op_admin_subscription_update_test.go
+│   │   │   │   │   ├── op_basket_create.go
+│   │   │   │   │   ├── op_basket_create_test.go
+│   │   │   │   │   ├── op_consumer_package_calculate_price.go
+│   │   │   │   │   ├── op_consumer_package_calculate_price_test.go
+│   │   │   │   │   ├── op_order_create.go
+│   │   │   │   │   ├── op_order_create_test.go
+│   │   │   │   │   ├── op_order_list.go
+│   │   │   │   │   ├── op_order_list_test.go
+│   │   │   │   │   ├── op_order_read.go
+│   │   │   │   │   ├── op_order_read_test.go
+│   │   │   │   │   ├── op_subscription_list.go
+│   │   │   │   │   ├── op_subscription_list_test.go
+│   │   │   │   │   ├── op_subscription_read.go
+│   │   │   │   │   ├── op_subscription_read_test.go
+│   │   │   │   │   ├── op_subscription_request_create.go
+│   │   │   │   │   ├── op_subscription_request_create_test.go
+│   │   │   │   │   ├── op_subscription_request_list.go
+│   │   │   │   │   ├── op_subscription_request_list_test.go
+│   │   │   │   │   ├── op_subscription_request_read.go
+│   │   │   │   │   ├── op_subscription_request_read_test.go
+│   │   │   │   │   ├── order.go
+│   │   │   │   │   ├── order_seed.go
+│   │   │   │   │   ├── repository.go
+│   │   │   │   │   ├── session_provider.go
+│   │   │   │   │   ├── subscription.go
+│   │   │   │   │   ├── subscription_request.go
+│   │   │   │   │   ├── subscription_request_seed.go
+│   │   │   │   │   ├── validation.go
+│   │   │   │   │   └── vat_information.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── product
+│   │   │   │   ├── adapters
+│   │   │   │   │   ├── datashop_service.go
+│   │   │   │   │   ├── datashop_service_test.go
+│   │   │   │   │   ├── ds_products.csv
+│   │   │   │   │   ├── file_upload_service.go
+│   │   │   │   │   ├── marketplace_account_service.go
+│   │   │   │   │   ├── marketplace_session_provider.go
+│   │   │   │   │   └── postgres
+│   │   │   │   │       ├── admin_consumer_products.go
+│   │   │   │   │       ├── classification_business_category.go
+│   │   │   │   │       ├── classification_company.go
+│   │   │   │   │       ├── classification_delivery_method.go
+│   │   │   │   │       ├── classification_tag.go
+│   │   │   │   │       ├── consumer_classification_business_category.go
+│   │   │   │   │       ├── consumer_classification_company.go
+│   │   │   │   │       ├── consumer_classification_delivery_method.go
+│   │   │   │   │       ├── consumer_classification_tag.go
+│   │   │   │   │       ├── consumer_product_contact_details.go
+│   │   │   │   │       ├── consumer_product_details_files.go
+│   │   │   │   │       ├── consumer_product_details_links.go
+│   │   │   │   │       ├── consumer_product.go
+│   │   │   │   │       ├── consumer_product_packaging_external_product_config.go
+│   │   │   │   │       ├── consumer_product_packaging.go
+│   │   │   │   │       ├── consumer_product_packaging_package_delivery.go
+│   │   │   │   │       ├── consumer_product_packaging_package_delivery_method.go
+│   │   │   │   │       ├── consumer_product_packaging_package.go
+│   │   │   │   │       ├── consumer_product_packaging_package_pricing_additional_affiliate_config.go
+│   │   │   │   │       ├── consumer_product_packaging_package_pricing_billing.go
+│   │   │   │   │       ├── consumer_product_packaging_package_pricing.go
+│   │   │   │   │       ├── consumer_product_packaging_package_pricing_single_price.go
+│   │   │   │   │       ├── consumer_product_packaging_package_pricing_sliding_scales.go
+│   │   │   │   │       ├── consumer_product_search.go
+│   │   │   │   │       ├── migrations
+│   │   │   │   │       │   ├── 000000_model.sql
+│   │   │   │   │       │   ├── 000010_model.sql
+│   │   │   │   │       │   ├── 000020_model.sql
+│   │   │   │   │       │   ├── 000030_model.sql
+│   │   │   │   │       │   ├── 000040_model.sql
+│   │   │   │   │       │   ├── 000050_model.sql
+│   │   │   │   │       │   ├── 000060_model.sql
+│   │   │   │   │       │   └── 000070_model.sql
+│   │   │   │   │       ├── migrations.go
+│   │   │   │   │       ├── pending_classification_business_category.go
+│   │   │   │   │       ├── pending_classification_company.go
+│   │   │   │   │       ├── pending_classification_delivery_method.go
+│   │   │   │   │       ├── pending_classification_tag.go
+│   │   │   │   │       ├── pending_product_contact_details.go
+│   │   │   │   │       ├── pending_product_details_files.go
+│   │   │   │   │       ├── pending_product_details.go
+│   │   │   │   │       ├── pending_product_details_links.go
+│   │   │   │   │       ├── pending_product_packaging_external_product_config.go
+│   │   │   │   │       ├── pending_product_packaging.go
+│   │   │   │   │       ├── pending_product_packaging_package_delivery.go
+│   │   │   │   │       ├── pending_product_packaging_package_delivery_method.go
+│   │   │   │   │       ├── pending_product_packaging_package.go
+│   │   │   │   │       ├── pending_product_packaging_package_pricing_billing.go
+│   │   │   │   │       ├── pending_product_packaging_package_pricing.go
+│   │   │   │   │       ├── pending_product_packaging_package_pricing_single_price.go
+│   │   │   │   │       ├── pricing_model_additional_affiliate_config.go
+│   │   │   │   │       ├── pricing_model.go
+│   │   │   │   │       ├── pricing_model_sliding_scales.go
+│   │   │   │   │       ├── product_contact_details.go
+│   │   │   │   │       ├── product_details_files.go
+│   │   │   │   │       ├── product_details.go
+│   │   │   │   │       ├── product_details_links.go
+│   │   │   │   │       ├── product.go
+│   │   │   │   │       ├── product_packaging_external_product_config.go
+│   │   │   │   │       ├── product_packaging.go
+│   │   │   │   │       ├── product_packaging_package_delivery.go
+│   │   │   │   │       ├── product_packaging_package_delivery_method.go
+│   │   │   │   │       ├── product_packaging_package.go
+│   │   │   │   │       ├── product_packaging_package_pricing_billing.go
+│   │   │   │   │       ├── product_packaging_package_pricing.go
+│   │   │   │   │       ├── product_packaging_package_pricing_single_price.go
+│   │   │   │   │       ├── product_pending_changes.go
+│   │   │   │   │       ├── repository.go
+│   │   │   │   │       └── repository_test.go
+│   │   │   │   ├── docs
+│   │   │   │   │   ├── data_model.png
+│   │   │   │   │   └── data_model.xml
+│   │   │   │   ├── domain
+│   │   │   │   │   ├── account.go
+│   │   │   │   │   ├── account_service.go
+│   │   │   │   │   ├── business_category.go
+│   │   │   │   │   ├── company.go
+│   │   │   │   │   ├── consumer_packaging.go
+│   │   │   │   │   ├── consumer_packaging_pkg_delivery.go
+│   │   │   │   │   ├── consumer_packaging_pkg_entitlement_instructions.go
+│   │   │   │   │   ├── consumer_packaging_pkg.go
+│   │   │   │   │   ├── consumer_packaging_pkg_pricing.go
+│   │   │   │   │   ├── consumer_product_contact_details.go
+│   │   │   │   │   ├── consumer_product_details.go
+│   │   │   │   │   ├── consumer_product_files.go
+│   │   │   │   │   ├── consumer_product.go
+│   │   │   │   │   ├── consumer_product_links.go
+│   │   │   │   │   ├── consumer_visibility.go
+│   │   │   │   │   ├── datashop_product.go
+│   │   │   │   │   ├── delivery_method.go
+│   │   │   │   │   ├── domaintest
+│   │   │   │   │   │   ├── test_helpers_expect_consumer.go
+│   │   │   │   │   │   ├── test_helpers_expect.go
+│   │   │   │   │   │   ├── test_helpers_fixtures.go
+│   │   │   │   │   │   ├── test_helpers.go
+│   │   │   │   │   │   ├── test_helpers_mocks.go
+│   │   │   │   │   │   ├── test_helpers_packaging.go
+│   │   │   │   │   │   ├── test_helpers_pricing_model.go
+│   │   │   │   │   │   └── test_helpers_seeds.go
+│   │   │   │   │   ├── file_upload_service.go
+│   │   │   │   │   ├── helpers_test.go
+│   │   │   │   │   ├── manager.go
+│   │   │   │   │   ├── mocks
+│   │   │   │   │   │   ├── account_service.go
+│   │   │   │   │   │   ├── data_shop_service.go
+│   │   │   │   │   │   ├── file_upload_service.go
+│   │   │   │   │   │   ├── product_manager.go
+│   │   │   │   │   │   ├── product_repository.go
+│   │   │   │   │   │   └── session_context_provider.go
+│   │   │   │   │   ├── op_admin_list_consumer_products.go
+│   │   │   │   │   ├── op_admin_list_consumer_products_test.go
+│   │   │   │   │   ├── op_admin_read_consumer_product.go
+│   │   │   │   │   ├── op_admin_read_consumer_product_test.go
+│   │   │   │   │   ├── op_consumer_product_doc_file_generate_download_url.go
+│   │   │   │   │   ├── op_consumer_product_doc_file_generate_download_url_test.go
+│   │   │   │   │   ├── op_create.go
+│   │   │   │   │   ├── op_create_test.go
+│   │   │   │   │   ├── op_datashop_product_list.go
+│   │   │   │   │   ├── op_datashop_product_list_test.go
+│   │   │   │   │   ├── op_datashop_product_read.go
+│   │   │   │   │   ├── op_datashop_product_read_test.go
+│   │   │   │   │   ├── op_delete.go
+│   │   │   │   │   ├── op_delete_test.go
+│   │   │   │   │   ├── op_doc_file_generate_download_url.go
+│   │   │   │   │   ├── op_doc_file_generate_download_url_test.go
+│   │   │   │   │   ├── op_doc_file_generate_upload_url.go
+│   │   │   │   │   ├── op_doc_file_generate_upload_url_test.go
+│   │   │   │   │   ├── op_doc_file_upload_validate.go
+│   │   │   │   │   ├── op_doc_file_upload_validate_test.go
+│   │   │   │   │   ├── op_list_business_categories.go
+│   │   │   │   │   ├── op_list_business_categories_test.go
+│   │   │   │   │   ├── op_list_companies.go
+│   │   │   │   │   ├── op_list_companies_test.go
+│   │   │   │   │   ├── op_list_consumer_business_categories.go
+│   │   │   │   │   ├── op_list_consumer_business_categories_test.go
+│   │   │   │   │   ├── op_list_consumer_companies.go
+│   │   │   │   │   ├── op_list_consumer_companies_test.go
+│   │   │   │   │   ├── op_list_consumer_delivery_methods.go
+│   │   │   │   │   ├── op_list_consumer_delivery_methods_test.go
+│   │   │   │   │   ├── op_list_consumer_products.go
+│   │   │   │   │   ├── op_list_consumer_products_test.go
+│   │   │   │   │   ├── op_list_delivery_methods.go
+│   │   │   │   │   ├── op_list_delivery_methods_test.go
+│   │   │   │   │   ├── op_list.go
+│   │   │   │   │   ├── op_list_tags.go
+│   │   │   │   │   ├── op_list_tags_test.go
+│   │   │   │   │   ├── op_list_test.go
+│   │   │   │   │   ├── op_packaging_update.go
+│   │   │   │   │   ├── op_packaging_update_test.go
+│   │   │   │   │   ├── op_platform_list.go
+│   │   │   │   │   ├── op_platform_list_test.go
+│   │   │   │   │   ├── op_platform_product_group_list.go
+│   │   │   │   │   ├── op_platform_product_group_list_test.go
+│   │   │   │   │   ├── op_platform_product_group_read.go
+│   │   │   │   │   ├── op_platform_product_group_read_test.go
+│   │   │   │   │   ├── op_pricing_model_create.go
+│   │   │   │   │   ├── op_pricing_model_create_test.go
+│   │   │   │   │   ├── op_pricing_model_delete.go
+│   │   │   │   │   ├── op_pricing_model_delete_test.go
+│   │   │   │   │   ├── op_pricing_model_list.go
+│   │   │   │   │   ├── op_pricing_model_list_test.go
+│   │   │   │   │   ├── op_pricing_model_read.go
+│   │   │   │   │   ├── op_pricing_model_read_test.go
+│   │   │   │   │   ├── op_pricing_model_rename.go
+│   │   │   │   │   ├── op_pricing_model_rename_test.go
+│   │   │   │   │   ├── op_pricing_model_update.go
+│   │   │   │   │   ├── op_pricing_model_update_test.go
+│   │   │   │   │   ├── op_publish.go
+│   │   │   │   │   ├── op_publish_test.go
+│   │   │   │   │   ├── op_read_consumer_product.go
+│   │   │   │   │   ├── op_read_consumer_product_test.go
+│   │   │   │   │   ├── op_read.go
+│   │   │   │   │   ├── op_read_test.go
+│   │   │   │   │   ├── op_rename.go
+│   │   │   │   │   ├── op_rename_test.go
+│   │   │   │   │   ├── op_update.go
+│   │   │   │   │   ├── op_update_test.go
+│   │   │   │   │   ├── op_visibility_update.go
+│   │   │   │   │   ├── op_visibility_update_test.go
+│   │   │   │   │   ├── package_delivery_method.go
+│   │   │   │   │   ├── package_type.go
+│   │   │   │   │   ├── packaging.go
+│   │   │   │   │   ├── packaging_pkg_delivery.go
+│   │   │   │   │   ├── packaging_pkg_entitlement_instructions.go
+│   │   │   │   │   ├── packaging_pkg.go
+│   │   │   │   │   ├── packaging_pkg_pricing.go
+│   │   │   │   │   ├── platform.go
+│   │   │   │   │   ├── platform_product_group.go
+│   │   │   │   │   ├── platform_product_group_test.go
+│   │   │   │   │   ├── pricing_model_affiliate.go
+│   │   │   │   │   ├── pricing_model.go
+│   │   │   │   │   ├── pricing_model_sliding_scales.go
+│   │   │   │   │   ├── pricing_unit.go
+│   │   │   │   │   ├── product_classification.go
+│   │   │   │   │   ├── product_contact_details.go
+│   │   │   │   │   ├── product_details.go
+│   │   │   │   │   ├── product_files.go
+│   │   │   │   │   ├── product.go
+│   │   │   │   │   ├── product_links.go
+│   │   │   │   │   ├── product_mutator_documentation.go
+│   │   │   │   │   ├── product_mutator.go
+│   │   │   │   │   ├── product_mutator_packaging.go
+│   │   │   │   │   ├── product_mutator_visibility.go
+│   │   │   │   │   ├── product_pending.go
+│   │   │   │   │   ├── product_seed.go
+│   │   │   │   │   ├── repository.go
+│   │   │   │   │   ├── session_provider.go
+│   │   │   │   │   ├── validation_fields.go
+│   │   │   │   │   ├── validation.go
+│   │   │   │   │   └── visibility.go
+│   │   │   │   └── service
+│   │   │   │       └── manager.go
+│   │   │   ├── scim-api
+│   │   │   │   └── adapters
+│   │   │   │       ├── context_provider.go
+│   │   │   │       └── iam-service
+│   │   │   │           ├── constants.go
+│   │   │   │           ├── errors.go
+│   │   │   │           ├── iam_service.go
+│   │   │   │           ├── models.go
+│   │   │   │           └── utils.go
+│   │   │   └── session
+│   │   │       └── adapters
+│   │   │           └── postgres
+│   │   │               └── migrations.go
+│   │   ├── log.go
+│   │   ├── ports
+│   │   │   ├── admin-api
+│   │   │   │   ├── generate.go
+│   │   │   │   ├── handler_account_entitled_products_list.go
+│   │   │   │   ├── handler_account_entitled_products_list_test.go
+│   │   │   │   ├── handler_account_entitlements_list.go
+│   │   │   │   ├── handler_account_entitlements_list_test.go
+│   │   │   │   ├── handler_account.go
+│   │   │   │   ├── handler_account_identity_add.go
+│   │   │   │   ├── handler_account_identity_add_test.go
+│   │   │   │   ├── handler_account_identity_list.go
+│   │   │   │   ├── handler_account_identity_list_test.go
+│   │   │   │   ├── handler_account_identity_remove.go
+│   │   │   │   ├── handler_account_identity_remove_test.go
+│   │   │   │   ├── handler_account_identity_role_update.go
+│   │   │   │   ├── handler_account_identity_role_update_test.go
+│   │   │   │   ├── handler_account_list.go
+│   │   │   │   ├── handler_account_list_test.go
+│   │   │   │   ├── handler_account_read.go
+│   │   │   │   ├── handler_account_read_test.go
+│   │   │   │   ├── handler_account_role_list.go
+│   │   │   │   ├── handler_account_role_list_test.go
+│   │   │   │   ├── handler_accounts_company_name_list.go
+│   │   │   │   ├── handler_accounts_company_name_list_test.go
+│   │   │   │   ├── handler_account_set_state.go
+│   │   │   │   ├── handler_account_set_state_test.go
+│   │   │   │   ├── handler_account_update.go
+│   │   │   │   ├── handler_account_update_test.go
+│   │   │   │   ├── handler_consumer_package_entitlements_delete.go
+│   │   │   │   ├── handler_consumer_package_entitlements_delete_test.go
+│   │   │   │   ├── handler_consumer_package_entitlements_disable.go
+│   │   │   │   ├── handler_consumer_package_entitlements_disable_test.go
+│   │   │   │   ├── handler_consumer_product_entitled_account_list.go
+│   │   │   │   ├── handler_consumer_product_entitled_account_list_test.go
+│   │   │   │   ├── handler_consumer_product_entitlements_delete.go
+│   │   │   │   ├── handler_consumer_product_entitlements_delete_test.go
+│   │   │   │   ├── handler_consumer_product_entitlements_disable.go
+│   │   │   │   ├── handler_consumer_product_entitlements_disable_test.go
+│   │   │   │   ├── handler_consumer_product.go
+│   │   │   │   ├── handler_consumer_product_package_entitled_account_list.go
+│   │   │   │   ├── handler_consumer_product_package_entitled_account_list_test.go
+│   │   │   │   ├── handler_consumer_product_read.go
+│   │   │   │   ├── handler_consumer_product_read_test.go
+│   │   │   │   ├── handler_consumer_products_list.go
+│   │   │   │   ├── handler_consumer_products_list_test.go
+│   │   │   │   ├── handler_country_list.go
+│   │   │   │   ├── handler_country_list_test.go
+│   │   │   │   ├── handler_country_read.go
+│   │   │   │   ├── handler_country_read_test.go
+│   │   │   │   ├── handler_entitlement_create.go
+│   │   │   │   ├── handler_entitlement_create_test.go
+│   │   │   │   ├── handler_entitlement_delete.go
+│   │   │   │   ├── handler_entitlement_delete_test.go
+│   │   │   │   ├── handler_entitlement_read.go
+│   │   │   │   ├── handler_entitlement_read_test.go
+│   │   │   │   ├── handler_entitlement_set_state.go
+│   │   │   │   ├── handler_entitlement_set_state_test.go
+│   │   │   │   ├── handler_entitlement_update.go
+│   │   │   │   ├── handler_entitlement_update_test.go
+│   │   │   │   ├── handler.go
+│   │   │   │   ├── handler_identity_delete.go
+│   │   │   │   ├── handler_identity_delete_test.go
+│   │   │   │   ├── handler_identity_list.go
+│   │   │   │   ├── handler_identity_list_test.go
+│   │   │   │   ├── handler_identity_read.go
+│   │   │   │   ├── handler_identity_read_test.go
+│   │   │   │   ├── handler_identity_set_state.go
+│   │   │   │   ├── handler_identity_set_state_test.go
+│   │   │   │   ├── handler_order_complete.go
+│   │   │   │   ├── handler_order_complete_test.go
+│   │   │   │   ├── handler_order_confirm.go
+│   │   │   │   ├── handler_order_confirm_test.go
+│   │   │   │   ├── handler_order_consumer_products_list.go
+│   │   │   │   ├── handler_order_consumer_products_list_test.go
+│   │   │   │   ├── handler_order_entitlement_lists.go
+│   │   │   │   ├── handler_order_entitlement_lists_test.go
+│   │   │   │   ├── handler_order.go
+│   │   │   │   ├── handler_order_list.go
+│   │   │   │   ├── handler_order_list_test.go
+│   │   │   │   ├── handler_order_read.go
+│   │   │   │   ├── handler_order_read_test.go
+│   │   │   │   ├── handler_order_reject.go
+│   │   │   │   ├── handler_order_reject_test.go
+│   │   │   │   ├── handler_order_suggested_entitlements_list.go
+│   │   │   │   ├── handler_order_suggested_entitlements_list_test.go
+│   │   │   │   ├── handler_subscription_create.go
+│   │   │   │   ├── handler_subscription_create_test.go
+│   │   │   │   ├── handler_subscription_delete.go
+│   │   │   │   ├── handler_subscription_delete_test.go
+│   │   │   │   ├── handler_subscription.go
+│   │   │   │   ├── handler_subscription_list.go
+│   │   │   │   ├── handler_subscription_list_test.go
+│   │   │   │   ├── handler_subscription_read.go
+│   │   │   │   ├── handler_subscription_read_test.go
+│   │   │   │   ├── handler_subscription_subscribed_consumer_account_list.go
+│   │   │   │   ├── handler_subscription_subscribed_consumer_account_list_test.go
+│   │   │   │   ├── handler_subscription_subscribed_consumer_products_list.go
+│   │   │   │   ├── handler_subscription_subscribed_consumer_products_list_test.go
+│   │   │   │   ├── handler_subscription_update.go
+│   │   │   │   ├── handler_subscription_update_test.go
+│   │   │   │   ├── handler_test.go
+│   │   │   │   ├── oapi-config.yaml
+│   │   │   │   ├── openapi.generated.go
+│   │   │   │   ├── response.go
+│   │   │   │   ├── staticcheck.conf
+│   │   │   │   └── tools.go
+│   │   │   ├── auth-api
+│   │   │   │   ├── generate.go
+│   │   │   │   ├── handler.go
+│   │   │   │   ├── oapi-config.yaml
+│   │   │   │   ├── openapi.generated.go
+│   │   │   │   ├── response.go
+│   │   │   │   ├── staticcheck.conf
+│   │   │   │   └── tools.go
+│   │   │   ├── isin-reports
+│   │   │   │   └── handler.go
+│   │   │   ├── marketplace-api
+│   │   │   │   ├── account_invitation_models.go
+│   │   │   │   ├── account_models.go
+│   │   │   │   ├── data_shop_models.go
+│   │   │   │   ├── error_handler.go
+│   │   │   │   ├── generate.go
+│   │   │   │   ├── handler_account_entitled_product_fileset_read.go
+│   │   │   │   ├── handler_account_entitled_product_fileset_read_test.go
+│   │   │   │   ├── handler_account_entitled_products_filesets_list.go
+│   │   │   │   ├── handler_account_entitled_products_filesets_list_test.go
+│   │   │   │   ├── handler_account_entitled_products_list.go
+│   │   │   │   ├── handler_account_entitled_products_list_test.go
+│   │   │   │   ├── handler_account_entitled_special_products_list.go
+│   │   │   │   ├── handler_account_entitled_special_products_list_test.go
+│   │   │   │   ├── handler_account_invitation_cancel.go
+│   │   │   │   ├── handler_account_invitation_cancel_test.go
+│   │   │   │   ├── handler_account_invitation_create.go
+│   │   │   │   ├── handler_account_invitation_create_test.go
+│   │   │   │   ├── handler_account_invitation_list.go
+│   │   │   │   ├── handler_account_invitation_list_test.go
+│   │   │   │   ├── handler_account_invitation_read.go
+│   │   │   │   ├── handler_account_invitation_read_test.go
+│   │   │   │   ├── handler_account_invitation_test.go
+│   │   │   │   ├── handler_account_invitation_update.go
+│   │   │   │   ├── handler_account_invitation_update_test.go
+│   │   │   │   ├── handler_account_isin_report_create.go
+│   │   │   │   ├── handler_account_isin_report_create_test.go
+│   │   │   │   ├── handler_account_isin_report_list.go
+│   │   │   │   ├── handler_account_isin_report_list_test.go
+│   │   │   │   ├── handler_account_list_identities.go
+│   │   │   │   ├── handler_account_list_identities_test.go
+│   │   │   │   ├── handler_account_list_roles.go
+│   │   │   │   ├── handler_account_list_roles_test.go
+│   │   │   │   ├── handler_account_purchases_isin_reports_list.go
+│   │   │   │   ├── handler_account_purchases_isin_reports_list_test.go
+│   │   │   │   ├── handler_account_purchases_order_read.go
+│   │   │   │   ├── handler_account_purchases_order_read_test.go
+│   │   │   │   ├── handler_account_purchases_orders_list.go
+│   │   │   │   ├── handler_account_purchases_orders_list_test.go
+│   │   │   │   ├── handler_account_purchases_subscription_read.go
+│   │   │   │   ├── handler_account_purchases_subscription_read_test.go
+│   │   │   │   ├── handler_account_purchases_subscriptions_list.go
+│   │   │   │   ├── handler_account_purchases_subscriptions_list_test.go
+│   │   │   │   ├── handler_account_read_country.go
+│   │   │   │   ├── handler_account_read_country_test.go
+│   │   │   │   ├── handler_account_read.go
+│   │   │   │   ├── handler_account_read_test.go
+│   │   │   │   ├── handler_account_remove_identity.go
+│   │   │   │   ├── handler_account_remove_identity_test.go
+│   │   │   │   ├── handler_account_supported_countries_list.go
+│   │   │   │   ├── handler_account_supported_countries_list_test.go
+│   │   │   │   ├── handler_account_test.go
+│   │   │   │   ├── handler_account_update_identity_roles.go
+│   │   │   │   ├── handler_account_update_identity_roles_test.go
+│   │   │   │   ├── handler_account_update_information.go
+│   │   │   │   ├── handler_account_update_information_test.go
+│   │   │   │   ├── handler_api_credentials_client_create.go
+│   │   │   │   ├── handler_api_credentials_client_create_test.go
+│   │   │   │   ├── handler_api_credentials_client_delete.go
+│   │   │   │   ├── handler_api_credentials_client_delete_test.go
+│   │   │   │   ├── handler_api_credentials_client.go
+│   │   │   │   ├── handler_api_credentials_client_list.go
+│   │   │   │   ├── handler_api_credentials_client_list_test.go
+│   │   │   │   ├── handler_api_credentials_client_read.go
+│   │   │   │   ├── handler_api_credentials_client_read_test.go
+│   │   │   │   ├── handler_api_credentials_client_reset_secret.go
+│   │   │   │   ├── handler_api_credentials_client_reset_secret_test.go
+│   │   │   │   ├── handler_business_category_list.go
+│   │   │   │   ├── handler_business_category_list_test.go
+│   │   │   │   ├── handler_company_list.go
+│   │   │   │   ├── handler_company_list_test.go
+│   │   │   │   ├── handler_consumer_business_category_list.go
+│   │   │   │   ├── handler_consumer_business_category_list_test.go
+│   │   │   │   ├── handler_consumer_company_list.go
+│   │   │   │   ├── handler_consumer_company_list_test.go
+│   │   │   │   ├── handler_consumer_delivery_method_list.go
+│   │   │   │   ├── handler_consumer_delivery_method_list_test.go
+│   │   │   │   ├── handler_consumer_product_doc_file_download_url_generate.go
+│   │   │   │   ├── handler_consumer_product_doc_file_download_url_generate_test.go
+│   │   │   │   ├── handler_consumer_product.go
+│   │   │   │   ├── handler_consumer_product_list.go
+│   │   │   │   ├── handler_consumer_product_list_test.go
+│   │   │   │   ├── handler_consumer_product_package_price.go
+│   │   │   │   ├── handler_consumer_product_package_price_test.go
+│   │   │   │   ├── handler_consumer_product_read.go
+│   │   │   │   ├── handler_consumer_product_read_test.go
+│   │   │   │   ├── handler_consumer_product_tech_doc_file_download_url_generate.go
+│   │   │   │   ├── handler_consumer_product_tech_doc_file_download_url_generate_test.go
+│   │   │   │   ├── handler_data_shop_product_list.go
+│   │   │   │   ├── handler_data_shop_product_list_test.go
+│   │   │   │   ├── handler_data_shop_product_read.go
+│   │   │   │   ├── handler_data_shop_product_read_test.go
+│   │   │   │   ├── handler_delivery_method_list.go
+│   │   │   │   ├── handler_delivery_method_list_test.go
+│   │   │   │   ├── handler.go
+│   │   │   │   ├── handler_order_basket_create.go
+│   │   │   │   ├── handler_order_basket_create_test.go
+│   │   │   │   ├── handler_order_create.go
+│   │   │   │   ├── handler_order_create_test.go
+│   │   │   │   ├── handler_order.go
+│   │   │   │   ├── handler_platform_list.go
+│   │   │   │   ├── handler_platform_list_test.go
+│   │   │   │   ├── handler_platform_product_list.go
+│   │   │   │   ├── handler_platform_product_list_test.go
+│   │   │   │   ├── handler_platform_product_read.go
+│   │   │   │   ├── handler_platform_product_read_test.go
+│   │   │   │   ├── handler_pricing_model_create.go
+│   │   │   │   ├── handler_pricing_model_create_test.go
+│   │   │   │   ├── handler_pricing_model_delete.go
+│   │   │   │   ├── handler_pricing_model_delete_test.go
+│   │   │   │   ├── handler_pricing_model_list.go
+│   │   │   │   ├── handler_pricing_model_list_test.go
+│   │   │   │   ├── handler_pricing_model_read.go
+│   │   │   │   ├── handler_pricing_model_read_test.go
+│   │   │   │   ├── handler_pricing_model_rename.go
+│   │   │   │   ├── handler_pricing_model_rename_test.go
+│   │   │   │   ├── handler_pricing_model_test.go
+│   │   │   │   ├── handler_pricing_model_update.go
+│   │   │   │   ├── handler_pricing_model_update_test.go
+│   │   │   │   ├── handler_product_create.go
+│   │   │   │   ├── handler_product_create_test.go
+│   │   │   │   ├── handler_product_delete.go
+│   │   │   │   ├── handler_product_delete_test.go
+│   │   │   │   ├── handler_product_doc_classification_update.go
+│   │   │   │   ├── handler_product_doc_classification_update_test.go
+│   │   │   │   ├── handler_product_doc_contact_details_update.go
+│   │   │   │   ├── handler_product_doc_contact_details_update_test.go
+│   │   │   │   ├── handler_product_doc_file_download_url_generate.go
+│   │   │   │   ├── handler_product_doc_file_download_url_generate_test.go
+│   │   │   │   ├── handler_product_doc_files.go
+│   │   │   │   ├── handler_product_doc_files_test.go
+│   │   │   │   ├── handler_product_doc_file_upload_url_generate.go
+│   │   │   │   ├── handler_product_doc_file_upload_url_generate_test.go
+│   │   │   │   ├── handler_product_doc_file_upload_validate.go
+│   │   │   │   ├── handler_product_doc_file_upload_validate_test.go
+│   │   │   │   ├── handler_product_doc_links_update.go
+│   │   │   │   ├── handler_product_doc_links_update_test.go
+│   │   │   │   ├── handler_product_doc_update.go
+│   │   │   │   ├── handler_product_doc_update_test.go
+│   │   │   │   ├── handler_product_list.go
+│   │   │   │   ├── handler_product_list_test.go
+│   │   │   │   ├── handler_product_name_update.go
+│   │   │   │   ├── handler_product_name_update_test.go
+│   │   │   │   ├── handler_product_packaging_update.go
+│   │   │   │   ├── handler_product_packaging_update_test.go
+│   │   │   │   ├── handler_product_publish.go
+│   │   │   │   ├── handler_product_publish_test.go
+│   │   │   │   ├── handler_product_read.go
+│   │   │   │   ├── handler_product_read_test.go
+│   │   │   │   ├── handler_product_tech_doc_file_download_url_generate.go
+│   │   │   │   ├── handler_product_tech_doc_file_download_url_generate_test.go
+│   │   │   │   ├── handler_product_tech_doc_files.go
+│   │   │   │   ├── handler_product_tech_doc_files_test.go
+│   │   │   │   ├── handler_product_tech_doc_file_upload_url_generate.go
+│   │   │   │   ├── handler_product_tech_doc_file_upload_url_generate_test.go
+│   │   │   │   ├── handler_product_tech_doc_file_upload_validate.go
+│   │   │   │   ├── handler_product_tech_doc_file_upload_validate_test.go
+│   │   │   │   ├── handler_product_tech_doc_links.go
+│   │   │   │   ├── handler_product_tech_doc_links_test.go
+│   │   │   │   ├── handler_product_tech_doc_update.go
+│   │   │   │   ├── handler_product_tech_doc_update_test.go
+│   │   │   │   ├── handler_product_test.go
+│   │   │   │   ├── handler_product_visibility_update.go
+│   │   │   │   ├── handler_product_visibility_update_test.go
+│   │   │   │   ├── handler_subscription.go
+│   │   │   │   ├── handler_subscription_request_create.go
+│   │   │   │   ├── handler_subscription_request_create_test.go
+│   │   │   │   ├── handler_subscription_request.go
+│   │   │   │   ├── handler_subscription_request_list.go
+│   │   │   │   ├── handler_subscription_request_list_test.go
+│   │   │   │   ├── handler_subscription_request_read.go
+│   │   │   │   ├── handler_subscription_request_read_test.go
+│   │   │   │   ├── handler_tag_list.go
+│   │   │   │   ├── handler_tag_list_test.go
+│   │   │   │   ├── handler_test.go
+│   │   │   │   ├── oapi-config.yaml
+│   │   │   │   ├── openapi.generated.go
+│   │   │   │   ├── pricing_model_models.go
+│   │   │   │   ├── product_models.go
+│   │   │   │   ├── response.go
+│   │   │   │   ├── staticcheck.conf
+│   │   │   │   └── tools.go
+│   │   │   ├── portstest
+│   │   │   │   └── test_helpers.go
+│   │   │   ├── public-api
+│   │   │   │   ├── error_handler.go
+│   │   │   │   ├── generate.go
+│   │   │   │   ├── handler_entitled_product_fileset_read.go
+│   │   │   │   ├── handler_entitled_product_fileset_read_test.go
+│   │   │   │   ├── handler_entitled_products_filesets_list.go
+│   │   │   │   ├── handler_entitled_products_filesets_list_test.go
+│   │   │   │   ├── handler_entitled_products_list.go
+│   │   │   │   ├── handler_entitled_products_list_test.go
+│   │   │   │   ├── handler.go
+│   │   │   │   ├── handler_isin_report_create.go
+│   │   │   │   ├── handler_isin_report_create_test.go
+│   │   │   │   ├── handler_isin_reports_list.go
+│   │   │   │   ├── handler_isin_reports_list_test.go
+│   │   │   │   ├── handler_test.go
+│   │   │   │   ├── oapi-config.yaml
+│   │   │   │   ├── openapi.generated.go
+│   │   │   │   ├── response.go
+│   │   │   │   ├── staticcheck.conf
+│   │   │   │   └── tools.go
+│   │   │   ├── rest.go
+│   │   │   ├── rpc.go
+│   │   │   ├── rpc_health.go
+│   │   │   └── scim-api
+│   │   │       └── handler.go
+│   │   └── service
+│   │       └── service.go
+│   └── notification-svc
+│       ├── adapters
+│       │   ├── sender
+│       │   │   ├── logger.go
+│       │   │   └── smtp.go
+│       │   └── tasks
+│       │       ├── logger.go
+│       │       └── publisher.go
+│       ├── app
+│       │   └── application.go
+│       ├── domain
+│       │   ├── account_invitation_created.go
+│       │   ├── isin_request_events.go
+│       │   ├── log.go
+│       │   ├── manager.go
+│       │   ├── mocks
+│       │   │   └── task_producer.go
+│       │   ├── op_on_account_invitation_created.go
+│       │   ├── op_on_account_invitation_created_test.go
+│       │   ├── op_on_isin_requests_report.go
+│       │   ├── op_on_isin_requests_report_test.go
+│       │   ├── op_on_order_completed.go
+│       │   ├── op_on_order_completed_test.go
+│       │   ├── op_on_order_created.go
+│       │   ├── op_on_order_created_test.go
+│       │   ├── op_on_order_rejected.go
+│       │   ├── op_on_order_rejected_test.go
+│       │   ├── op_on_subscription_created.go
+│       │   ├── op_on_subscription_created_test.go
+│       │   ├── op_on_subscription_deleted.go
+│       │   ├── op_on_subscription_deleted_test.go
+│       │   ├── op_on_subscription_request_created.go
+│       │   ├── op_on_subscription_request_created_test.go
+│       │   ├── op_on_subscription_updated.go
+│       │   ├── op_on_subscription_updated_test.go
+│       │   ├── op_on_task.go
+│       │   ├── order_events.go
+│       │   ├── sender.go
+│       │   ├── subscription_events.go
+│       │   ├── subscription_request_created.go
+│       │   ├── tasks.go
+│       │   └── templates
+│       │       ├── account-invitation-created-customer.tmpl
+│       │       ├── account-invitation-created-customer.tmpl.html
+│       │       ├── isin-requests-report-internal.tmpl.html
+│       │       ├── order-completed-customer.tmpl.html
+│       │       ├── order-received-customer.tmpl.html
+│       │       ├── order-received-internal.tmpl.html
+│       │       ├── order-rejected-customer.tmpl.html
+│       │       ├── subscription-created-customer.tmpl.html
+│       │       ├── subscription-deleted-customer.tmpl.html
+│       │       ├── subscription-request-received-customer.tmpl.html
+│       │       ├── subscription-request-received-internal.tmpl.html
+│       │       ├── subscription-updated-customer.tmpl.html
+│       │       └── templates.go
+│       ├── ports
+│       │   ├── account_invitation_events.go
+│       │   ├── isin_request_events.go
+│       │   ├── order_events.go
+│       │   ├── ports.go
+│       │   ├── subscription_events.go
+│       │   ├── subscription_request_events.go
+│       │   └── tasks.go
+│       └── service
+│           ├── manager.go
+│           └── service.go
+├── common
+│   ├── account_attrs.go
+│   ├── account.go
+│   ├── actions.go
+│   ├── authz
+│   │   ├── access_token.go
+│   │   ├── introspection_service.go
+│   │   ├── middleware.go
+│   │   ├── mocks
+│   │   │   └── introspection_service.go
+│   │   ├── scopes.go
+│   │   └── scopes_test.go
+│   ├── capabilities.go
+│   ├── capabilities_test.go
+│   ├── check.go
+│   ├── console.go
+│   ├── context.go
+│   ├── context_test.go
+│   ├── delegation.go
+│   ├── errors.go
+│   ├── event_bus
+│   │   ├── gcp
+│   │   │   └── event_bus.go
+│   │   └── interfaces.go
+│   ├── iam.go
+│   ├── identities.go
+│   ├── identity_attrs.go
+│   ├── identity.go
+│   ├── identity_type.go
+│   ├── middleware.go
+│   ├── mocks
+│   │   └── sid_session_context_builder.go
+│   ├── permission.go
+│   ├── rpc
+│   │   └── names.go
+│   ├── session.go
+│   └── task
+│       └── multi_sender.go
+└── proto
+    ├── file-upload
+    │   ├── file_upload.pb.go
+    │   ├── file_upload.pb.micro.go
+    │   ├── service.pb.go
+    │   └── service.pb.micro.go
+    ├── generate.go
+    └── tools.go
+
+296 directories, 1637 files
