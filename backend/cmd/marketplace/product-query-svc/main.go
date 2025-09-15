@@ -29,7 +29,7 @@ func main() {
 	// 支持 env 回退
 	dsn := *dsnFlag
 	if dsn == "" {
-		dsn = os.Getenv("DB_DSN")
+		dsn = os.Getenv("DATABASE_URL")
 	}
 
 	log.Println("starting product-query-svc")
