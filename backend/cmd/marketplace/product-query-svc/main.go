@@ -13,9 +13,8 @@ import (
 	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/http"
 	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inmem"
 	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/postgres"
-	"github.com/fightingBald/GoTuto/internal"
-	httpadp "github.com/fightingBald/GoTuto/internal/adapters/http"
-	"github.com/fightingBald/GoTuto/internal/ports"
+	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/service"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -62,7 +61,7 @@ func main() {
 	}
 
 	// build service
-	svc := internal.NewProductService(repo)
+	svc := appsvc.NewProductService(repo)
 
 	server := appshttp.NewServer(svc)
 
@@ -70,7 +69,7 @@ func main() {
 	// 注册健康检查
 	r.HandleFunc("/healthz", server.Health)
 	// 注册 OpenAPI 生成的 handler 到 chi Router
-	h := httpadp.HandlerFromMux(server, r)
+	h := appshttp.HandlerFromMux(server, r)
 
 	srv := &http.Server{
 		Addr:    *addr,

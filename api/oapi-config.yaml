@@ -4,4 +4,4 @@ generate:
   - chi-server     # 生成 chi server 接口
   - strict-server  # 生成严格 server 接口（带类型安全）
   - spec           # 生成 embedded swagger spec
-output: ../internal/adapters/http/marketplaceapi.gen.go
+output: ../apps/product-query-svc/adapters/http/marketplaceapi.gen.go

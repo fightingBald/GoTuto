@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/fightingBald/GoTuto/internal/domain"
-	"github.com/fightingBald/GoTuto/internal/ports"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 )
 
 // 简单的内存实现，用于本地开发/测试和示例 wiring

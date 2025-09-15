@@ -4,8 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	httpadp "github.com/fightingBald/GoTuto/internal/adapters/http"
-	"github.com/fightingBald/GoTuto/internal/ports"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 )
 
 type Server struct{ svc ports.ProductService }
@@ -17,16 +16,16 @@ func (s *Server) GetProductByID(w http.ResponseWriter, r *http.Request, id int64
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
-		_ = json.NewEncoder(w).Encode(httpadp.Error{Code: "NOT_FOUND", Message: err.Error()})
+		_ = json.NewEncoder(w).Encode(Error{Code: "NOT_FOUND", Message: err.Error()})
 		return
 	}
-	out := httpadp.Product{Id: p.ID, Name: p.Name, Price: float32(p.Price) / 100.0}
+	out := Product{Id: p.ID, Name: p.Name, Price: float32(p.Price) / 100.0}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(out)
 }
 
-func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params httpadp.SearchProductsParams) {
+func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params SearchProductsParams) {
 	q := ""
 	if params.Q != nil {
 		q = *params.Q
@@ -43,14 +42,14 @@ func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params h
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(httpadp.Error{Code: "INTERNAL", Message: err.Error()})
+		_ = json.NewEncoder(w).Encode(Error{Code: "INTERNAL", Message: err.Error()})
 		return
 	}
-	var out []httpadp.Product
+	var out []Product
 	for _, it := range items {
-		out = append(out, httpadp.Product{Id: it.ID, Name: it.Name, Price: float32(it.Price) / 100.0})
+		out = append(out, Product{Id: it.ID, Name: it.Name, Price: float32(it.Price) / 100.0})
 	}
-	resp := httpadp.ProductList{Items: out, Page: page, PageSize: pageSize, Total: len(out)}
+	resp := ProductList{Items: out, Page: page, PageSize: pageSize, Total: len(out)}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(resp)

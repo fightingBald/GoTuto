@@ -128,16 +128,16 @@ go generate ./api
 <details>
 <summary>批次 2 — DB 配置与迁移</summary>
 
-- 相关文件：apps/product-query-svc/adapters/postgres/（migrations、migrations_embedded.go、product_repository.go）、internal/adapters/db/pg_product_repo.go
+ - 相关文件：apps/product-query-svc/adapters/postgres/（migrations、migrations_embedded.go、product_repository.go）
 - 建议 commit message："db: add Postgres migrations and adapters (migrations embedded via //go:embed)"
 
 </details>
 
 <details>
-<summary>批次 3 — 核心应用层（domain、app、ports）</summary>
+<summary>批次 3 — 核心应用层（domain、ports、service）</summary>
 
-- 相关文件：apps/product-query-svc/domain/ apps/product-query-svc/app/ apps/product-query-svc/ports/
-- 建议 commit message："app: add domain models, application service and ports for product-query-svc"
+- 相关文件：apps/product-query-svc/domain/ apps/product-query-svc/ports/ apps/product-query-svc/adapters/service/
+  - 建议 commit message："app: add domain models, service implementation and ports for product-query-svc"
 
 </details>
 
@@ -152,7 +152,7 @@ go generate ./api
 <details>
 <summary>批次 5 — 后端入口 / wiring / router</summary>
 
-- 相关文件：backend/cmd/marketplace/product-query-svc、internal/adapters/http/router.go、internal/adapters/http/handlers.go
+ - 相关文件：backend/cmd/marketplace/product-query-svc、apps/product-query-svc/adapters/http/
 - 建议 commit message："chore: add service main and HTTP wiring (router & handlers)"
 
 </details>
