@@ -1,4 +1,4 @@
-package: marketplaceapi
+package: httpadapter
 generate:
   - types          # 生成 models (OpenAPI schemas → Go structs)
   - chi-server     # 生成 chi server 接口
