@@ -110,6 +110,16 @@ bash scripts/db-init.sh
 make db-init
 ```
 
+仅插入测试数据（已存在即跳过）：
+
+```sh
+# 使用 psql 执行 SQL 脚本（需先创建好表）
+psql "postgres://app:app_password@localhost:5432/productdb?sslmode=disable" -v ON_ERROR_STOP=1 -f sql/seed_test_data.sql
+
+# 或使用 Makefile 目标（读取 MIGRATE_URL）
+make db-seed MIGRATE_URL="postgres://app:app_password@localhost:5432/productdb?sslmode=disable"
+```
+
 ---
 
 ## 在 Kubernetes（kind + Tilt）上启动
