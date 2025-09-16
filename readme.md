@@ -120,6 +120,12 @@ psql "postgres://app:app_password@localhost:5432/productdb"
 helm install product-query-svc ./charts/product-query-svc -f ./charts/product-query-svc/values.yaml
 ```
 
+Helm 迁移 Job：
+- Chart 内置了一个 `post-install, post-upgrade` 的迁移 Job（使用 `migrate/migrate` 镜像）。
+- 迁移文件位于 Chart 下的 `migrations/` 目录（通过 ConfigMap 挂载到容器 `/migrations`）。
+- 默认启用（`values.yaml: migrations.enabled=true`）。如需关闭，设置 `--set migrations.enabled=false`。
+- 连接串默认读取 `values.env.DATABASE_URL`，生产环境建议改为从 Secret 注入并在模板中引用。
+
 ---
 
 ## 构建 Docker 镜像
