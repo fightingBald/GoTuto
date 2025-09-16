@@ -4,6 +4,59 @@
 
 ---
 
+## 验证服务是否可用（Tilt 本地）
+
+- 端口转发就绪
+  - 打开 Tilt UI，确认 `product-query-svc` 资源为绿色/Ready，且显示端口转发到 `http://localhost:8080`。
+
+- 健康检查
+
+```sh
+curl -i http://localhost:8080/healthz
+# 期望: HTTP/1.1 200 OK，响应体: ok
+```
+
+- 调用接口（注意：`q` 至少 3 个字符，否则返回 400）
+
+```sh
+# 搜索（分页）
+curl -s 'http://localhost:8080/products/search?q=wid&page=1&pageSize=10' | jq
+
+# 按 ID 查询
+curl -i http://localhost:8080/products/1
+```
+
+- 插入演示数据（Postgres）
+
+```sh
+# 连接数据库（Tilt 将 Postgres 转发到本机 5432）
+psql "postgres://app:app_password@localhost:5432/productdb?sslmode=disable"
+
+# 在 psql 中执行:
+insert into products(name, price, tags)
+values ('Blue Widget',1999,ARRAY['demo','blue']),
+       ('Red Gizmo',2999,ARRAY['demo','red']);
+
+# 再次验证
+\q
+curl -s 'http://localhost:8080/products/search?q=wid&page=1&pageSize=10' | jq
+curl -s http://localhost:8080/products/1 | jq
+```
+
+- 迁移是否成功
+  - 在 Tilt UI 查看 `db-migrate` 资源日志，确认 `up` 成功。
+  - 或进入 psql 执行 `\dt` 检查是否存在 `products` 表。
+
+- Pod/日志排查
+
+```sh
+kubectl -n marketplace-dev get pods
+kubectl -n marketplace-dev logs deploy/product-query-svc
+kubectl -n marketplace-dev logs statefulset/postgres
+```
+
+---
+
 ## 前置条件
 - Go == 1.24
 - Docker
