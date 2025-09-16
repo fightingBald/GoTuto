@@ -6,6 +6,49 @@
 
 ---
 
+## 目录结构
+
+项目采用按“应用 + 适配器”的分层组织，便于替换实现与独立演进。
+
+```
+.
+├── api/                               # OpenAPI 定义与代码生成配置
+│   ├── openapi.yaml                   # 主 OpenAPI 入口
+│   ├── oapi-config.yaml               # oapi-codegen 配置
+│   ├── generate.go                    # go generate 指令
+│   ├── paths/                         # 路径/接口片段
+│   ├── schemas/                       # 数据结构（Schema）
+│   └── responses/                     # 响应体定义
+├── apps/
+│   └── product-query-svc/             # 应用层与适配器
+│       ├── domain/                    # 领域模型与领域错误
+│       ├── ports/                     # 端口（接口），抽象仓储与服务
+│       └── adapters/
+│           ├── http/                  # 生成的 HTTP 接口 + 路由/处理器
+│           ├── inmem/                 # 内存仓储实现（开发/测试）
+│           ├── postgres/              # Postgres 仓储与迁移文件
+│           └── service/               # 应用服务实现（业务编排）
+├── backend/
+│   └── cmd/marketplace/product-query-svc/  # 可执行入口（main.go），装配路由/依赖
+├── charts/product-query-svc/          # 最小 Helm Chart（含迁移 Job 与 ConfigMap）
+├── k8s/                               # 直接应用的 Kubernetes 清单（Service/Deployment/Postgres）
+├── kind/                              # kind 本地集群配置
+├── scripts/                           # 脚本（初始化迁移、kind 集群启动等）
+├── test/                              # 单元/集成测试
+├── bin/                               # 本地构建产物输出（make build）
+├── Dockerfile                         # 服务镜像构建
+├── Tiltfile                           # 本地开发编排（构建、端口转发、迁移）
+├── Makefile                           # 常用命令封装（构建、代码生成、迁移）
+└── .env.dev.example                   # 本地开发环境变量示例
+```
+
+说明：
+- 目录遵循“端口与适配器”（Hexagonal/Clean Architecture）思路，`ports` 定义接口，`adapters/*` 提供实现；`domain` 保持纯净，可复用。
+- 数据库迁移统一放在 `apps/product-query-svc/adapters/postgres/migrations`，通过 golang-migrate 执行（脚本/Make/Tilt/Helm 均已支持）。
+- 生产部署建议使用 Helm Chart；本仓库同时保留了 `k8s/` 便于直接 kubectl 应用与调试。
+
+---
+
 ## 验证服务是否可用（Tilt 本地）
 
 - 端口转发就绪
@@ -77,7 +120,7 @@ docker run --name marketplace-postgres \
   -p 5432:5432 -d postgres:16-alpine
 ```
 
-2. 设置环境变量：
+1. 设置环境变量：
 
 ```sh
 export DATABASE_URL="postgres://app:app_password@localhost:5432/productdb?sslmode=disable"
@@ -85,7 +128,7 @@ export HTTP_ADDRESS=":8080"
 export LOG_LEVEL=debug
 ```
 
-3. 运行服务（开发）：
+1. 运行服务（开发）：
 
 ```sh
 cd backend/cmd/marketplace/product-query-svc
