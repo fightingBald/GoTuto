@@ -73,6 +73,46 @@ psql "postgres://app:app_password@localhost:5432/productdb"
 
 ---
 
+## 数据库迁移（Migration）说明与避坑
+
+本项目的迁移文件位于 `apps/product-query-svc/adapters/postgres/migrations`，支持三种方式执行迁移：
+
+- 手动本地执行（开发态）
+  - 命令：`make migrate-up MIGRATE_URL="postgres://app:app_password@localhost:5432/productdb?sslmode=disable"`
+  - 依赖：本机安装 `migrate` CLI（可选 Homebrew：`brew install golang-migrate`）。
+
+- 通过 Tilt 自动迁移（当前默认，推荐开发态）
+  - Tiltfile 配置了 `local_resource('db-migrate', ...)`，会在 `postgres` 端口转发就绪后，使用 Docker 运行 `migrate/migrate` 容器来执行迁移。
+  - 无需在本机安装 `migrate` CLI，但需要本机 Docker 正常运行。
+  - 连接串默认使用 `host.docker.internal:5432` 访问 Tilt 的本地端口转发（macOS/Windows Docker Desktop 默认可用）。
+  - 如需修改连接串，可在 Tiltfile 顶部调整 `MIGRATE_URL`。
+
+- 在 K8s/Helm 中执行（集群内）
+  - 可选：用 Helm hook 或 Job 在集群内运行 `migrate/migrate`，`DATABASE_URL` 使用集群内 Service（例如 `postgres.marketplace-dev.svc.cluster.local`）。需要的话可以补充该 Job。
+
+常见避坑：
+
+- “migrate: command not found”
+  - 原因：旧实现会在本机直接执行 `migrate` CLI；如果没安装就会报错。
+  - 现状：Tiltfile 已改为通过 `docker run migrate/migrate ...` 执行，无需本机安装 CLI，但需要 Docker。
+
+- Linux 下 `host.docker.internal` 不可用
+  - 方案1：在 Docker 命令中添加 `--add-host=host.docker.internal:host-gateway`；或
+  - 方案2：使用 `--network host` 并将 `MIGRATE_URL` 的主机名改为 `localhost`（注意该方案在 macOS/Windows 不通用）。
+
+- 5432 端口占用冲突
+  - Tilt 会把集群内 Postgres 端口转发到你本机 5432；如果你本地已有 Postgres 占用该端口，则端口转发失败。
+  - 解决：停掉本地 Postgres，或修改端口转发/连接串（例如改为 15432，并同步调整 Tiltfile 的 `MIGRATE_URL`）。
+
+- 凭据与安全
+  - 目前开发态在 ConfigMap/值文件中包含了示例凭据，便于演示。
+  - 生产/共享环境应将 `DATABASE_URL` 放入 Secret，并在迁移/应用中引用 Secret。
+
+- Distroless 镜像与热更新
+  - 当前服务镜像为 distroless，不支持容器内直接热重载，Tilt 将走重新构建/重启流程，这是预期行为。
+
+---
+
 ## 使用 Helm
 仓库包含最小 Helm chart：charts/product-query-svc，可用如下命令部署：
 
