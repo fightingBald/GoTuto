@@ -36,19 +36,3 @@ delete:
     '404':
       $ref: '#/components/responses/ErrorResponse'
 
-delete:
-  operationId: DeleteProductByID
-  parameters:
-    - in: path
-      name: id
-      required: true
-      schema:
-        type: integer
-        format: int64
-  responses:
-    '204':
-      description: Deleted
-    '400':
-      $ref: '#/components/responses/ErrorResponse'
-    '404':
-      $ref: '#/components/responses/ErrorResponse'
