@@ -1,5 +1,5 @@
 # Makefile for common tasks
-.PHONY: gen build run fmt tidy migrate-up migrate-down migrate-create
+.PHONY: gen build run fmt tidy migrate-up migrate-down migrate-create db-init
 
 SERVICE_PKG=./backend/cmd/marketplace/product-query-svc
 BIN_DIR=bin
@@ -33,6 +33,10 @@ migrate-down:
 
 migrate-create:
 	migrate create -ext sql -dir $(MIGRATE_PATH) $(name)
+
+db-init:
+	bash scripts/db-init.sh
+
 
 # Notes:
 # - Requires golang-migrate installed to use migrate-* targets
