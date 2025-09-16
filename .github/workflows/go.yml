@@ -13,6 +13,20 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app_password
+          POSTGRES_DB: productdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U app -d productdb" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
     steps:
     - uses: actions/checkout@v4
 
@@ -26,8 +40,31 @@ jobs:
     - name: Tidy modules
       run: go mod tidy
 
+    - name: Install psql client
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client
+
+    - name: Wait for Postgres
+      env:
+        PGPASSWORD: app_password
+      run: |
+        for i in {1..30}; do
+          if pg_isready -h localhost -p 5432 -U app -d productdb; then
+            echo "Postgres is ready"; break; fi; sleep 2; done
+        pg_isready -h localhost -p 5432 -U app -d productdb
+
+    - name: Apply migrations (psql)
+      env:
+        PGPASSWORD: app_password
+      run: |
+        psql -v ON_ERROR_STOP=1 -h localhost -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/postgres/migrations/000001_init.up.sql
+        psql -v ON_ERROR_STOP=1 -h localhost -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/postgres/migrations/000002_seed_test_data.up.sql
+
     - name: Build
       run: go build -v ./...
 
     - name: Test
+      env:
+        DATABASE_URL: postgres://app:app_password@localhost:5432/productdb?sslmode=disable
       run: go test -v ./...
