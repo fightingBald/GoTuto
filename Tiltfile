@@ -24,9 +24,7 @@ docker_build(
     context='.',
     dockerfile='Dockerfile',
     live_update=[
-        sync('apps/product-query-svc', '/app'),  # if you run from alpine w/ shell; for distroless, restart only
-        sync('backend', '/app'),                 # fallback sync path if you change wiring/main
-        # If using a wrapper script to restart, call it here. For distroless, a full image rebuild is fine.
+        # Distroless image: live_update syncs won't hot-reload; expect full rebuilds.
     ]
 )
 
