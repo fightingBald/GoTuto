@@ -20,16 +20,21 @@ import (
 )
 
 func main() {
-	addr := flag.String("addr", ":8080", "listen address")
-	dsnFlag := flag.String("db-dsn", "", "Postgres DSN (if empty, use in-memory repo)")
-	migrate := flag.Bool("migrate", false, "run embedded SQL migrations when using Postgres")
-	flag.Parse()
+    addr := flag.String("addr", ":8080", "listen address")
+    dsnFlag := flag.String("db-dsn", "", "Postgres DSN (if empty, use in-memory repo)")
+    flag.Parse()
 
-	// 支持 env 回退
-	dsn := *dsnFlag
-	if dsn == "" {
-		dsn = os.Getenv("DATABASE_URL")
-	}
+    // 支持 env 回退
+    dsn := *dsnFlag
+    if dsn == "" {
+        dsn = os.Getenv("DATABASE_URL")
+    }
+    // address env fallback
+    if *addr == ":8080" { // only override default
+        if envAddr := os.Getenv("HTTP_ADDRESS"); envAddr != "" {
+            *addr = envAddr
+        }
+    }
 
 	log.Println("starting product-query-svc")
 
@@ -49,19 +54,13 @@ func main() {
 		}
 		pool = p
 
-		if *migrate {
-			if err := appspg.RunMigrations(context.Background(), pool); err != nil {
-				log.Fatalf("run migrations: %v", err)
-			}
-		}
-
 		repo = appspg.NewProductRepository(pool)
 	} else {
 		repo = appsinmem.NewInMemRepo()
 	}
 
 	// build service
-	svc := appsvc.NewProductService(repo)
+    svc := appsvc.NewProductService(repo)
 
 	server := appshttp.NewServer(svc)
 
