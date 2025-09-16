@@ -1,5 +1,7 @@
 # 项目搭建与开发指南
 
+[![Go CI](https://github.com/fightingBald/GoTuto/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/fightingBald/GoTuto/actions/workflows/go.yml)
+
 简短说明：本仓库包含一个示例后端服务 product-query-svc（支持 in-memory 与 Postgres），数据库迁移需通过 golang-migrate 执行（不再使用嵌入式迁移），以及用于本地开发的 Tilt + kind 配置与最小 Helm chart（已补全）。
 
 ---
