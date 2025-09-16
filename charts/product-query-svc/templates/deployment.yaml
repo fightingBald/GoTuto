@@ -24,7 +24,14 @@ spec:
             - name: HTTP_ADDRESS
               value: {{ .Values.env.HTTP_ADDRESS | quote }}
             - name: DATABASE_URL
+              {{- if and .Values.database.secret.enabled .Values.database.secret.name .Values.database.secret.key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secret.name | quote }}
+                  key: {{ .Values.database.secret.key | quote }}
+              {{- else }}
               value: {{ .Values.env.DATABASE_URL | quote }}
+              {{- end }}
           readinessProbe:
             httpGet:
               path: /healthz

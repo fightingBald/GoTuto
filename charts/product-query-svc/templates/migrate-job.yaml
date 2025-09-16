@@ -23,7 +23,14 @@ spec:
             - migrate -path /migrations -database "$DATABASE_URL" up
           env:
             - name: DATABASE_URL
+              {{- if and .Values.database.secret.enabled .Values.database.secret.name .Values.database.secret.key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secret.name | quote }}
+                  key: {{ .Values.database.secret.key | quote }}
+              {{- else }}
               value: {{ .Values.env.DATABASE_URL | quote }}
+              {{- end }}
           volumeMounts:
             - name: migrations
               mountPath: /migrations
@@ -33,4 +40,3 @@ spec:
           configMap:
             name: {{ include "product-query-svc.fullname" . }}-migrations
 {{- end }}
-
