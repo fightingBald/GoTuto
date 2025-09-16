@@ -1,8 +1,9 @@
 package service
 
 import (
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+    "context"
+    "github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+    "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 )
 
 type ProductService struct {
@@ -11,10 +12,10 @@ type ProductService struct {
 
 func NewProductService(r ports.ProductRepo) *ProductService { return &ProductService{repo: r} }
 
-func (s *ProductService) GetProduct(id int64) (*domain.Product, error) {
-	return s.repo.GetByID(id)
+func (s *ProductService) GetProduct(ctx context.Context, id int64) (*domain.Product, error) {
+    return s.repo.GetByID(ctx, id)
 }
 
-func (s *ProductService) SearchProducts(q string, page, pageSize int) ([]domain.Product, error) {
-	return s.repo.Search(q, page, pageSize)
+func (s *ProductService) SearchProducts(ctx context.Context, q string, page, pageSize int) ([]domain.Product, int, error) {
+    return s.repo.Search(ctx, q, page, pageSize)
 }
