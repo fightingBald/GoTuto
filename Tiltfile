@@ -48,3 +48,21 @@ k8s_resource(
 # If you have an ext that provides restart_process, you can load it and uncomment the line below
 # load('ext://restart_process', 'restart_process')
 # restart_process(svc_name, ['touch /tmp/restart'])
+
+# --- Local DB migration step (dev convenience) ---
+# Requires: golang-migrate CLI installed locally: https://github.com/golang-migrate/migrate
+MIGRATE_PATH = 'apps/product-query-svc/adapters/postgres/migrations'
+MIGRATE_URL  = 'postgres://app:app_password@localhost:5432/productdb?sslmode=disable'
+
+local_resource(
+    name='db-migrate',
+    cmd='migrate -path ' + MIGRATE_PATH + ' -database "' + MIGRATE_URL + '" up',
+    deps=[MIGRATE_PATH],
+    resource_deps=['postgres'],
+)
+
+# Ensure app deploys after migrations ran at least once
+k8s_resource(
+    workload=svc_name,
+    resource_deps=['db-migrate']
+)
