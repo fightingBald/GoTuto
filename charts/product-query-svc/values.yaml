@@ -24,3 +24,7 @@ podAnnotations: {}
 replicaCount: 1
 nameOverride: ""
 fullnameOverride: ""
+
+migrations:
+  enabled: true
+  image: migrate/migrate:latest

@@ -1,0 +1,11 @@
+{{- if .Values.migrations.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "product-query-svc.fullname" . }}-migrations
+  labels:
+    app: {{ include "product-query-svc.name" . }}
+data:
+{{- (.Files.Glob "migrations/*").AsConfig | nindent 2 }}
+{{- end }}
+
