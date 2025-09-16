@@ -28,15 +28,7 @@ spec:
         app: product-query-svc
     spec:
       initContainers:
-        - name: migrate
-          image: product-query-svc:dev
-          imagePullPolicy: IfNotPresent
-          args: ["-migrate"]
-          envFrom:
-            - configMapRef:
-                name: app-config
-            - secretRef:
-                name: pg-secret
+        # (removed) previously attempted to run migrations via a flag not supported by the binary
       containers:
         - name: product-query-svc
           image: product-query-svc:dev
