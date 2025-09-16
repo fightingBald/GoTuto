@@ -1,1 +1,6 @@
-
+apiVersion: v2
+name: product-query-svc
+description: A minimal chart to deploy the product-query-svc
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
