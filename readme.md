@@ -99,7 +99,7 @@ go build -o bin/product-query-svc ./backend/cmd/marketplace/product-query-svc
 
 说明：项目包含迁移文件（apps/product-query-svc/adapters/postgres/migrations），请统一使用 golang-migrate 工具管理数据库 schema。
 
-快捷初始化（含测试数据）：
+快捷初始化（迁移包含测试数据）：
 
 ```sh
 # 使用脚本自动运行迁移（优先本机 migrate CLI，缺失则用 docker 镜像）
@@ -110,15 +110,7 @@ bash scripts/db-init.sh
 make db-init
 ```
 
-仅插入测试数据（已存在即跳过）：
-
-```sh
-# 使用 psql 执行 SQL 脚本（需先创建好表）
-psql "postgres://app:app_password@localhost:5432/productdb?sslmode=disable" -v ON_ERROR_STOP=1 -f sql/seed_test_data.sql
-
-# 或使用 Makefile 目标（读取 MIGRATE_URL）
-make db-seed MIGRATE_URL="postgres://app:app_password@localhost:5432/productdb?sslmode=disable"
-```
+说明：迁移序列包含 `000002_seed_test_data.up.sql`，会插入示例数据（幂等）。回滚同名 `.down.sql` 可清理。
 
 ---
 
