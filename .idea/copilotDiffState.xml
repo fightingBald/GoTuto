@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/apps/product-query-svc/adapters/postgres/migrations_embedded.go">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/apps/product-query-svc/adapters/postgres/migrations_embedded.go" />
+              <option name="updatedContent" value="// file removed: migrations_embedded.go&#10;// 该文件的嵌入式 migration 方案已迁移为 golang-migrate，文件保留此说明以便后续人工删除（git rm）。&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
