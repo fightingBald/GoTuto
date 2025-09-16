@@ -1,6 +1,6 @@
 # 项目搭建与开发指南
 
-简短说明：本仓库包含一个示例后端服务 product-query-svc（支持 in-memory 与 Postgres）、数据库迁移（嵌入支持 //go:embed）、以及用于本地开发的 Tilt + kind 配置与最小 Helm chart。
+简短说明：本仓库包含一个示例后端服务 product-query-svc（支持 in-memory 与 Postgres），数据库迁移需通过 golang-migrate 执行（不再使用嵌入式迁移），以及用于本地开发的 Tilt + kind 配置与最小 Helm chart（已补全）。
 
 ---
 
@@ -44,7 +44,7 @@ go build -o bin/product-query-svc ./backend/cmd/marketplace/product-query-svc
 ./bin/product-query-svc
 ```
 
-说明：项目包含迁移文件（apps/product-query-svc/adapters/postgres/migrations）以及嵌入支持（migrations_embedded.go）。生产入口会在提供 DSN 时连接 Postgres 并可执行嵌入迁移（参见 flags: --db-dsn, --migrate）。
+说明：项目包含迁移文件（apps/product-query-svc/adapters/postgres/migrations），请统一使用 golang-migrate 工具管理数据库 schema。
 
 ---
 
@@ -180,9 +180,7 @@ go generate ./api
 <summary>常见错误与排查</summary>
 
 - "FATAL: database \"app\" does not exist"：确认 Postgres 启动时环境变量 POSTGRES_DB 与服务的 DATABASE_URL 中数据库名一致（示例使用 productdb）；或手动创建数据库。
-- Docker 构建报 "go.mod: unknown directive: tool"：确保 Docker 使用的 Go 版本 >= 1.22（Dockerfile 默认 golang:1.22-alpine）。
+- Docker 构建报 "go.mod: unknown directive: tool"：请使用与 go.mod 中 toolchain 对齐的 Go 版本（本项目使用 1.24）。
 - Lens 中看不到资源：确认 Lens 使用的 kubeconfig 与 kubectl 当前上下文一致，并且查看正确命名空间（marketplace-dev）。
 
 </details>
-
-
