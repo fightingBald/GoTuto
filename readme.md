@@ -25,9 +25,10 @@
 │       ├── ports/                     # 端口（接口），抽象仓储与服务
 │       ├── app/                       # 应用服务实现（业务编排）
 │       └── adapters/
-│           ├── http/                  # 生成的 HTTP 接口 + 路由/处理器
-│           ├── inmem/                 # 内存仓储实现（开发/测试）
-│           └── postgres/              # Postgres 仓储与迁移文件
+│           ├── inbound/http/          # 生成的 HTTP 接口 + 路由/处理器
+│           └── outbound/
+│               ├── inmem/             # 内存仓储实现（开发/测试）
+│               └── postgres/          # Postgres 仓储与迁移文件
 ├── backend/
 │   └── cmd/marketplace/product-query-svc/  # 可执行入口（main.go），装配路由/依赖
 ├── charts/product-query-svc/          # 最小 Helm Chart（含迁移 Job 与 ConfigMap）
@@ -44,7 +45,7 @@
 
 说明：
 - 目录遵循“端口与适配器”（Hexagonal/Clean Architecture）思路，`ports` 定义接口（inbound/outbound），`app` 为用例实现，`adapters/*` 提供适配器实现；`domain` 保持纯净，可复用。
-- 数据库迁移统一放在 `apps/product-query-svc/adapters/postgres/migrations`，通过 golang-migrate 执行（脚本/Make/Tilt/Helm 均已支持）。
+- 数据库迁移统一放在 `apps/product-query-svc/adapters/outbound/postgres/migrations`，通过 golang-migrate 执行（脚本/Make/Tilt/Helm 均已支持）。
 - 生产部署建议使用 Helm Chart；本仓库同时保留了 `k8s/` 便于直接 kubectl 应用与调试。
 
 ---
@@ -142,7 +143,7 @@ go build -o bin/product-query-svc ./backend/cmd/marketplace/product-query-svc
 ./bin/product-query-svc
 ```
 
-说明：项目包含迁移文件（apps/product-query-svc/adapters/postgres/migrations），请统一使用 golang-migrate 工具管理数据库 schema。
+说明：项目包含迁移文件（apps/product-query-svc/adapters/outbound/postgres/migrations），请统一使用 golang-migrate 工具管理数据库 schema。
 
 快捷初始化（迁移包含测试数据）：
 
@@ -186,7 +187,7 @@ psql "postgres://app:app_password@localhost:5432/productdb"
 
 ## 数据库迁移（Migration）说明与避坑
 
-本项目的迁移文件位于 `apps/product-query-svc/adapters/postgres/migrations`，支持三种方式执行迁移：
+本项目的迁移文件位于 `apps/product-query-svc/adapters/outbound/postgres/migrations`，支持三种方式执行迁移：
 
 - 手动本地执行（开发态）
   - 命令：`make migrate-up MIGRATE_URL="postgres://app:app_password@localhost:5432/productdb?sslmode=disable"`
@@ -289,7 +290,7 @@ go generate ./api
 <details>
 <summary>批次 2 — DB 配置与迁移</summary>
 
- - 相关文件：apps/product-query-svc/adapters/postgres/（migrations、migrations_embedded.go、product_repository.go）
+ - 相关文件：apps/product-query-svc/adapters/outbound/postgres/（migrations、product_repository.go）
 - 建议 commit message："db: add Postgres migrations and adapters (migrations embedded via //go:embed)"
 
 </details>
@@ -305,7 +306,7 @@ go generate ./api
 <details>
 <summary>批次 4 — 适配器：in-memory repo 与 HTTP handlers</summary>
 
-- 相关文件：apps/product-query-svc/adapters/inmem/ apps/product-query-svc/adapters/http/
+- 相关文件：apps/product-query-svc/adapters/outbound/inmem/ apps/product-query-svc/adapters/inbound/http/
 - 建议 commit message："feat: add in-memory repo and HTTP handlers for product endpoints"
 
 </details>
@@ -313,7 +314,7 @@ go generate ./api
 <details>
 <summary>批次 5 — 后端入口 / wiring / router</summary>
 
- - 相关文件：backend/cmd/marketplace/product-query-svc、apps/product-query-svc/adapters/http/
+ - 相关文件：backend/cmd/marketplace/product-query-svc、apps/product-query-svc/adapters/inbound/http/
 - 建议 commit message："chore: add service main and HTTP wiring (router & handlers)"
 
 </details>

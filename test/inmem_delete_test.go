@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/http"
-	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inmem"
+	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
+	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
 	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
 	"github.com/go-chi/chi/v5"
 )

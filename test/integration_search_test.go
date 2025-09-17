@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/http"
-	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/postgres"
+	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
+	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/postgres"
 	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"

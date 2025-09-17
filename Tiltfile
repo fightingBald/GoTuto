@@ -51,7 +51,7 @@ k8s_resource(
 
 # --- Local DB migration step (dev convenience) ---
 # Requires: golang-migrate CLI installed locally: https://github.com/golang-migrate/migrate
-MIGRATE_PATH = 'apps/product-query-svc/adapters/postgres/migrations'
+MIGRATE_PATH = 'apps/product-query-svc/adapters/outbound/postgres/migrations'
 # For dockerized migration, use host.docker.internal to reach Tilt port-forward on macOS/Windows.
 MIGRATE_URL  = 'postgres://app:app_password@host.docker.internal:5432/productdb?sslmode=disable'
 

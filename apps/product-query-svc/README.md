@@ -8,8 +8,8 @@
   - outbound（基础设施接口）：`ProductRepo`
 - app：用例实现（编排业务，依赖 `ports`，不关心 HTTP/DB）
 - adapters：适配器实现
-  - http：实现 OpenAPI 生成的 `ServerInterface`，调用 `ports.ProductService`
-  - inmem/postgres：实现 `ports.ProductRepo`
+  - inbound/http：实现 OpenAPI 生成的 `ServerInterface`，调用 `ports.ProductService`
+  - outbound/inmem、outbound/postgres：实现 `ports.ProductRepo`
 - backend/cmd/.../main.go：组装根，选择具体适配器（inmem 或 postgres），注入到 app 层，再挂到 HTTP。
 
 依赖方向：`adapters -> app -> ports <- domain`（领域最内层，适配器最外层）。
@@ -22,7 +22,7 @@
 Client
   ↓
 HTTP Inbound Adapter
-  apps/product-query-svc/adapters/http/handler_product_read.go (Server.GetProductByID)
+  apps/product-query-svc/adapters/inbound/http/handler_product_read.go (Server.GetProductByID)
   ↓ 依赖入站端口 ports.ProductService
 Ports (Inbound)
   apps/product-query-svc/ports/inbound.go (interface ProductService)
@@ -34,8 +34,8 @@ Ports (Outbound)
   apps/product-query-svc/ports/outbound.go (interface ProductRepo)
   ↓ 由组装根选择并注入具体适配器
 Outbound Adapters (Persistence)
-  ├─ apps/product-query-svc/adapters/inmem/product_repository.go (InMemRepo.GetByID)
-  └─ apps/product-query-svc/adapters/postgres/product_repository.go (PGProductRepo.GetByID)
+  ├─ apps/product-query-svc/adapters/outbound/inmem/product_repository.go (InMemRepo.GetByID)
+  └─ apps/product-query-svc/adapters/outbound/postgres/product_repository.go (PGProductRepo.GetByID)
       ↓
 Domain
   apps/product-query-svc/domain/product.go (实体/校验)

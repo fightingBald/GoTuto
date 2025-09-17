@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
-	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/http"
-	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inmem"
-	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/postgres"
+	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
+	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
+	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/postgres"
 	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 	"github.com/go-chi/chi/v5"
