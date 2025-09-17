@@ -2,14 +2,19 @@
 -- Inserts are conditional to avoid duplicates on re-run
 
 INSERT INTO products (name, price, tags)
-SELECT 'Blue Widget', 1999, ARRAY['demo','blue']
+SELECT 'Basic Plan', 9900, ARRAY['starter','subscription']
 WHERE NOT EXISTS (
-  SELECT 1 FROM products WHERE name = 'Blue Widget'
+  SELECT 1 FROM products WHERE name = 'Basic Plan'
 );
 
 INSERT INTO products (name, price, tags)
-SELECT 'Red Gizmo', 2999, ARRAY['demo','red']
+SELECT 'Pro Plan', 19900, ARRAY['professional','subscription']
 WHERE NOT EXISTS (
-  SELECT 1 FROM products WHERE name = 'Red Gizmo'
+  SELECT 1 FROM products WHERE name = 'Pro Plan'
 );
 
+INSERT INTO products (name, price, tags)
+SELECT 'Enterprise Plan', 49900, ARRAY['enterprise','subscription']
+WHERE NOT EXISTS (
+  SELECT 1 FROM products WHERE name = 'Enterprise Plan'
+);

@@ -58,8 +58,8 @@ jobs:
       env:
         PGPASSWORD: app_password
       run: |
-        psql -v ON_ERROR_STOP=1 -h localhost -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/postgres/migrations/000001_init.up.sql
-        psql -v ON_ERROR_STOP=1 -h localhost -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/postgres/migrations/000002_seed_test_data.up.sql
+        psql -v ON_ERROR_STOP=1 -h localhost -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/outbound/postgres/migrations/000001_init.up.sql
+        psql -v ON_ERROR_STOP=1 -h localhost -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/outbound/postgres/migrations/000002_seed_test_data.up.sql
 
 
     - name: Build
