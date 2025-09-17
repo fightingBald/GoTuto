@@ -21,7 +21,7 @@ fmt:
 tidy:
 	go mod tidy
 
-MIGRATE_PATH=apps/product-query-svc/adapters/postgres/migrations
+MIGRATE_PATH=apps/product-query-svc/adapters/outbound/postgres/migrations
 # Example; override on CLI: make migrate-up MIGRATE_URL=postgres://...
 MIGRATE_URL?=postgres://app:app_password@localhost:5432/productdb?sslmode=disable
 

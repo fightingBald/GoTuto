@@ -10,31 +10,31 @@ import (
 	"syscall"
 	"time"
 
-	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/http"
-	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inmem"
-	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/postgres"
-	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/service"
+	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
+	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
+	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/postgres"
+	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
-    addr := flag.String("addr", ":8080", "listen address")
-    dsnFlag := flag.String("db-dsn", "", "Postgres DSN (if empty, use in-memory repo)")
-    flag.Parse()
+	addr := flag.String("addr", ":8080", "listen address")
+	dsnFlag := flag.String("db-dsn", "", "Postgres DSN (if empty, use in-memory repo)")
+	flag.Parse()
 
-    // 支持 env 回退
-    dsn := *dsnFlag
-    if dsn == "" {
-        dsn = os.Getenv("DATABASE_URL")
-    }
-    // address env fallback
-    if *addr == ":8080" { // only override default
-        if envAddr := os.Getenv("HTTP_ADDRESS"); envAddr != "" {
-            *addr = envAddr
-        }
-    }
+	// 支持 env 回退
+	dsn := *dsnFlag
+	if dsn == "" {
+		dsn = os.Getenv("DATABASE_URL")
+	}
+	// address env fallback
+	if *addr == ":8080" { // only override default
+		if envAddr := os.Getenv("HTTP_ADDRESS"); envAddr != "" {
+			*addr = envAddr
+		}
+	}
 
 	log.Println("starting product-query-svc")
 
@@ -60,7 +60,7 @@ func main() {
 	}
 
 	// build service
-    svc := appsvc.NewProductService(repo)
+	svc := appsvc.NewProductService(repo)
 
 	server := appshttp.NewServer(svc)
 

@@ -10,7 +10,7 @@ set -euo pipefail
 # Otherwise, this script falls back to `docker run migrate/migrate`.
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-MIGRATIONS_REL="apps/product-query-svc/adapters/postgres/migrations"
+MIGRATIONS_REL="apps/product-query-svc/adapters/outbound/postgres/migrations"
 MIGRATIONS_DIR="${ROOT_DIR}/${MIGRATIONS_REL}"
 
 DATABASE_URL="${DATABASE_URL:-}"
@@ -33,4 +33,3 @@ else
 fi
 
 echo "[ok] Database initialized with schema and seed data"
-

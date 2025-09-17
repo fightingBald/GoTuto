@@ -1,10 +1,10 @@
 package inmem
 
 import (
-    "errors"
-    "strings"
-    "sync"
-    "context"
+	"context"
+	"errors"
+	"strings"
+	"sync"
 
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
@@ -27,11 +27,11 @@ func NewInMemRepo() ports.ProductRepo {
 }
 
 func (r *InMemRepo) GetByID(ctx context.Context, id int64) (*domain.Product, error) {
-    r.mu.RLock()
-    defer r.mu.RUnlock()
-    p, ok := r.data[id]
-    if !ok {
-        return nil, errors.New("not found")
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	p, ok := r.data[id]
+	if !ok {
+		return nil, errors.New("not found")
 	}
 	// return copy
 	pp := p
@@ -39,38 +39,48 @@ func (r *InMemRepo) GetByID(ctx context.Context, id int64) (*domain.Product, err
 }
 
 func (r *InMemRepo) Search(ctx context.Context, q string, page, pageSize int) ([]domain.Product, int, error) {
-    if page < 1 {
-        page = 1
-    }
-    start := (page - 1) * pageSize
-    q = strings.TrimSpace(strings.ToLower(q))
+	if page < 1 {
+		page = 1
+	}
+	start := (page - 1) * pageSize
+	q = strings.TrimSpace(strings.ToLower(q))
 
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-    var filtered []domain.Product
-    for _, p := range r.data {
-        if q == "" || strings.Contains(strings.ToLower(p.Name), q) {
-            filtered = append(filtered, p)
-        }
-    }
-    total := len(filtered)
-    // simple pagination
-    if start >= total {
-        return []domain.Product{}, total, nil
-    }
-    end := start + pageSize
-    if end > total {
-        end = total
-    }
-    return filtered[start:end], total, nil
+	var filtered []domain.Product
+	for _, p := range r.data {
+		if q == "" || strings.Contains(strings.ToLower(p.Name), q) {
+			filtered = append(filtered, p)
+		}
+	}
+	total := len(filtered)
+	// simple pagination
+	if start >= total {
+		return []domain.Product{}, total, nil
+	}
+	end := start + pageSize
+	if end > total {
+		end = total
+	}
+	return filtered[start:end], total, nil
 }
 
 func (r *InMemRepo) Create(ctx context.Context, p *domain.Product) (int64, error) {
-    r.mu.Lock()
-    defer r.mu.Unlock()
-    id := r.next
-    p.ID = id
-    r.data[id] = *p
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	id := r.next
+	p.ID = id
+	r.data[id] = *p
 	r.next = id + 1
 	return id, nil
+}
+
+func (r *InMemRepo) Delete(ctx context.Context, id int64) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.data[id]; !ok {
+		return errors.New("not found")
+	}
+	delete(r.data, id)
+	return nil
 }
