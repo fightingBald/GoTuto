@@ -7,7 +7,7 @@ import (
 
 	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/http"
 	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inmem"
-	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/service"
+	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
 	"github.com/go-chi/chi/v5"
 )
 

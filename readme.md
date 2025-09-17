@@ -23,11 +23,11 @@
 │   └── product-query-svc/             # 应用层与适配器
 │       ├── domain/                    # 领域模型与领域错误
 │       ├── ports/                     # 端口（接口），抽象仓储与服务
+│       ├── app/                       # 应用服务实现（业务编排）
 │       └── adapters/
 │           ├── http/                  # 生成的 HTTP 接口 + 路由/处理器
 │           ├── inmem/                 # 内存仓储实现（开发/测试）
-│           ├── postgres/              # Postgres 仓储与迁移文件
-│           └── service/               # 应用服务实现（业务编排）
+│           └── postgres/              # Postgres 仓储与迁移文件
 ├── backend/
 │   └── cmd/marketplace/product-query-svc/  # 可执行入口（main.go），装配路由/依赖
 ├── charts/product-query-svc/          # 最小 Helm Chart（含迁移 Job 与 ConfigMap）
@@ -43,7 +43,7 @@
 ```
 
 说明：
-- 目录遵循“端口与适配器”（Hexagonal/Clean Architecture）思路，`ports` 定义接口，`adapters/*` 提供实现；`domain` 保持纯净，可复用。
+- 目录遵循“端口与适配器”（Hexagonal/Clean Architecture）思路，`ports` 定义接口（inbound/outbound），`app` 为用例实现，`adapters/*` 提供适配器实现；`domain` 保持纯净，可复用。
 - 数据库迁移统一放在 `apps/product-query-svc/adapters/postgres/migrations`，通过 golang-migrate 执行（脚本/Make/Tilt/Helm 均已支持）。
 - 生产部署建议使用 Helm Chart；本仓库同时保留了 `k8s/` 便于直接 kubectl 应用与调试。
 
@@ -295,9 +295,9 @@ go generate ./api
 </details>
 
 <details>
-<summary>批次 3 — 核心应用层（domain、ports、service）</summary>
+<summary>批次 3 — 核心应用层（domain、ports、app）</summary>
 
-- 相关文件：apps/product-query-svc/domain/ apps/product-query-svc/ports/ apps/product-query-svc/adapters/service/
+- 相关文件：apps/product-query-svc/domain/ apps/product-query-svc/ports/ apps/product-query-svc/app/
   - 建议 commit message："app: add domain models, service implementation and ports for product-query-svc"
 
 </details>

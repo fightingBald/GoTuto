@@ -1,3 +1,4 @@
+// outbound: infrastructure-facing interfaces (repositories, gateways)
 package ports
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
 )
 
+// ProductRepo is an outbound port abstracting persistence concerns.
 type ProductRepo interface {
 	GetByID(ctx context.Context, id int64) (*domain.Product, error)
 	// Search returns the page of items and the total count matching the query

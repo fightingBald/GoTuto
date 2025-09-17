@@ -11,7 +11,7 @@ import (
 
 	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/http"
 	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/postgres"
-	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/service"
+	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
