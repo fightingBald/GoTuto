@@ -66,7 +66,7 @@ curl -i http://localhost:8080/healthz
 
 ```sh
 # 搜索（分页）
-curl -s 'http://localhost:8080/products/search?q=wid&page=1&pageSize=10' | jq
+curl -s 'http://localhost:8080/products/search?q=pro&page=1&pageSize=10' | jq
 
 # 按 ID 查询
 curl -i http://localhost:8080/products/1
@@ -80,12 +80,13 @@ psql "postgres://app:app_password@localhost:5432/productdb?sslmode=disable"
 
 # 在 psql 中执行:
 insert into products(name, price, tags)
-values ('Blue Widget',1999,ARRAY['demo','blue']),
-       ('Red Gizmo',2999,ARRAY['demo','red']);
+values ('Basic Plan',9900,ARRAY['starter','subscription']),
+       ('Pro Plan',19900,ARRAY['professional','subscription']),
+       ('Enterprise Plan',49900,ARRAY['enterprise','subscription']);
 
 # 再次验证
 \q
-curl -s 'http://localhost:8080/products/search?q=wid&page=1&pageSize=10' | jq
+curl -s 'http://localhost:8080/products/search?q=pro&page=1&pageSize=10' | jq
 curl -s http://localhost:8080/products/1 | jq
 ```
 
