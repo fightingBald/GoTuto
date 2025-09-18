@@ -1,27 +1,18 @@
-package test
+package http_inmem_test
 
 import (
-	"encoding/json"
-	"net/http"
-	"net/http/httptest"
-	"testing"
+    "encoding/json"
+    "net/http"
+    "testing"
 
-	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
-	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
-	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
-	"github.com/go-chi/chi/v5"
+    appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
+    appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
+    "github.com/fightingBald/GoTuto/internal/testutil"
 )
 
 func TestSearchProducts_InMem(t *testing.T) {
-	repo := appsinmem.NewInMemRepo()
-	svc := appsvc.NewProductService(repo)
-	server := appshttp.NewServer(svc)
-
-	r := chi.NewRouter()
-	h := appshttp.HandlerFromMux(server, r)
-
-	ts := httptest.NewServer(h)
-	defer ts.Close()
+    ts := testutil.NewHTTPServerWithRepo(appsinmem.NewInMemRepo())
+    defer ts.Close()
 
 	// q must be at least 3 characters; use 'wid' to match 'Blue Widget'
 	resp, err := http.Get(ts.URL + "/products/search?q=wid&page=1&pageSize=10")
@@ -42,15 +33,8 @@ func TestSearchProducts_InMem(t *testing.T) {
 }
 
 func TestGetProduct_InMem(t *testing.T) {
-	repo := appsinmem.NewInMemRepo()
-	svc := appsvc.NewProductService(repo)
-	server := appshttp.NewServer(svc)
-
-	r := chi.NewRouter()
-	h := appshttp.HandlerFromMux(server, r)
-
-	ts := httptest.NewServer(h)
-	defer ts.Close()
+    ts := testutil.NewHTTPServerWithRepo(appsinmem.NewInMemRepo())
+    defer ts.Close()
 
 	resp, err := http.Get(ts.URL + "/products/1")
 	if err != nil {
@@ -70,15 +54,8 @@ func TestGetProduct_InMem(t *testing.T) {
 }
 
 func TestSearchProducts_QueryTooShort(t *testing.T) {
-	repo := appsinmem.NewInMemRepo()
-	svc := appsvc.NewProductService(repo)
-	server := appshttp.NewServer(svc)
-
-	r := chi.NewRouter()
-	h := appshttp.HandlerFromMux(server, r)
-
-	ts := httptest.NewServer(h)
-	defer ts.Close()
+    ts := testutil.NewHTTPServerWithRepo(appsinmem.NewInMemRepo())
+    defer ts.Close()
 
 	resp, err := http.Get(ts.URL + "/products/search?q=ab")
 	if err != nil {

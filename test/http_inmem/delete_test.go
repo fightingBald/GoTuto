@@ -1,27 +1,16 @@
-package test
+package http_inmem_test
 
 import (
-	"net/http"
-	"net/http/httptest"
-	"testing"
+    "net/http"
+    "testing"
 
-	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
-	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
-	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
-	"github.com/go-chi/chi/v5"
+    appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
+    "github.com/fightingBald/GoTuto/internal/testutil"
 )
 
 func TestDeleteProduct_InMem(t *testing.T) {
-	repo := appsinmem.NewInMemRepo()
-	svc := appsvc.NewProductService(repo)
-	server := appshttp.NewServer(svc)
-
-	r := chi.NewRouter()
-	// 仅挂载 OpenAPI 生成的路由（包含 DELETE）
-	h := appshttp.HandlerFromMux(server, r)
-
-	ts := httptest.NewServer(h)
-	defer ts.Close()
+    ts := testutil.NewHTTPServerWithRepo(appsinmem.NewInMemRepo())
+    defer ts.Close()
 
 	// delete existing seeded id=1
 	req, _ := http.NewRequest(http.MethodDelete, ts.URL+"/products/1", nil)
