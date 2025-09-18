@@ -90,5 +90,4 @@ func TestCreateProduct_Postgres(t *testing.T) {
     if resp4.StatusCode != http.StatusNotFound {
         t.Fatalf("expected 404 after delete, got %d", resp4.StatusCode)
     }
-    if cleanup != nil { cleanup() }
 }
