@@ -1,9 +1,11 @@
 package httpadapter
 
 import (
-	"net/http"
+    "net/http"
+    "errors"
 
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+    "github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+    "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 )
 
 type Server struct{ svc ports.ProductService }
@@ -11,11 +13,15 @@ type Server struct{ svc ports.ProductService }
 func NewServer(s ports.ProductService) *Server { return &Server{svc: s} }
 
 func (s *Server) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
-	p, err := s.svc.GetProduct(r.Context(), id)
-	if err != nil {
-		writeError(w, http.StatusNotFound, "NOT_FOUND", err.Error())
-		return
-	}
+    p, err := s.svc.GetProduct(r.Context(), id)
+    if err != nil {
+        if errors.Is(err, domain.ErrNotFound) {
+            writeError(w, http.StatusNotFound, "NOT_FOUND", err.Error())
+        } else {
+            writeError(w, http.StatusInternalServerError, "INTERNAL", err.Error())
+        }
+        return
+    }
 	out := Product{Id: p.ID, Name: p.Name, Price: float32(p.Price) / 100.0}
 	writeJSON(w, http.StatusOK, out)
 }
