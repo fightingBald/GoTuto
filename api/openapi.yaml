@@ -8,11 +8,15 @@ paths:
     $ref: './paths/products_by_id.yaml'
   /products/search:
     $ref: './paths/products_search.yaml'
+  /products:
+    $ref: './paths/products_create.yaml'
 
 components:
   schemas:
     Product:
       $ref: './schemas/Product.yaml'
+    ProductCreate:
+      $ref: './schemas/ProductCreate.yaml'
     ProductList:
       $ref: './schemas/ProductList.yaml'
     Error:

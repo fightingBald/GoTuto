@@ -1,14 +1,13 @@
 package postgres
 
 import (
-	"context"
-	"errors"
-	"strings"
+    "context"
+    "strings"
 
-	"github.com/Masterminds/squirrel"
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
-	"github.com/jackc/pgx/v5/pgxpool"
+    "github.com/Masterminds/squirrel"
+    "github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+    "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+    "github.com/jackc/pgx/v5/pgxpool"
 )
 
 var psql = squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
@@ -99,8 +98,8 @@ func (r *PGProductRepo) Delete(ctx context.Context, id int64) error {
 	if err != nil {
 		return err
 	}
-	if ct.RowsAffected() == 0 {
-		return errors.New("not found")
-	}
-	return nil
+    if ct.RowsAffected() == 0 {
+        return domain.ErrNotFound
+    }
+    return nil
 }
