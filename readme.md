@@ -108,6 +108,30 @@ curl -i http://localhost:8080/products/$ID  # 期望 404
 
 </details>
 
+<details>
+<summary>🧪 使用临时 Docker Postgres 跑集成测试（避免 5432 端口冲突）</summary>
+
+前置：本机已安装 Docker。
+
+一键运行（自动起容器 → 迁移 → 运行带 Postgres 的集成测试 → 清理容器）：
+
+```sh
+make test-integration-docker
+```
+
+或直接运行脚本，并自定义 go test 目标/参数：
+
+```sh
+bash scripts/test-integration-docker.sh ./test -run Postgres
+```
+
+脚本要点：
+- 使用 `docker run -P` 启动 postgres:16-alpine，随机映射宿主端口，避免与 Tilt 的 5432 冲突。
+- 通过 `migrate/migrate` 容器在同一网络命名空间内执行迁移。
+- 自动导出 `DATABASE_URL` 为宿主上的随机端口，并运行 go test。
+
+</details>
+
 - 插入演示数据（Postgres）
 
 ```sh

@@ -37,6 +37,10 @@ migrate-create:
 db-init:
 	bash scripts/db-init.sh
 
+.PHONY: test-integration-docker
+test-integration-docker:
+	bash scripts/test-integration-docker.sh ./test -run Postgres
+
 
 # Notes:
 # - Requires golang-migrate installed to use migrate-* targets

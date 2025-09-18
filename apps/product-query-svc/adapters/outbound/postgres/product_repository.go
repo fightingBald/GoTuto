@@ -2,11 +2,13 @@ package postgres
 
 import (
     "context"
+    "errors"
     "strings"
 
     "github.com/Masterminds/squirrel"
     "github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
     "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+    "github.com/jackc/pgx/v5"
     "github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -23,9 +25,12 @@ func (r *PGProductRepo) GetByID(ctx context.Context, id int64) (*domain.Product,
 	}
 	var p domain.Product
 	var tags []string
-	if err := r.pool.QueryRow(ctx, q, args...).Scan(&p.ID, &p.Name, &p.Price, &tags); err != nil {
-		return nil, err
-	}
+    if err := r.pool.QueryRow(ctx, q, args...).Scan(&p.ID, &p.Name, &p.Price, &tags); err != nil {
+        if errors.Is(err, pgx.ErrNoRows) {
+            return nil, domain.ErrNotFound
+        }
+        return nil, err
+    }
 	p.Tags = tags
 	return &p, nil
 }
