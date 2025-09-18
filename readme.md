@@ -62,15 +62,51 @@ curl -i http://localhost:8080/healthz
 # 期望: HTTP/1.1 200 OK，响应体: ok
 ```
 
-- 调用接口（注意：`q` 至少 3 个字符，否则返回 400）
+<details>
+<summary>⚡ 快速 API 测试（可复制/点击运行）</summary>
+
+前提：服务已监听 http://localhost:8080，已安装 curl 与 jq。
+
+1) GET /healthz（健康检查）
 
 ```sh
-# 搜索（分页）
-curl -s 'http://localhost:8080/products/search?q=pro&page=1&pageSize=10' | jq
-
-# 按 ID 查询
-curl -i http://localhost:8080/products/1
+curl -i http://localhost:8080/healthz
 ```
+
+2) POST /products（创建商品）
+
+```sh
+curl -s -X POST http://localhost:8080/products \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Sample Plan","price":123.45}' | jq
+```
+
+3) GET /products/{id}（按 ID 查询，示例使用已种子或上一步创建的 id）
+
+```sh
+# 如果使用迁移种子数据（Postgres），通常 1 为 Basic Plan
+curl -s http://localhost:8080/products/1 | jq
+```
+
+4) GET /products/search（分页搜索；注意 q 至少 3 个字符）
+
+```sh
+curl -s 'http://localhost:8080/products/search?q=pro&page=1&pageSize=10' | jq
+```
+
+5) DELETE /products/{id}（删除；示例：先创建临时商品再删除）
+
+```sh
+ID=$(curl -s -X POST http://localhost:8080/products \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Temp Item","price":1.99}' | jq -r '.id'); \
+echo "created id=$ID"; \
+curl -i -X DELETE http://localhost:8080/products/$ID; \
+echo; \
+curl -i http://localhost:8080/products/$ID  # 期望 404
+```
+
+</details>
 
 - 插入演示数据（Postgres）
 
