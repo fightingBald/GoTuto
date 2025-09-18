@@ -1,0 +1,18 @@
+post:
+  operationId: CreateProduct
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ProductCreate'
+  responses:
+    '201':
+      description: Created product
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
+    '400':
+      $ref: '#/components/responses/ErrorResponse'
+
