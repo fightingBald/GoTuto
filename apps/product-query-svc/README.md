@@ -46,3 +46,25 @@ Composition Root（组装根）
   - 构造 app.ProductService，并作为 ports.ProductService 注入 HTTP 适配器
   - 启动 HTTP 服务器
 ```
+
+示例（写入，用以体现 domain 的作用）：
+
+```
+Client
+  ↓
+HTTP Inbound Adapter
+  apps/product-query-svc/adapters/inbound/http/handler_product_write.go (Server.CreateProduct)
+  - 将 JSON DTO 映射为 domain.Product（美元转分，调用 NewProduct 校验不变式）
+  ↓ 调用入站端口 ports.ProductService.CreateProduct
+Application (Use Case)
+  apps/product-query-svc/app/product_service.go (CreateProduct)
+  - 调用 p.Validate / 富行为 → 通过出站端口持久化
+  ↓
+Ports (Outbound)
+  apps/product-query-svc/ports/outbound.go (ProductRepo.Create)
+  ↓
+Outbound Adapter
+  apps/product-query-svc/adapters/outbound/postgres/inmem (真正落库/内存存储)
+  ↓
+返回 HTTP（Created + JSON），领域错误映射为 400/404。
+```
