@@ -21,11 +21,9 @@ func TestSearchProducts_Postgres(t *testing.T) {
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
-    dsn, isTemp, cleanup := testutil.DSNFromEnvOrDocker(ctx, t)
-    if isTemp { t.Cleanup(cleanup) }
-    pool := testutil.NewPool(ctx, t, dsn)
+    pool := testutil.NewPool(ctx, t, pgDSN)
     defer pool.Close()
-    if isTemp { testutil.ApplyMigrations(ctx, t, pool) }
+    if pgTemp { testutil.ApplyMigrations(ctx, t, pool) }
 
     repo := appspg.NewProductRepository(pool)
     svc := appsvc.NewProductService(repo)
