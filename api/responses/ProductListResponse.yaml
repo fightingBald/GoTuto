@@ -1,9 +1,0 @@
-description: List of products response
-content:
-  application/json:
-    schema:
-      type: object
-      properties:
-        data:
-          $ref: '../schemas/ProductList.yaml'
-      required: [data]

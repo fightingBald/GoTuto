@@ -28,7 +28,7 @@ func (s *Server) DeleteProductByID(w http.ResponseWriter, r *http.Request, id in
 
 // CreateProduct implements POST /products
 func (s *Server) CreateProduct(w http.ResponseWriter, r *http.Request) {
-    var in ProductCreate
+    var in CreateProductJSONBody
     if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
         writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid request body")
         return
