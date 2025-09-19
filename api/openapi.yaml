@@ -2,14 +2,17 @@ openapi: 3.0.0
 info:
   title: Marketplace Demo API
   version: 1.0.0
+tags:
+  - name: Products
+    description: Product query and management endpoints
 
 paths:
   /products/{id}:
-    $ref: './paths/products_by_id.yaml'
+    $ref: './paths/products/get_by_id.yaml'
   /products/search:
-    $ref: './paths/products_search.yaml'
+    $ref: './paths/products/search.yaml'
   /products:
-    $ref: './paths/products_create.yaml'
+    $ref: './paths/products/create.yaml'
 
 components:
   schemas:
@@ -21,11 +24,3 @@ components:
       $ref: './schemas/ProductList.yaml'
     Error:
       $ref: './schemas/Error.yaml'
-
-  responses:
-    ErrorResponse:
-      description: Error response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'

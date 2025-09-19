@@ -1,11 +1,8 @@
 post:
+  tags: [Products]
   operationId: CreateProduct
   requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/ProductCreate'
+    $ref: '../../components/requestBodies/ProductCreate.yaml'
   responses:
     '201':
       description: Created product
@@ -14,5 +11,4 @@ post:
           schema:
             $ref: '#/components/schemas/Product'
     '400':
-      $ref: '#/components/responses/ErrorResponse'
-
+      $ref: '../../components/responses/Error.yaml'

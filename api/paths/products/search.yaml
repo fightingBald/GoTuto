@@ -1,0 +1,16 @@
+get:
+  tags: [Products]
+  operationId: SearchProducts
+  parameters:
+    - $ref: '../../components/parameters/Q.yaml'
+    - $ref: '../../components/parameters/Page.yaml'
+    - $ref: '../../components/parameters/PageSize.yaml'
+  responses:
+    '200':
+      description: List of products
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductList'
+    '400':
+      $ref: '../../components/responses/Error.yaml'
