@@ -15,6 +15,25 @@ get:
     '404':
       $ref: '../../components/responses/Error.yaml'
 
+put:
+  tags: [Products]
+  operationId: UpdateProduct
+  parameters:
+    - $ref: '../../components/parameters/ProductID.yaml'
+  requestBody:
+    $ref: '../../components/requestBodies/ProductCreate.yaml'
+  responses:
+    '200':
+      description: Updated product
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
+    '400':
+      $ref: '../../components/responses/Error.yaml'
+    '404':
+      $ref: '../../components/responses/Error.yaml'
+
 delete:
   tags: [Products]
   operationId: DeleteProductByID

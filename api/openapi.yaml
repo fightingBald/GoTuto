@@ -8,11 +8,11 @@ tags:
 
 paths:
   /products/{id}:
-    $ref: './paths/products/get_by_id.yaml'
+    $ref: './paths/products/item.yaml'
   /products/search:
     $ref: './paths/products/search.yaml'
   /products:
-    $ref: './paths/products/create.yaml'
+    $ref: './paths/products/collection.yaml'
 
 components:
   schemas:
