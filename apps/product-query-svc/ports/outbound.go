@@ -14,4 +14,5 @@ type ProductRepo interface {
 	Search(ctx context.Context, q string, page, pageSize int) ([]domain.Product, int, error)
 	Create(ctx context.Context, p *domain.Product) (int64, error)
 	Delete(ctx context.Context, id int64) error
+	Update(ctx context.Context, p *domain.Product) error
 }
