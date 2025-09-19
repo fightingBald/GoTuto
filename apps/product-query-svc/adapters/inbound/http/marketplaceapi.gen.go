@@ -49,8 +49,17 @@ type SearchProductsParams struct {
 	PageSize *int    `form:"pageSize,omitempty" json:"pageSize,omitempty"`
 }
 
+// UpdateProductJSONBody defines parameters for UpdateProduct.
+type UpdateProductJSONBody struct {
+	Name  string  `json:"name"`
+	Price float32 `json:"price"`
+}
+
 // CreateProductJSONRequestBody defines body for CreateProduct for application/json ContentType.
 type CreateProductJSONRequestBody CreateProductJSONBody
+
+// UpdateProductJSONRequestBody defines body for UpdateProduct for application/json ContentType.
+type UpdateProductJSONRequestBody UpdateProductJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -66,6 +75,9 @@ type ServerInterface interface {
 
 	// (GET /products/{id})
 	GetProductByID(w http.ResponseWriter, r *http.Request, id int64)
+
+	// (PUT /products/{id})
+	UpdateProduct(w http.ResponseWriter, r *http.Request, id int64)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -89,6 +101,11 @@ func (_ Unimplemented) DeleteProductByID(w http.ResponseWriter, r *http.Request,
 
 // (GET /products/{id})
 func (_ Unimplemented) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (PUT /products/{id})
+func (_ Unimplemented) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -199,6 +216,31 @@ func (siw *ServerInterfaceWrapper) GetProductByID(w http.ResponseWriter, r *http
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetProductByID(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdateProduct operation middleware
+func (siw *ServerInterfaceWrapper) UpdateProduct(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateProduct(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -332,6 +374,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/products/{id}", wrapper.GetProductByID)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/products/{id}", wrapper.UpdateProduct)
 	})
 
 	return r
@@ -500,6 +545,56 @@ func (response GetProductByID404JSONResponse) VisitGetProductByIDResponse(w http
 	return json.NewEncoder(w).Encode(response)
 }
 
+type UpdateProductRequestObject struct {
+	Id   int64 `json:"id"`
+	Body *UpdateProductJSONRequestBody
+}
+
+type UpdateProductResponseObject interface {
+	VisitUpdateProductResponse(w http.ResponseWriter) error
+}
+
+type UpdateProduct200JSONResponse Product
+
+func (response UpdateProduct200JSONResponse) VisitUpdateProductResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProduct400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response UpdateProduct400JSONResponse) VisitUpdateProductResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProduct404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response UpdateProduct404JSONResponse) VisitUpdateProductResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
 
@@ -514,6 +609,9 @@ type StrictServerInterface interface {
 
 	// (GET /products/{id})
 	GetProductByID(ctx context.Context, request GetProductByIDRequestObject) (GetProductByIDResponseObject, error)
+
+	// (PUT /products/{id})
+	UpdateProduct(ctx context.Context, request UpdateProductRequestObject) (UpdateProductResponseObject, error)
 }
 
 type StrictHandlerFunc = strictnethttp.StrictHTTPHandlerFunc
@@ -654,23 +752,56 @@ func (sh *strictHandler) GetProductByID(w http.ResponseWriter, r *http.Request, 
 	}
 }
 
+// UpdateProduct operation middleware
+func (sh *strictHandler) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64) {
+	var request UpdateProductRequestObject
+
+	request.Id = id
+
+	var body UpdateProductJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateProduct(ctx, request.(UpdateProductRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateProduct")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateProductResponseObject); ok {
+		if err := validResponse.VisitUpdateProductResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RXS2/bOBD+K8LsHoVITow96LZZLwoDKZAix8AIGHEsMxUfoeiirqH/XpDU06aNJLV9",
-	"aE+WOa9vvhnOSFvIJVdSoDAVZFtQRBOOBrX718ueesHTPSnQSpmADF7XqDcQgyAcIQNlZTFU+Qo5sUoU",
-	"l2RdGsgmMXAmGF9z92w2yuozYbBADXUdH4n2wH4cjejkwajXaQycfG/CpulHQWhJ17mZzzoUiphVD4JR",
-	"iEHj65pppJAZvcYhnKXUnBgf6Z8pvCPwl0Npv47y5UzcoSjMCrKbzntlNBMF1Na7xYaVuZWU4W5pR7I2",
-	"1f80EoNeUxgUxj4SpUqWE8OkSF4qKexZD+JvjUvI4K+k9514afe7491Bo1jlminrFDJoFKLcajApIkU2",
-	"pST7/PqsKiVFFcioOX/6X2upT56F9xpA7wRRG97VtbGxrpvc3D3TUqE2TTEYfVOXtMXf2pZu6z259k3d",
-	"/d+rfwxKsxybPvHNn3ZaYs2fmxbsCX70He3CteaLzkQ+v2BurOMmoztWhbIyyMcP7+gQ670JR7QmG5dG",
-	"M3j2eVGDIbEvNdKQMiTazdnhjNshNpgs3kOIgXFL7HGQSzoE1ZeEoiGsHNMzNl0yLGnQViNp2nb3pgcA",
-	"7pLIsarGPA6sh2w46L3+seR/v8YOz6u9/C4H+72I/9graT0wsZTOOTOllX0m+isaVZIcoxlyGf17P4cY",
-	"vqGu/NyeXKVXqcUlFQqiGGRw445it+gdU4nyNPirKj29lly3SeYUMvBt0tI13LqbQ1yPlm/yxq28u/qu",
-	"08m5NnVoy3kUNFJ9X0zT9HCGDdLkyIZ2o4sUla35fcvzwp52tCcVEp2vbJgCA+Q/OHFnHI/eZR/D2HqV",
-	"5ND7Vx1/0NS9Jv+Stev0erFX7PRcxXZDI1Bwex7JZdTdgAtVfMto7V/nS/Tjd1zymTtvrG8389mJqt6/",
-	"7gfYn3pEQ348DnoSWqyL6TmYjcPX5hOaCxOYXnJWPTBRlHjSUXW2Cg2Otwc+i9xXYEQEjTgRpECOwkQo",
-	"qJJMuKHXfB52XutF/TMAAP//aSszseQPAAA=",
+	"H4sIAAAAAAAC/+RYT2/7Ngz9Kga3o1E7bbCDb+syDAE6oEOxUxEUqsU46qw/leVhWeDvPkjy30QJ2i4J",
+	"sP1OTUSJfHyPItXsIJdcSYHCVJDtQBFNOBrU7ttgexkML4+kQGtlAjJ4r1FvIQZBOEIGytpiqPINcmI3",
+	"UVyTujSQzWLgTDBec/fZbJXdz4TBAjU0TXwi2hP7+2REZw9GvU1j4OSvNmyafhWElrTOzXLRo1DEbAYQ",
+	"jEIMGt9rppFCZnSNYzhrqTkxPtIPc/hE4N+Opf0+yZcz8YCiMBvI7nrvldFMFNBY7xYbVuZeUob70k5s",
+	"Xao/aSQG/U5hUBj7kShVspwYJkXyVklh1wYQ32tcQwbfJYPvxFv7v3veHTSKVa6Zsk4hg3ZDlNsdTIpI",
+	"kW0pySG/PqtKSVEFMmrXX37WWuqzZ+G9BtA7Q9SFd7q2Z6zrNjd3z7RUqE0rBqMfqpJO/J0t6U7v2a0v",
+	"6v77gf4xKM1ybOvEF3/a7xI1f21LcCD42Ve0C9cdX/VH5Osb5sY6bjN6YFUoK4N8+uETFWK9t+GI1mTr",
+	"0mgbzyEvatQkDq1GGlKGTPs5O5xx18RGncV7CDEwLYkDDnJJx6AGSSgawsopPdOja4YlDZ7VSNqy3b/p",
+	"AYD7JHKsqimPo9NjNhz0Yf+p5P9/hR3uVwf5XQ/2ZxF/s1fSemBiLZ1zZkpr+5XoP9CokuQYLZDL6MfH",
+	"JcTwJ+rK9+3ZTXqTWlxSoSCKQQZ3bil2g94xlShPg7+q0tNryXWTZEkhA18mHV3jqbs9xvVk+CYfnMr7",
+	"o+82nV1qUoemnEdBIzXUxTxNj2fYIk1OTGjXukhRWc0fO55XdrWnPamQ6HxjwxQYIP/JmfvD8eQt+xzG",
+	"NmxJjr2/mviLR90z+V+ddpXerA7ETi8ltmsaAcHteiTXUX8DrqT4jtHGP+dL9O13KvnCrben77fLxZlU",
+	"H577AfbnHtGYH4+DnoUW62J+CWbj8LX5Bc2VCUyv2auemChKPGuruqBCqg4o9Luik6lyCYGuNaeuqr0n",
+	"jv43xB8t7478T+x+AoiIoBEnghTIUZgIBVWSCTfx2t8Geq/NqvknAAD//zWbF0rhEQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
