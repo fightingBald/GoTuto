@@ -1,12 +1,12 @@
 package inmem
 
 import (
-    "context"
-    "strings"
-    "sync"
+	"context"
+	"strings"
+	"sync"
 
-    "github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
-    "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
 )
 
 // 简单的内存实现，用于本地开发/测试和示例 wiring
@@ -29,9 +29,9 @@ func (r *InMemRepo) GetByID(ctx context.Context, id int64) (*domain.Product, err
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	p, ok := r.data[id]
-    if !ok {
-        return nil, domain.ErrNotFound
-    }
+	if !ok {
+		return nil, domain.ErrNotFound
+	}
 	// return copy
 	pp := p
 	return &pp, nil
@@ -77,9 +77,19 @@ func (r *InMemRepo) Create(ctx context.Context, p *domain.Product) (int64, error
 func (r *InMemRepo) Delete(ctx context.Context, id int64) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-    if _, ok := r.data[id]; !ok {
-        return domain.ErrNotFound
-    }
+	if _, ok := r.data[id]; !ok {
+		return domain.ErrNotFound
+	}
 	delete(r.data, id)
+	return nil
+}
+
+func (r *InMemRepo) Update(ctx context.Context, p *domain.Product) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.data[p.ID]; !ok {
+		return domain.ErrNotFound
+	}
+	r.data[p.ID] = *p
 	return nil
 }

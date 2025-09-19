@@ -1,0 +1,6 @@
+name: q
+in: query
+schema:
+  type: string
+  minLength: 3
+

@@ -1,15 +1,15 @@
 package postgres
 
 import (
-    "context"
-    "errors"
-    "strings"
+	"context"
+	"errors"
+	"strings"
 
-    "github.com/Masterminds/squirrel"
-    "github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
-    "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
-    "github.com/jackc/pgx/v5"
-    "github.com/jackc/pgx/v5/pgxpool"
+	"github.com/Masterminds/squirrel"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var psql = squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
@@ -25,12 +25,12 @@ func (r *PGProductRepo) GetByID(ctx context.Context, id int64) (*domain.Product,
 	}
 	var p domain.Product
 	var tags []string
-    if err := r.pool.QueryRow(ctx, q, args...).Scan(&p.ID, &p.Name, &p.Price, &tags); err != nil {
-        if errors.Is(err, pgx.ErrNoRows) {
-            return nil, domain.ErrNotFound
-        }
-        return nil, err
-    }
+	if err := r.pool.QueryRow(ctx, q, args...).Scan(&p.ID, &p.Name, &p.Price, &tags); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, domain.ErrNotFound
+		}
+		return nil, err
+	}
 	p.Tags = tags
 	return &p, nil
 }
@@ -103,8 +103,19 @@ func (r *PGProductRepo) Delete(ctx context.Context, id int64) error {
 	if err != nil {
 		return err
 	}
-    if ct.RowsAffected() == 0 {
-        return domain.ErrNotFound
-    }
-    return nil
+	if ct.RowsAffected() == 0 {
+		return domain.ErrNotFound
+	}
+	return nil
+}
+
+func (r *PGProductRepo) Update(ctx context.Context, p *domain.Product) error {
+	ct, err := r.pool.Exec(ctx, "UPDATE products SET name=$1, price=$2, tags=$3 WHERE id=$4", p.Name, p.Price, p.Tags, p.ID)
+	if err != nil {
+		return err
+	}
+	if ct.RowsAffected() == 0 {
+		return domain.ErrNotFound
+	}
+	return nil
 }

@@ -21,25 +21,9 @@ import (
 	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 )
 
-// Error defines model for Error.
-type Error struct {
-	Code    string `json:"code"`
-	Details *[]struct {
-		Field  *string `json:"field,omitempty"`
-		Reason *string `json:"reason,omitempty"`
-	} `json:"details,omitempty"`
-	Message string `json:"message"`
-}
-
 // Product defines model for Product.
 type Product struct {
 	Id    int64   `json:"id"`
-	Name  string  `json:"name"`
-	Price float32 `json:"price"`
-}
-
-// ProductCreate defines model for ProductCreate.
-type ProductCreate struct {
 	Name  string  `json:"name"`
 	Price float32 `json:"price"`
 }
@@ -52,8 +36,11 @@ type ProductList struct {
 	Total    int       `json:"total"`
 }
 
-// ErrorResponse defines model for ErrorResponse.
-type ErrorResponse = Error
+// CreateProductJSONBody defines parameters for CreateProduct.
+type CreateProductJSONBody struct {
+	Name  string  `json:"name"`
+	Price float32 `json:"price"`
+}
 
 // SearchProductsParams defines parameters for SearchProducts.
 type SearchProductsParams struct {
@@ -62,8 +49,17 @@ type SearchProductsParams struct {
 	PageSize *int    `form:"pageSize,omitempty" json:"pageSize,omitempty"`
 }
 
+// UpdateProductJSONBody defines parameters for UpdateProduct.
+type UpdateProductJSONBody struct {
+	Name  string  `json:"name"`
+	Price float32 `json:"price"`
+}
+
 // CreateProductJSONRequestBody defines body for CreateProduct for application/json ContentType.
-type CreateProductJSONRequestBody = ProductCreate
+type CreateProductJSONRequestBody CreateProductJSONBody
+
+// UpdateProductJSONRequestBody defines body for UpdateProduct for application/json ContentType.
+type UpdateProductJSONRequestBody UpdateProductJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -79,6 +75,9 @@ type ServerInterface interface {
 
 	// (GET /products/{id})
 	GetProductByID(w http.ResponseWriter, r *http.Request, id int64)
+
+	// (PUT /products/{id})
+	UpdateProduct(w http.ResponseWriter, r *http.Request, id int64)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -102,6 +101,11 @@ func (_ Unimplemented) DeleteProductByID(w http.ResponseWriter, r *http.Request,
 
 // (GET /products/{id})
 func (_ Unimplemented) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (PUT /products/{id})
+func (_ Unimplemented) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -212,6 +216,31 @@ func (siw *ServerInterfaceWrapper) GetProductByID(w http.ResponseWriter, r *http
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetProductByID(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdateProduct operation middleware
+func (siw *ServerInterfaceWrapper) UpdateProduct(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateProduct(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -346,11 +375,12 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/products/{id}", wrapper.GetProductByID)
 	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/products/{id}", wrapper.UpdateProduct)
+	})
 
 	return r
 }
-
-type ErrorResponseJSONResponse Error
 
 type CreateProductRequestObject struct {
 	Body *CreateProductJSONRequestBody
@@ -369,7 +399,14 @@ func (response CreateProduct201JSONResponse) VisitCreateProductResponse(w http.R
 	return json.NewEncoder(w).Encode(response)
 }
 
-type CreateProduct400JSONResponse struct{ ErrorResponseJSONResponse }
+type CreateProduct400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
 
 func (response CreateProduct400JSONResponse) VisitCreateProductResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -395,7 +432,14 @@ func (response SearchProducts200JSONResponse) VisitSearchProductsResponse(w http
 	return json.NewEncoder(w).Encode(response)
 }
 
-type SearchProducts400JSONResponse struct{ ErrorResponseJSONResponse }
+type SearchProducts400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
 
 func (response SearchProducts400JSONResponse) VisitSearchProductsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -420,7 +464,14 @@ func (response DeleteProductByID204Response) VisitDeleteProductByIDResponse(w ht
 	return nil
 }
 
-type DeleteProductByID400JSONResponse struct{ ErrorResponseJSONResponse }
+type DeleteProductByID400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
 
 func (response DeleteProductByID400JSONResponse) VisitDeleteProductByIDResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -429,7 +480,14 @@ func (response DeleteProductByID400JSONResponse) VisitDeleteProductByIDResponse(
 	return json.NewEncoder(w).Encode(response)
 }
 
-type DeleteProductByID404JSONResponse Error
+type DeleteProductByID404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
 
 func (response DeleteProductByID404JSONResponse) VisitDeleteProductByIDResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -455,7 +513,14 @@ func (response GetProductByID200JSONResponse) VisitGetProductByIDResponse(w http
 	return json.NewEncoder(w).Encode(response)
 }
 
-type GetProductByID400JSONResponse struct{ ErrorResponseJSONResponse }
+type GetProductByID400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
 
 func (response GetProductByID400JSONResponse) VisitGetProductByIDResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -464,9 +529,66 @@ func (response GetProductByID400JSONResponse) VisitGetProductByIDResponse(w http
 	return json.NewEncoder(w).Encode(response)
 }
 
-type GetProductByID404JSONResponse Error
+type GetProductByID404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
 
 func (response GetProductByID404JSONResponse) VisitGetProductByIDResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProductRequestObject struct {
+	Id   int64 `json:"id"`
+	Body *UpdateProductJSONRequestBody
+}
+
+type UpdateProductResponseObject interface {
+	VisitUpdateProductResponse(w http.ResponseWriter) error
+}
+
+type UpdateProduct200JSONResponse Product
+
+func (response UpdateProduct200JSONResponse) VisitUpdateProductResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProduct400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response UpdateProduct400JSONResponse) VisitUpdateProductResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProduct404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response UpdateProduct404JSONResponse) VisitUpdateProductResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(404)
 
@@ -487,6 +609,9 @@ type StrictServerInterface interface {
 
 	// (GET /products/{id})
 	GetProductByID(ctx context.Context, request GetProductByIDRequestObject) (GetProductByIDResponseObject, error)
+
+	// (PUT /products/{id})
+	UpdateProduct(ctx context.Context, request UpdateProductRequestObject) (UpdateProductResponseObject, error)
 }
 
 type StrictHandlerFunc = strictnethttp.StrictHTTPHandlerFunc
@@ -627,21 +752,56 @@ func (sh *strictHandler) GetProductByID(w http.ResponseWriter, r *http.Request, 
 	}
 }
 
+// UpdateProduct operation middleware
+func (sh *strictHandler) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64) {
+	var request UpdateProductRequestObject
+
+	request.Id = id
+
+	var body UpdateProductJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateProduct(ctx, request.(UpdateProductRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateProduct")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateProductResponseObject); ok {
+		if err := validResponse.VisitUpdateProductResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

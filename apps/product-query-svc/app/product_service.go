@@ -21,12 +21,25 @@ func (s *ProductService) SearchProducts(ctx context.Context, q string, page, pag
 }
 
 func (s *ProductService) DeleteProduct(ctx context.Context, id int64) error {
-    return s.repo.Delete(ctx, id)
+	return s.repo.Delete(ctx, id)
 }
 
 func (s *ProductService) CreateProduct(ctx context.Context, p *domain.Product) (int64, error) {
-    if err := p.Validate(); err != nil {
-        return 0, err
-    }
-    return s.repo.Create(ctx, p)
+	if err := p.Validate(); err != nil {
+		return 0, err
+	}
+	return s.repo.Create(ctx, p)
+}
+
+func (s *ProductService) UpdateProduct(ctx context.Context, p *domain.Product) (*domain.Product, error) {
+	if p.ID <= 0 {
+		return nil, domain.ErrValidation
+	}
+	if err := p.Validate(); err != nil {
+		return nil, err
+	}
+	if err := s.repo.Update(ctx, p); err != nil {
+		return nil, err
+	}
+	return s.repo.GetByID(ctx, p.ID)
 }

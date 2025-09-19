@@ -81,20 +81,28 @@ curl -s -X POST http://localhost:8080/products \
   -d '{"name":"Sample Plan","price":123.45}' | jq
 ```
 
-3) GET /products/{id}（按 ID 查询，示例使用已种子或上一步创建的 id）
+3) PUT /products/{id}（整资源更新，示例使用已存在的 id）
+
+```sh
+curl -s -X PUT http://localhost:8080/products/1 \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Updated Plan","price":199.99}' | jq
+```
+
+4) GET /products/{id}（按 ID 查询，示例使用已种子或上一步创建/更新的 id）
 
 ```sh
 # 如果使用迁移种子数据（Postgres），通常 1 为 Basic Plan
 curl -s http://localhost:8080/products/1 | jq
 ```
 
-4) GET /products/search（分页搜索；注意 q 至少 3 个字符）
+5) GET /products/search（分页搜索；注意 q 至少 3 个字符）
 
 ```sh
 curl -s 'http://localhost:8080/products/search?q=pro&page=1&pageSize=10' | jq
 ```
 
-5) DELETE /products/{id}（删除；示例：先创建临时商品再删除）
+6) DELETE /products/{id}（删除；示例：先创建临时商品再删除）
 
 ```sh
 ID=$(curl -s -X POST http://localhost:8080/products \

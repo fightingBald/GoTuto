@@ -1,0 +1,7 @@
+description: Product creation payload
+required: true
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/ProductCreate.yaml'
+
