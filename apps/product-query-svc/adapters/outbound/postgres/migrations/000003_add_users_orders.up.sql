@@ -32,4 +32,6 @@ JOIN (VALUES
   ('alice@example.com', 'Premium Pack', 19999),
   ('bob@example.com', 'Gift Card', 2500)
 ) AS p(email, product_name, total)
-WHERE u.email = p.email;
+  ON u.email = p.email
+LEFT JOIN orders o ON o.user_id = u.id AND o.product_name = p.product_name
+WHERE o.id IS NULL;
