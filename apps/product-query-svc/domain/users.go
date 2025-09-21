@@ -1,19 +1,15 @@
 package domain
 
 import (
-	"errors"
 	"regexp"
+	"strings"
 	"time"
 )
 
-var (
-	ErrEmailValidation = errors.New("email validation error")
-)
+var emailRegexp = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
 
 func IsValidEmail(email string) bool {
-	// 这是一个常用的简化正则，够用 90% 场景
-	re := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
-	return re.MatchString(email)
+	return emailRegexp.MatchString(strings.TrimSpace(email))
 }
 
 type User struct {
@@ -24,18 +20,25 @@ type User struct {
 }
 
 func NewUser(name string, email string) (*User, error) {
-	u := &User{Name: name, Email: email, CreatedAt: time.Now()}
+	u := &User{
+		Name:      strings.TrimSpace(name),
+		Email:     strings.TrimSpace(email),
+		CreatedAt: time.Now().UTC(),
+	}
 
 	if err := u.Validate(); err != nil {
-		return nil, ErrValidation
+		return nil, err
 	}
 
 	return u, nil
 }
 
 func (u *User) Validate() error {
-	if IsValidEmail(u.Email) {
-		return ErrValidation
+	if u.Name == "" {
+		return errValidation("name required")
+	}
+	if !IsValidEmail(u.Email) {
+		return errValidation("invalid email format")
 	}
 	return nil
 }
@@ -43,6 +46,10 @@ func (u *User) Validate() error {
 //TODO how to avoid a same email could create several account
 
 func (u *User) ChangeName(newName string) error {
-	u.Name = newName
+	cleaned := strings.TrimSpace(newName)
+	if cleaned == "" {
+		return errValidation("name required")
+	}
+	u.Name = cleaned
 	return nil
 }

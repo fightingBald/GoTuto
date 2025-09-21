@@ -91,28 +91,11 @@ func (p *Product) RemoveTag(tag string) {
 
 // replaceTags 重建标签列表（调用方负责去重复构建）。
 func (p *Product) replaceTags(tags []string) error {
-	if len(tags) == 0 {
-		p.Tags = nil
-		return nil
+	sanitized, err := sanitizeTags(tags)
+	if err != nil {
+		return err
 	}
-	seen := make(map[string]struct{}, len(tags))
-	out := outBuffer(len(tags))
-	for _, raw := range tags {
-		cleaned := strings.TrimSpace(raw)
-		if cleaned == "" {
-			continue
-		}
-		key := strings.ToLower(cleaned)
-		if _, exists := seen[key]; exists {
-			continue
-		}
-		seen[key] = struct{}{}
-		out = append(out, cleaned)
-		if len(out) > maxTags {
-			return errValidation("tags exceed limit")
-		}
-	}
-	p.Tags = out
+	p.Tags = sanitized
 	return nil
 }
 
@@ -125,9 +108,29 @@ func equalFold(a, b string) bool {
 	return strings.EqualFold(strings.TrimSpace(a), strings.TrimSpace(b))
 }
 
-func outBuffer(capacity int) []string {
-	if capacity < 0 {
-		capacity = 0
+func sanitizeTags(tags []string) ([]string, error) {
+	if len(tags) == 0 {
+		return nil, nil
 	}
-	return make([]string, 0, capacity)
+	seen := make(map[string]struct{}, len(tags))
+	sanitized := make([]string, 0, len(tags))
+	for _, raw := range tags {
+		cleaned := strings.TrimSpace(raw)
+		if cleaned == "" {
+			continue
+		}
+		key := strings.ToLower(cleaned)
+		if _, exists := seen[key]; exists {
+			continue
+		}
+		seen[key] = struct{}{}
+		sanitized = append(sanitized, cleaned)
+		if len(sanitized) > maxTags {
+			return nil, errValidation("tags exceed limit")
+		}
+	}
+	if len(sanitized) == 0 {
+		return nil, nil
+	}
+	return sanitized, nil
 }
