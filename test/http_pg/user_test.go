@@ -15,9 +15,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-// TestSearchProducts_Postgres seeds are applied via migrations in dev/CI.
-// This test requires DATABASE_URL to be set; otherwise it is skipped.
-func TestSearchProducts_Postgres(t *testing.T) {
+func TestGetUserByID_Postgres(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -39,25 +37,22 @@ func TestSearchProducts_Postgres(t *testing.T) {
 	ts := httptest.NewServer(h)
 	defer ts.Close()
 
-	t.Run("search wid returns 200", func(t *testing.T) {
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, ts.URL+"/products/search?q=wid&page=1&pageSize=10", nil)
-		if err != nil {
-			t.Fatalf("new request: %v", err)
-		}
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			t.Fatalf("http do: %v", err)
-		}
-		defer resp.Body.Close()
-		if resp.StatusCode != http.StatusOK {
-			t.Fatalf("unexpected status: %d", resp.StatusCode)
-		}
-		var pl appshttp.ProductList
-		if err := json.NewDecoder(resp.Body).Decode(&pl); err != nil {
-			t.Fatalf("decode: %v", err)
-		}
-		if pl.Total < len(pl.Items) {
-			t.Fatalf("expected total >= items length; got total=%d items=%d", pl.Total, len(pl.Items))
-		}
-	})
+	resp, err := http.Get(ts.URL + "/users/1")
+	if err != nil {
+		t.Fatalf("http get user: %v", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected 200, got %d", resp.StatusCode)
+	}
+	var user appshttp.User
+	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
+		t.Fatalf("decode user: %v", err)
+	}
+	if user.Id == nil || *user.Id != 1 {
+		t.Fatalf("unexpected user id: %+v", user)
+	}
+	if user.Email == "" {
+		t.Fatalf("expected email to be set: %+v", user)
+	}
 }

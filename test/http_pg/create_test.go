@@ -28,9 +28,11 @@ func TestCreateProduct_Postgres(t *testing.T) {
 		testutil.ApplyMigrations(ctx, t, pool)
 	}
 
-	repo := appspg.NewProductRepository(pool)
-	svc := appsvc.NewProductService(repo)
-	server := appshttp.NewServer(svc)
+	productRepo := appspg.NewProductRepository(pool)
+	userRepo := appspg.NewUserRepository(pool)
+	productSvc := appsvc.NewProductService(productRepo)
+	userSvc := appsvc.NewUserService(userRepo)
+	server := appshttp.NewServer(productSvc, userSvc)
 
 	r := chi.NewRouter()
 	h := appshttp.HandlerFromMux(server, r)

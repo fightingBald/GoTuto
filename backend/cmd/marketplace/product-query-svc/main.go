@@ -39,8 +39,9 @@ func main() {
 	log.Println("starting product-query-svc")
 
 	var (
-		repo ports.ProductRepo
-		pool *pgxpool.Pool
+		repo     ports.ProductRepo
+		userRepo ports.UserRepo
+		pool     *pgxpool.Pool
 	)
 
 	// If DSN provided, use Postgres wiring
@@ -55,14 +56,18 @@ func main() {
 		pool = p
 
 		repo = appspg.NewProductRepository(pool)
+		userRepo = appspg.NewUserRepository(pool)
 	} else {
-		repo = appsinmem.NewInMemRepo()
+		store := appsinmem.NewInMemRepo()
+		repo = store
+		userRepo = store
 	}
 
 	// build service
-	svc := appsvc.NewProductService(repo)
+	productSvc := appsvc.NewProductService(repo)
+	userSvc := appsvc.NewUserService(userRepo)
 
-	server := appshttp.NewServer(svc)
+	server := appshttp.NewServer(productSvc, userSvc)
 
 	r := chi.NewRouter()
 	// 注册健康检查
