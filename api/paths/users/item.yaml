@@ -1,0 +1,17 @@
+get:
+  tags: [Users]
+  operationId: GetUserByID
+  parameters:
+    - $ref: '../../components/parameters/ID.yaml'
+  responses:
+    '200':
+      description: Single user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    '400':
+      $ref: '../../components/responses/Error.yaml'
+    '404':
+      $ref: '../../components/responses/Error.yaml'
+

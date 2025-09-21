@@ -13,6 +13,10 @@ paths:
     $ref: './paths/products/search.yaml'
   /products:
     $ref: './paths/products/collection.yaml'
+  /users/{id}:
+      $ref: './paths/users/item.yaml'
+
+
 
 components:
   schemas:
