@@ -21,3 +21,8 @@ type ProductService interface {
 	// UpdateProduct replaces the existing product state and returns the updated snapshot
 	UpdateProduct(ctx context.Context, p *domain.Product) (*domain.Product, error)
 }
+
+// UserService exposes user-related use cases to driving adapters.
+type UserService interface {
+	GetUser(ctx context.Context, id int64) (*domain.User, error)
+}

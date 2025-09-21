@@ -16,3 +16,8 @@ type ProductRepo interface {
 	Delete(ctx context.Context, id int64) error
 	Update(ctx context.Context, p *domain.Product) error
 }
+
+// UserRepo abstracts access to persistent user data.
+type UserRepo interface {
+	GetUserByID(ctx context.Context, id int64) (*domain.User, error)
+}

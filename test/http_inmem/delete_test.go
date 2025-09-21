@@ -9,7 +9,8 @@ import (
 )
 
 func TestDeleteProduct_InMem(t *testing.T) {
-	ts := testutil.NewHTTPServerWithRepo(appsinmem.NewInMemRepo())
+	store := appsinmem.NewInMemRepo()
+	ts := testutil.NewHTTPServer(store, store)
 	defer ts.Close()
 
 	t.Run("delete id=1 returns 204", func(t *testing.T) {

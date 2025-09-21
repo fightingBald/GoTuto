@@ -1,29 +1,18 @@
 package httpadapter
 
-import (
-    "net/http"
-    "errors"
-
-    "github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
-    "github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
-)
-
-type Server struct{ svc ports.ProductService }
-
-func NewServer(s ports.ProductService) *Server { return &Server{svc: s} }
+import "net/http"
 
 func (s *Server) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
-    p, err := s.svc.GetProduct(r.Context(), id)
-    if err != nil {
-        if errors.Is(err, domain.ErrNotFound) {
-            writeError(w, http.StatusNotFound, "NOT_FOUND", err.Error())
-        } else {
-            writeError(w, http.StatusInternalServerError, "INTERNAL", err.Error())
-        }
-        return
-    }
-	out := Product{Id: p.ID, Name: p.Name, Price: float32(p.Price) / 100.0}
-	writeJSON(w, http.StatusOK, out)
+	if id <= 0 {
+		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
+		return
+	}
+	p, err := s.products.GetProduct(r.Context(), id)
+	if err != nil {
+		writeDomainError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, presentProduct(p))
 }
 
 func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params SearchProductsParams) {
@@ -44,21 +33,11 @@ func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params S
 	if params.PageSize != nil {
 		pageSize = *params.PageSize
 	}
-	items, total, err := s.svc.SearchProducts(r.Context(), q, page, pageSize)
+	items, total, err := s.products.SearchProducts(r.Context(), q, page, pageSize)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, "INTERNAL", err.Error())
+		writeDomainError(w, err)
 		return
 	}
-	var out []Product
-	for _, it := range items {
-		out = append(out, Product{Id: it.ID, Name: it.Name, Price: float32(it.Price) / 100.0})
-	}
-	resp := ProductList{Items: out, Page: page, PageSize: pageSize, Total: total}
+	resp := ProductList{Items: presentProducts(items), Page: page, PageSize: pageSize, Total: total}
 	writeJSON(w, http.StatusOK, resp)
-}
-
-// Healthz 健康检查
-func (s *Server) Health(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("ok"))
 }

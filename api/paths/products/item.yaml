@@ -2,7 +2,7 @@ get:
   tags: [Products]
   operationId: GetProductByID
   parameters:
-    - $ref: '../../components/parameters/ProductID.yaml'
+    - $ref: '../../components/parameters/ID.yaml'
   responses:
     '200':
       description: Single product
@@ -19,7 +19,7 @@ put:
   tags: [Products]
   operationId: UpdateProduct
   parameters:
-    - $ref: '../../components/parameters/ProductID.yaml'
+    - $ref: '../../components/parameters/ID.yaml'
   requestBody:
     $ref: '../../components/requestBodies/ProductCreate.yaml'
   responses:
@@ -38,7 +38,7 @@ delete:
   tags: [Products]
   operationId: DeleteProductByID
   parameters:
-    - $ref: '../../components/parameters/ProductID.yaml'
+    - $ref: '../../components/parameters/ID.yaml'
   responses:
     '204':
       description: Deleted
