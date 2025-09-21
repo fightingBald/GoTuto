@@ -5,6 +5,8 @@ info:
 tags:
   - name: Products
     description: Product query and management endpoints
+  - name: Users
+    description: User account retrieval endpoints
 
 paths:
   /products/{id}:
@@ -14,7 +16,7 @@ paths:
   /products:
     $ref: './paths/products/collection.yaml'
   /users/{id}:
-      $ref: './paths/users/item.yaml'
+    $ref: './paths/users/item.yaml'
 
 
 
@@ -26,5 +28,7 @@ components:
       $ref: './schemas/ProductCreate.yaml'
     ProductList:
       $ref: './schemas/ProductList.yaml'
+    User:
+      $ref: './schemas/User.yaml'
     Error:
       $ref: './schemas/Error.yaml'
