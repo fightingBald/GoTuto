@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -36,7 +37,7 @@ func TestGetUserByID_Postgres(t *testing.T) {
 	seedErr := pool.QueryRow(ctx, insertStmt, "Fixture User", "fixture@example.com").Scan(&userID)
 	if seedErr != nil {
 		var pgErr *pgconn.PgError
-		if errors.As(seedErr, &pgErr) && pgErr.Code == "42P01" {
+		if errors.As(seedErr, &pgErr) && pgErr.Code == "42P01" || strings.Contains(seedErr.Error(), "does not exist") {
 			testutil.ApplyMigrations(ctx, t, pool)
 			if err := pool.QueryRow(ctx, insertStmt, "Fixture User", "fixture@example.com").Scan(&userID); err != nil {
 				t.Fatalf("seed user after migrations: %v", err)
