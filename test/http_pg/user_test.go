@@ -3,6 +3,7 @@ package http_pg_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -14,6 +15,7 @@ import (
 	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
 	"github.com/fightingBald/GoTuto/internal/testutil"
 	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgconn"
 )
 
 func TestGetUserByID_Postgres(t *testing.T) {
@@ -26,14 +28,22 @@ func TestGetUserByID_Postgres(t *testing.T) {
 		testutil.ApplyMigrations(ctx, t, pool)
 	}
 
+	insertStmt := `INSERT INTO users (name, email) VALUES ($1, $2)
+		ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
+		RETURNING id`
+
 	var userID int64
-	if err := pool.QueryRow(ctx,
-		`INSERT INTO users (name, email) VALUES ($1, $2)
-		 ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
-		 RETURNING id`,
-		"Fixture User", "fixture@example.com",
-	).Scan(&userID); err != nil {
-		t.Fatalf("seed user: %v", err)
+	seedErr := pool.QueryRow(ctx, insertStmt, "Fixture User", "fixture@example.com").Scan(&userID)
+	if seedErr != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(seedErr, &pgErr) && pgErr.Code == "42P01" {
+			testutil.ApplyMigrations(ctx, t, pool)
+			if err := pool.QueryRow(ctx, insertStmt, "Fixture User", "fixture@example.com").Scan(&userID); err != nil {
+				t.Fatalf("seed user after migrations: %v", err)
+			}
+		} else {
+			t.Fatalf("seed user: %v", seedErr)
+		}
 	}
 	t.Cleanup(func() {
 		_, _ = pool.Exec(context.Background(), "DELETE FROM users WHERE id = $1", userID)
