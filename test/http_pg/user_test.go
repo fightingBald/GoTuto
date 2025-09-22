@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -25,6 +26,19 @@ func TestGetUserByID_Postgres(t *testing.T) {
 		testutil.ApplyMigrations(ctx, t, pool)
 	}
 
+	var userID int64
+	if err := pool.QueryRow(ctx,
+		`INSERT INTO users (name, email) VALUES ($1, $2)
+		 ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
+		 RETURNING id`,
+		"Fixture User", "fixture@example.com",
+	).Scan(&userID); err != nil {
+		t.Fatalf("seed user: %v", err)
+	}
+	t.Cleanup(func() {
+		_, _ = pool.Exec(context.Background(), "DELETE FROM users WHERE id = $1", userID)
+	})
+
 	productRepo := appspg.NewProductRepository(pool)
 	userRepo := appspg.NewUserRepository(pool)
 	productSvc := appsvc.NewProductService(productRepo)
@@ -37,7 +51,7 @@ func TestGetUserByID_Postgres(t *testing.T) {
 	ts := httptest.NewServer(h)
 	defer ts.Close()
 
-	resp, err := http.Get(ts.URL + "/users/1")
+	resp, err := http.Get(ts.URL + "/users/" + strconv.FormatInt(userID, 10))
 	if err != nil {
 		t.Fatalf("http get user: %v", err)
 	}
@@ -49,7 +63,7 @@ func TestGetUserByID_Postgres(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
 		t.Fatalf("decode user: %v", err)
 	}
-	if user.Id == nil || *user.Id != 1 {
+	if user.Id == nil || *user.Id != userID {
 		t.Fatalf("unexpected user id: %+v", user)
 	}
 	if user.Email == "" {
