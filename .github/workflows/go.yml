@@ -1,13 +1,11 @@
-
 name: Go CI
 
 on:
   push:
-    branches: ["main"]           # 只在 main 上的 push 跑
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]           # 只对 main 的 PR 跑
+    branches: [ "main" ]
     types: [opened, synchronize, reopened, ready_for_review]
-
 
 jobs:
   build:
@@ -20,9 +18,11 @@ jobs:
           POSTGRES_USER: app
           POSTGRES_PASSWORD: app_password
           POSTGRES_DB: productdb
-        # 不需要端口映射，直接用服务名 postgres 访问
+        # 映射一个随机主机端口，避免占用冲突
+        ports:
+          - 5432/tcp
         options: >-
-          --health-cmd="pg_isready -U app -d productdb"
+          --health-cmd="pg_isready -U app -d productdb -h 127.0.0.1 || exit 1"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -33,12 +33,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.3'    # 用你项目真实版本；或 1.23.x
+          go-version: '1.23.3'
           check-latest: true
           cache: true
-
-      - name: Tidy modules
-        run: go mod tidy
 
       - name: Install psql client
         run: |
@@ -46,9 +43,11 @@ jobs:
           sudo apt-get install -y postgresql-client
 
       - name: Wait for Postgres (by health)
+        env:
+          PGPORT: ${{ job.services.postgres.ports['5432'] }}   # 映射到的主机端口
         run: |
-          for i in {1..30}; do
-            if pg_isready -h postgres -p 5432 -U app -d productdb; then
+          for i in {1..60}; do
+            if pg_isready -h 127.0.0.1 -p "$PGPORT" -U app -d productdb; then
               echo "Postgres is ready"; exit 0
             fi
             sleep 2
@@ -56,17 +55,17 @@ jobs:
           echo "Postgres not ready after timeout" >&2
           exit 1
 
-
       - name: Apply migrations (psql)
         env:
           PGPASSWORD: app_password
+          PGPORT: ${{ job.services.postgres.ports['5432'] }}
         run: |
-          psql -v ON_ERROR_STOP=1 -h postgres -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/outbound/postgres/migrations/000001_init.up.sql
-          psql -v ON_ERROR_STOP=1 -h postgres -p 5432 -U app -d productdb -f apps/product-query-svc/adapters/outbound/postgres/migrations/000002_seed_test_data.up.sql
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -p "$PGPORT" -U app -d productdb -f apps/product-query-svc/adapters/outbound/postgres/migrations/000001_init.up.sql
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -p "$PGPORT" -U app -d productdb -f apps/product-query-svc/adapters/outbound/postgres/migrations/000002_seed_test_data.up.sql
 
-      - name: "Test (integration: Postgres endpoints)"
+      - name: Test integration Postgres endpoints
         env:
-          DATABASE_URL: postgres://app:app_password@postgres:5432/productdb?sslmode=disable
+          DATABASE_URL: postgres://app:app_password@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/productdb?sslmode=disable
         run: go test -v ./test/... -run Postgres
 
       - name: Build
@@ -74,6 +73,5 @@ jobs:
 
       - name: Test (all)
         env:
-          DATABASE_URL: postgres://app:app_password@postgres:5432/productdb?sslmode=disable
+          DATABASE_URL: postgres://app:app_password@127.0.0.1:${{ job.services.postgres.ports['5432'] }}/productdb?sslmode=disable
         run: go test -v ./...
-
