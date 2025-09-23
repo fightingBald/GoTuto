@@ -17,6 +17,9 @@ paths:
     $ref: './paths/products/collection.yaml'
   /users/{id}:
     $ref: './paths/users/item.yaml'
+  /users:
+    $ref: './paths/users/collection.yaml'
+
 
 
 
@@ -30,5 +33,7 @@ components:
       $ref: './schemas/ProductList.yaml'
     User:
       $ref: './schemas/User.yaml'
+    UserCreate:
+      $ref: './schemas/UserCreate.yaml'
     Error:
       $ref: './schemas/Error.yaml'

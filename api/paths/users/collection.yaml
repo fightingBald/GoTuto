@@ -1,11 +1,13 @@
-get:
+post:
   tags: [Users]
-  operationId: GetUserByID
-  parameters:
-    - $ref: '../../components/parameters/ID.yaml'
+  operationId: CreateUser
+  #parameters:
+  #  - $ref: '../../components/parameters/ID.yaml'
+  requestBody:
+    $ref: '../../components/requestBodies/UserCreate.yaml'
   responses:
     '200':
-      description: Single user
+      description: Created User
       content:
         application/json:
           schema:

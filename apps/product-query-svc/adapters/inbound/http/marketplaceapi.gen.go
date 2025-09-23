@@ -65,8 +65,22 @@ type UpdateProductJSONBody struct {
 	Price float32 `json:"price"`
 }
 
+// CreateUserJSONBody defines parameters for CreateUser.
+type CreateUserJSONBody struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}
+
 // CreateProductJSONRequestBody defines body for CreateProduct for application/json ContentType.
 type CreateProductJSONRequestBody CreateProductJSONBody
+
+// 
+// CreateProductJSONRequestBody defines body for CreateProduct for application/json ContentType.
+type CreateProductJSONRequestBody CreateProductJSONBody
+CreateUserJSONRequestBody defines body for CreateUser for application/json ContentType.
+type CreateUserJSONRequestBody CreateUserJSONBody
+
+// ServerInter
 
 // UpdateProductJSONRequestBody defines body for UpdateProduct for application/json ContentType.
 type UpdateProductJSONRequestBody UpdateProductJSONBody
@@ -84,6 +98,11 @@ type ServerInterface interface {
 	DeleteProductByID(w http.ResponseWriter, r *http.Request, id int64)
 
 	// (GET /products/{id})
+sers)
+	CreateUser(w http.ResponseWriter, r *http.Request)
+
+	// (GET /users/{id})
+	GetUserBy
 	GetProductByID(w http.ResponseWriter, r *http.Request, id int64)
 
 	// (PUT /products/{id})
@@ -114,6 +133,15 @@ func (_ Unimplemented) DeleteProductByID(w http.ResponseWriter, r *http.Request,
 
 // (GET /products/{id})
 func (_ Unimplemented) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
+emented)
+}
+
+// (POST /users)
+func (_ Unimplemented) CreateUser(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -250,6 +278,26 @@ func (siw *ServerInterfaceWrapper) UpdateProduct(w http.ResponseWriter, r *http.
 
 	// ------------- Path parameter "id" -------------
 	var id int64
+ nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateProduct(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreateUser operation middleware
+func (siw *ServerInterfaceWrapper) CreateUser(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.Res
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -404,6 +452,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		Handler:            si,
 		HandlerMiddlewares: options.Middlewares,
 		ErrorHandlerFunc:   options.ErrorHandlerFunc,
+ wrapper.GetProductByID)
+	})
+	r.G
 	}
 
 	r.Group(func(r chi.Router) {
@@ -624,6 +675,56 @@ func (response UpdateProduct400JSONResponse) VisitUpdateProductResponse(w http.R
 
 	return json.NewEncoder(w).Encode(response)
 }
+p.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateUserRequestObject struct {
+	Body *CreateUserJSONRequestBody
+}
+
+type CreateUserResponseObject interface {
+	VisitCreateUserResponse(w http.ResponseWriter) error
+}
+
+type CreateUser200JSONResponse User
+
+func (response CreateUser200JSONResponse) VisitCreateUserResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateUser400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response CreateUser400JSONResponse) VisitCreateUserResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateUser404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response CreateUser404JSONResponse) VisitCreateUserResponse(w http.Resp
 
 type UpdateProduct404JSONResponse struct {
 	Code    string `json:"code"`
@@ -690,6 +791,10 @@ func (response GetUserByID404JSONResponse) VisitGetUserByIDResponse(w http.Respo
 	return json.NewEncoder(w).Encode(response)
 }
 
+SearchProductsResponseObject, error)
+
+	// (DELETE /products/{id})
+	DeleteProductByID(ctx context
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
 
@@ -864,6 +969,37 @@ func (sh *strictHandler) UpdateProduct(w http.ResponseWriter, r *http.Request, i
 	request.Body = &body
 
 	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+lidResponse, ok := response.(UpdateProductResponseObject); ok {
+		if err := validResponse.VisitUpdateProductResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateUser operation middleware
+func (sh *strictHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var request CreateUserRequestObject
+
+	var body CreateUserJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateUser(ctx, request.(CreateUserRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateUser")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, 
 		return sh.ssi.UpdateProduct(ctx, request.(UpdateProductRequestObject))
 	}
 	for _, middleware := range sh.middlewares {
@@ -893,23 +1029,24 @@ func (sh *strictHandler) GetUserByID(w http.ResponseWriter, r *http.Request, id 
 		return sh.ssi.GetUserByID(ctx, request.(GetUserByIDRequestObject))
 	}
 	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "GetUserByID")
-	}
-
-	response, err := handler(r.Context(), w, r, request)
-
-	if err != nil {
-		sh.options.ResponseErrorHandlerFunc(w, r, err)
-	} else if validResponse, ok := response.(GetUserByIDResponseObject); ok {
-		if err := validResponse.VisitGetUserByIDResponse(w); err != nil {
-			sh.options.ResponseErrorHandlerFunc(w, r, err)
-		}
-	} else if response != nil {
-		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
-	}
-}
-
-// Base64 encoded, gzipped, json marshaled Swagger object
+	"H4sIAAAAAAAC/+xYW2/bNhT+KwK3Ry1WUm8PemvnYTDQYR6CPBVBwIjHNjvxEooq5hn67wMvutCijKS1",
+	"vWbrU2Ienuv38fBQe1QIJgUHriuU75HECjPQoOyvXvbQCx6WCyOjHOVIYr1FKeKYAcoRJShFCp5qqoCg",
+	"XKsaUlQVW2DYaKyFYlibfVz/NEcp0jsJ7idsQKGmSSc8rvAGOp9PNahd71Qa2dANgTWuS43y6xQxyimr",
+	"mf3/Rd5u6d9HPVp51OtNliKG//Jus+wzg/hjyvtT4JZR/h74Rm9R/qazXmlF+QY1xrqBAyr9ThAKh5gG",
+	"soeVEqQu9M8KsAa3k2vg2vyLpSxpgTUVfPaxEtys9UF8r2CNcvTdrLc9c9Lu74F1GxqBqlBUGqMoR35D",
+	"UpgdVPBE4l0p8JhSYcnCHO4qUGdKYGA6Er2RPiN0C0glBa8iYPj1h1+UEurk8TurkdCtIGndW0p6HWPa",
+	"w2J7gxISlPY8ouRZZ7rl7d4cipaq1zfuWHS/R9RNkVS0AE9xd3yybhev2aM/PX2BP7j+Y9216vedinj8",
+	"CIU2hn1G72kVy0oDC/95AbmNde8OK4V3Ng3fusZ1kYM2M5ZqoXEZEx3mbONM2zY46E3OQqwChqyuZ40o",
+	"LJVY0xISBbpWHEjyuEv0FpK3q+WVreqwWJbvQN7qgAkEa/hBU4uCAkx+5+WuvQxGKAPDtAzU3Uo6pMvN",
+	"j/OI6gQBJ1x+KSGPUK2NuC9HrOjhORwRrxBkyIQ+TQIa0zLkZKi6plCSqK4C7HvFOJtRgIfMZVBVIXkn",
+	"amFD7/cfS/6/103i99sov8uF/dKI/8d9cHi1f+uH/1I/DEe2sKBdNSL07xM/RfxB6ONwzXbK18ISkerS",
+	"yH7D6k/QssQFJAtgwnACpegTqMoR6Poqu8pMgEICx5KiHL2xS6l9N9kMZ9IdGdfWhTuKpgR21FsSlCNX",
+	"nPZoDSf63dS5DIbi2TMn/sPZ9Ca7PtcrIDaGuihIIvseMs+y6Qx9pLMjI7S95vCmMgCv2jrfm9Wu7LMK",
+	"sCq2xs0GIsW/teJOOQ0eyB/isfVbZlNvuyb9TFX7Ev4ibdsVm/sR2Nm5wLYXTARws56IddKdgAshvqek",
+	"cd2+BNd0QsgXdt1rv9stFydCfbmIlX0+vnhcAOQk9TAm5ucoaRo/L7+CvlTlskt2p1vKNyWctDmdERpZ",
+	"R6C5kyS4R06KzKWupIuC7ipGXgfqpsfVlf9we2ySsNPuKTEbfhm7AGA2/iMDhJN/dVDdWWwGOHUX0VQj",
+	"NRqvsItO4eNbaP2Vw9Ov7Se+UNsP8gnmJGGY4w0w4DoBTqSg3M6I/kv9qh9som9LXBSi5tq8LRWFT7iM",
+	"GXFxNffNPwEAAP//hL+pP6oZAAA=",
 var swaggerSpec = []string{
 
 	"H4sIAAAAAAAC/+xYS4/bNhD+KwLbo7rWbtwedEvqojCQoi4WOQWLBVcc20zFx5KjoK6h/16Q1NOiFtnE",

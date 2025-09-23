@@ -1,0 +1,7 @@
+description: User creation payload
+required: true
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/UserCreate.yaml'
+
