@@ -7,7 +7,7 @@ func (s *Server) GetProductByID(w http.ResponseWriter, r *http.Request, id int64
 		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
 		return
 	}
-	p, err := s.products.GetProduct(r.Context(), id)
+	p, err := s.products.FetchByID(r.Context(), id)
 	if err != nil {
 		writeDomainError(w, err)
 		return
@@ -33,7 +33,7 @@ func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params S
 	if params.PageSize != nil {
 		pageSize = *params.PageSize
 	}
-	items, total, err := s.products.SearchProducts(r.Context(), q, page, pageSize)
+	items, total, err := s.products.Search(r.Context(), q, page, pageSize)
 	if err != nil {
 		writeDomainError(w, err)
 		return

@@ -7,7 +7,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports/outbound"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -16,7 +16,11 @@ var psql = squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
 
 type PGProductRepo struct{ pool *pgxpool.Pool }
 
-func NewProductRepository(pool *pgxpool.Pool) ports.ProductRepo { return &PGProductRepo{pool: pool} }
+var _ outbound.ProductRepository = (*PGProductRepo)(nil)
+
+func NewProductRepository(pool *pgxpool.Pool) outbound.ProductRepository {
+	return &PGProductRepo{pool: pool}
+}
 
 func (r *PGProductRepo) GetByID(ctx context.Context, id int64) (*domain.Product, error) {
 	q, args, err := psql.Select("id", "name", "price", "tags").From("products").Where(squirrel.Eq{"id": id}).ToSql()

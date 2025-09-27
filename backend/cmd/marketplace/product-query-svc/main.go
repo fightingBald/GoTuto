@@ -13,8 +13,9 @@ import (
 	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
 	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
 	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/postgres"
-	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+	productapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/product"
+	userapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/user"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports/outbound"
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -39,8 +40,8 @@ func main() {
 	log.Println("starting product-query-svc")
 
 	var (
-		repo     ports.ProductRepo
-		userRepo ports.UserRepo
+		repo     outbound.ProductRepository
+		userRepo outbound.UserRepository
 		pool     *pgxpool.Pool
 	)
 
@@ -64,8 +65,8 @@ func main() {
 	}
 
 	// build service
-	productSvc := appsvc.NewProductService(repo)
-	userSvc := appsvc.NewUserService(userRepo)
+	productSvc := productapp.NewService(repo)
+	userSvc := userapp.NewService(userRepo)
 
 	server := appshttp.NewServer(productSvc, userSvc)
 

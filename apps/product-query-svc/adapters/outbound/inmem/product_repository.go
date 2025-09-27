@@ -7,6 +7,12 @@ import (
 	"time"
 
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports/outbound"
+)
+
+var (
+	_ outbound.ProductRepository = (*InMemRepo)(nil)
+	_ outbound.UserRepository    = (*InMemRepo)(nil)
 )
 
 // 简单的内存实现，用于本地开发/测试和示例 wiring
@@ -101,7 +107,7 @@ func (r *InMemRepo) Update(ctx context.Context, p *domain.Product) error {
 	return nil
 }
 
-func (r *InMemRepo) GetUserByID(ctx context.Context, id int64) (*domain.User, error) {
+func (r *InMemRepo) FindByID(ctx context.Context, id int64) (*domain.User, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	u, ok := r.users[id]

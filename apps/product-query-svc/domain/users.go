@@ -35,10 +35,10 @@ func NewUser(name string, email string) (*User, error) {
 
 func (u *User) Validate() error {
 	if u.Name == "" {
-		return errValidation("name required")
+		return ValidationError("name required")
 	}
 	if !IsValidEmail(u.Email) {
-		return errValidation("invalid email format")
+		return ValidationError("invalid email format")
 	}
 	return nil
 }
@@ -48,7 +48,7 @@ func (u *User) Validate() error {
 func (u *User) ChangeName(newName string) error {
 	cleaned := strings.TrimSpace(newName)
 	if cleaned == "" {
-		return errValidation("name required")
+		return ValidationError("name required")
 	}
 	u.Name = cleaned
 	return nil

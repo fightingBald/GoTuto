@@ -7,7 +7,7 @@ func (s *Server) GetUserByID(w http.ResponseWriter, r *http.Request, id int64) {
 		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
 		return
 	}
-	u, err := s.users.GetUser(r.Context(), id)
+	u, err := s.users.FetchByID(r.Context(), id)
 	if err != nil {
 		writeDomainError(w, err)
 		return

@@ -367,7 +367,7 @@ go generate ./api
 <details>
 <summary>批次 3 — 核心应用层（domain、ports、app）</summary>
 
-- 相关文件：apps/product-query-svc/domain/ apps/product-query-svc/ports/ apps/product-query-svc/app/
+- 相关文件：apps/product-query-svc/domain/ apps/product-query-svc/ports/ apps/product-query-svc/application/
   - 建议 commit message："app: add domain models, service implementation and ports for product-query-svc"
 
 </details>

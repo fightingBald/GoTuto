@@ -3,16 +3,16 @@ package httpadapter
 import (
 	"net/http"
 
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports"
+	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports/inbound"
 )
 
 // Server wires product and user services to HTTP handlers generated from OpenAPI.
 type Server struct {
-	products ports.ProductService
-	users    ports.UserService
+	products inbound.ProductUseCases
+	users    inbound.UserQueries
 }
 
-func NewServer(products ports.ProductService, users ports.UserService) *Server {
+func NewServer(products inbound.ProductUseCases, users inbound.UserQueries) *Server {
 	return &Server{products: products, users: users}
 }
 
