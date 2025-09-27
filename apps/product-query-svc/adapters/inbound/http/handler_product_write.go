@@ -13,7 +13,7 @@ func (s *Server) DeleteProductByID(w http.ResponseWriter, r *http.Request, id in
 		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
 		return
 	}
-	if err := s.products.DeleteProduct(r.Context(), id); err != nil {
+	if err := s.products.Remove(r.Context(), id); err != nil {
 		writeDomainError(w, err)
 		return
 	}
@@ -33,7 +33,7 @@ func (s *Server) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		writeDomainError(w, err)
 		return
 	}
-	id, err := s.products.CreateProduct(r.Context(), p)
+	id, err := s.products.Create(r.Context(), p)
 	if err != nil {
 		writeDomainError(w, err)
 		return
@@ -61,7 +61,7 @@ func (s *Server) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64)
 		return
 	}
 	p.ID = id
-	updated, err := s.products.UpdateProduct(r.Context(), p)
+	updated, err := s.products.Update(r.Context(), p)
 	if err != nil {
 		writeDomainError(w, err)
 		return

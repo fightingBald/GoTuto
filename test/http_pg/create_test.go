@@ -12,7 +12,8 @@ import (
 
 	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
 	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/postgres"
-	appsvc "github.com/fightingBald/GoTuto/apps/product-query-svc/app"
+	productapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/product"
+	userapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/user"
 	"github.com/fightingBald/GoTuto/internal/testutil"
 	"github.com/go-chi/chi/v5"
 )
@@ -30,8 +31,8 @@ func TestCreateProduct_Postgres(t *testing.T) {
 
 	productRepo := appspg.NewProductRepository(pool)
 	userRepo := appspg.NewUserRepository(pool)
-	productSvc := appsvc.NewProductService(productRepo)
-	userSvc := appsvc.NewUserService(userRepo)
+	productSvc := productapp.NewService(productRepo)
+	userSvc := userapp.NewService(userRepo)
 	server := appshttp.NewServer(productSvc, userSvc)
 
 	r := chi.NewRouter()
