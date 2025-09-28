@@ -1,15 +1,6 @@
 package domain
 
-import (
-	"errors"
-	"strings"
-)
-
-// 领域错误（供适配器映射状态码）
-var (
-	ErrValidation = errors.New("validation error")
-	ErrNotFound   = errors.New("not found")
-)
+import "strings"
 
 // Product 是领域聚合根，Price 以分为单位避免浮点误差。
 type Product struct {
@@ -36,13 +27,13 @@ func NewProduct(name string, priceCents int64, tags []string) (*Product, error) 
 // Validate 检查核心不变式。
 func (p *Product) Validate() error {
 	if p.Name == "" {
-		return errValidation("name required")
+		return ValidationError("name required")
 	}
 	if p.Price < 0 {
-		return errValidation("price must be >= 0")
+		return ValidationError("price must be >= 0")
 	}
 	if len(p.Tags) > maxTags {
-		return errValidation("tags exceed limit")
+		return ValidationError("tags exceed limit")
 	}
 	return nil
 }
@@ -50,7 +41,7 @@ func (p *Product) Validate() error {
 // ChangePrice 变更价格（分为单位）。
 func (p *Product) ChangePrice(newPrice int64) error {
 	if newPrice < 0 {
-		return errValidation("price must be >= 0")
+		return ValidationError("price must be >= 0")
 	}
 	p.Price = newPrice
 	return nil
@@ -68,7 +59,7 @@ func (p *Product) AddTag(tag string) error {
 		}
 	}
 	if len(p.Tags) >= maxTags {
-		return errValidation("tags exceed limit")
+		return ValidationError("tags exceed limit")
 	}
 	p.Tags = append(p.Tags, cleaned)
 	return nil
@@ -99,11 +90,6 @@ func (p *Product) replaceTags(tags []string) error {
 	return nil
 }
 
-// errValidation 构造带细节的校验错误。
-func errValidation(msg string) error {
-	return errors.Join(ErrValidation, errors.New(msg))
-}
-
 func equalFold(a, b string) bool {
 	return strings.EqualFold(strings.TrimSpace(a), strings.TrimSpace(b))
 }
@@ -126,7 +112,7 @@ func sanitizeTags(tags []string) ([]string, error) {
 		seen[key] = struct{}{}
 		sanitized = append(sanitized, cleaned)
 		if len(sanitized) > maxTags {
-			return nil, errValidation("tags exceed limit")
+			return nil, ValidationError("tags exceed limit")
 		}
 	}
 	if len(sanitized) == 0 {
