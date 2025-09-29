@@ -13,7 +13,6 @@ import (
 	productapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/product"
 	userapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/user"
 	"github.com/fightingBald/GoTuto/internal/testutil"
-	"github.com/go-chi/chi/v5"
 )
 
 // TestSearchProducts_Postgres seeds are applied via migrations in dev/CI.
@@ -34,9 +33,10 @@ func TestSearchProducts_Postgres(t *testing.T) {
 	userSvc := userapp.NewService(userRepo)
 	server := appshttp.NewServer(productSvc, userSvc)
 
-	r := chi.NewRouter()
-	strict := appshttp.NewStrictHTTPHandler(server, nil)
-	h := appshttp.HandlerFromMux(strict, r)
+	h, err := appshttp.NewAPIHandler(server, nil)
+	if err != nil {
+		t.Fatalf("new api handler: %v", err)
+	}
 
 	ts := httptest.NewServer(h)
 	defer ts.Close()

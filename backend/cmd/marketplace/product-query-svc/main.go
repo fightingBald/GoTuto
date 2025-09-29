@@ -70,16 +70,20 @@ func main() {
 
 	server := appshttp.NewServer(productSvc, userSvc)
 
+	apiHandler, err := appshttp.NewAPIHandler(server, nil)
+	if err != nil {
+		log.Fatalf("build api handler: %v", err)
+	}
+
 	r := chi.NewRouter()
 	// 注册健康检查
 	r.HandleFunc("/healthz", server.Health)
-	// 注册 OpenAPI 生成的 strict handler 到 chi Router
-	strict := appshttp.NewStrictHTTPHandler(server, nil)
-	h := appshttp.HandlerFromMux(strict, r)
+	// 注册 OpenAPI 严格处理器到 chi Router，并前置请求校验
+	r.Mount("/", apiHandler)
 
 	srv := &http.Server{
 		Addr:    *addr,
-		Handler: h,
+		Handler: r,
 	}
 
 	// 启动服务器

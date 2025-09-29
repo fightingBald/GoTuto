@@ -25,7 +25,7 @@
 │       ├── ports/                     # 端口（接口），抽象仓储与服务
 │       ├── app/                       # 应用服务实现（业务编排）
 │       └── adapters/
-│           ├── inbound/http/          # 生成的 HTTP 接口 + 路由/处理器
+│           ├── inbound/http/          # OpenAPI 严格服务 + 路由装配 + 轻量 handler
 │           └── outbound/
 │               ├── inmem/             # 内存仓储实现（开发/测试）
 │               └── postgres/          # Postgres 仓储与迁移文件
@@ -49,6 +49,17 @@
 - 生产部署建议使用 Helm Chart；本仓库同时保留了 `k8s/` 便于直接 kubectl 应用与调试。
 
 ---
+
+## HTTP 适配器设计（Strict Server）
+
+- **代码生成统一使用 `oapi-codegen strict-server`**：`api/oapi-config.yaml` 只保留严格服务输出，避免手写 handler 接口。每次变更 OpenAPI 需执行 `go generate ./api` 重新生成 `marketplaceapi.gen.go`。
+- **请求校验前移到 OpenAPI**：所有参数/请求体验证（`minimum`/`maxLength`/`enum` 等）写在 `api` 目录的 schema/parameter 中，由 `github.com/oapi-codegen/nethttp-middleware` 提供的 `OapiRequestValidator` 中间件统一拦截。
+- **Handler 职责“三件套”**（`apps/product-query-svc/adapters/inbound/http/handler_*.go`）：
+  1. 从生成的强类型 `RequestObject` 中取出入参（无需重复校验）；
+  2. 调用对应的应用服务（`application/*`）；
+  3. 利用 `response_helpers.go` 中的 `ok*/xxxError` 辅助函数返回严格的响应类型（仅 2xx/4xx）。
+- **跨操作共享错误映射**：`response_helpers.go` 负责把领域错误映射成具体的 OpenAPI 响应类型，并封装标准错误载荷；新增业务错误时只需在此扩展。
+- **统一路由出口**：`NewAPIHandler` 会加载内嵌的 Swagger、挂载必需的中间件（含请求校验）并包装 strict server；在 `main.go`、集成测试与 `internal/testutil` 中均通过该函数装配，保持行为一致。
 
 ## 验证服务是否可用（Tilt 本地）
 
@@ -335,6 +346,10 @@ docker build -t product-query-svc:dev .
 go generate ./api
 # 或者根据 generate.go 的 //go:generate 指定路径
 ```
+
+- 生成后的 `adapters/inbound/http/marketplaceapi.gen.go` **禁止手动修改**；需要调整校验或字段时改 OpenAPI 资源并重新生成。
+- HTTP handler 只能依赖生成的 `StrictServerInterface`，其实现位于 `handler_*.go`，必须配合 `response_helpers.go` 和 `request_mappers.go` 使用。
+- `NewAPIHandler` 会自动加载最新的 Swagger 并注册 `OapiRequestValidator` 中间件，生产/测试入口都应通过该函数获取路由。
 
 - 建议：将生成步骤写入 Makefile 或 CI，团队协同时要约定是否把生成产物纳入版本控制（两种策略均可）。
 
