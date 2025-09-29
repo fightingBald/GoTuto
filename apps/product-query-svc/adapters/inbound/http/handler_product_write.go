@@ -1,70 +1,56 @@
 package httpadapter
 
-import (
-	"encoding/json"
-	"net/http"
+import "context"
 
-	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
-)
+func (s *Server) CreateProduct(ctx context.Context, request CreateProductRequestObject) (CreateProductResponseObject, error) {
+	product, err := newProductFromCreateBody(request.Body)
+	if err != nil {
+		if resp, handled := createProductError(err); handled {
+			return resp, nil
+		}
+		return nil, err
+	}
 
-// DeleteProductByID implements OpenAPI operation: DELETE /products/{id}
-func (s *Server) DeleteProductByID(w http.ResponseWriter, r *http.Request, id int64) {
-	if id <= 0 {
-		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
-		return
+	id, err := s.products.Create(ctx, product)
+	if err != nil {
+		if resp, handled := createProductError(err); handled {
+			return resp, nil
+		}
+		return nil, err
 	}
-	if err := s.products.Remove(r.Context(), id); err != nil {
-		writeDomainError(w, err)
-		return
-	}
-	w.WriteHeader(http.StatusNoContent)
+
+	product.ID = id
+
+	return okCreateProduct(product), nil
 }
 
-// CreateProduct implements POST /products
-func (s *Server) CreateProduct(w http.ResponseWriter, r *http.Request) {
-	var in CreateProductJSONBody
-	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
-		writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid request body")
-		return
-	}
-	cents := amountToCents(in.Price)
-	p, err := domain.NewProduct(in.Name, cents, nil)
+func (s *Server) UpdateProduct(ctx context.Context, request UpdateProductRequestObject) (UpdateProductResponseObject, error) {
+	product, err := newProductFromUpdateBody(request.Id, request.Body)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		if resp, handled := updateProductError(err); handled {
+			return resp, nil
+		}
+		return nil, err
 	}
-	id, err := s.products.Create(r.Context(), p)
+
+	updated, err := s.products.Update(ctx, product)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		if resp, handled := updateProductError(err); handled {
+			return resp, nil
+		}
+		return nil, err
 	}
-	created := *p
-	created.ID = id
-	writeJSON(w, http.StatusCreated, presentProduct(&created))
+
+	return okUpdateProduct(updated), nil
 }
 
-// UpdateProduct implements OpenAPI operation: PUT /products/{id}
-func (s *Server) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64) {
-	if id <= 0 {
-		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
-		return
+func (s *Server) DeleteProductByID(ctx context.Context, request DeleteProductByIDRequestObject) (DeleteProductByIDResponseObject, error) {
+	if err := s.products.Remove(ctx, request.Id); err != nil {
+		if resp, handled := deleteProductError(err); handled {
+			return resp, nil
+		}
+		return nil, err
 	}
-	var in UpdateProductJSONBody
-	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
-		writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid request body")
-		return
-	}
-	cents := amountToCents(in.Price)
-	p, err := domain.NewProduct(in.Name, cents, nil)
-	if err != nil {
-		writeDomainError(w, err)
-		return
-	}
-	p.ID = id
-	updated, err := s.products.Update(r.Context(), p)
-	if err != nil {
-		writeDomainError(w, err)
-		return
-	}
-	writeJSON(w, http.StatusOK, presentProduct(updated))
+
+	return okDeleteProduct(), nil
 }

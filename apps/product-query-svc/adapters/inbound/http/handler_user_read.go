@@ -1,16 +1,15 @@
 package httpadapter
 
-import "net/http"
+import "context"
 
-func (s *Server) GetUserByID(w http.ResponseWriter, r *http.Request, id int64) {
-	if id <= 0 {
-		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
-		return
-	}
-	u, err := s.users.FetchByID(r.Context(), id)
+func (s *Server) GetUserByID(ctx context.Context, request GetUserByIDRequestObject) (GetUserByIDResponseObject, error) {
+	user, err := s.users.FetchByID(ctx, request.Id)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		if resp, handled := getUserError(err); handled {
+			return resp, nil
+		}
+		return nil, err
 	}
-	writeJSON(w, http.StatusOK, presentUser(u))
+
+	return okGetUser(user), nil
 }

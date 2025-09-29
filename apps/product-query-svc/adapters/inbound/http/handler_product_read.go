@@ -1,43 +1,29 @@
 package httpadapter
 
-import "net/http"
+import "context"
 
-func (s *Server) GetProductByID(w http.ResponseWriter, r *http.Request, id int64) {
-	if id <= 0 {
-		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
-		return
-	}
-	p, err := s.products.FetchByID(r.Context(), id)
+func (s *Server) GetProductByID(ctx context.Context, request GetProductByIDRequestObject) (GetProductByIDResponseObject, error) {
+	product, err := s.products.FetchByID(ctx, request.Id)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		if resp, handled := getProductError(err); handled {
+			return resp, nil
+		}
+		return nil, err
 	}
-	writeJSON(w, http.StatusOK, presentProduct(p))
+
+	return okGetProduct(product), nil
 }
 
-func (s *Server) SearchProducts(w http.ResponseWriter, r *http.Request, params SearchProductsParams) {
-	q := ""
-	if params.Q != nil {
-		q = *params.Q
-	}
-	// Enforce OpenAPI minLength:3 for q when provided
-	if q != "" && len(q) < 3 {
-		writeError(w, http.StatusBadRequest, "INVALID_QUERY", "q must be at least 3 characters if provided")
-		return
-	}
-	page := 1
-	if params.Page != nil {
-		page = *params.Page
-	}
-	pageSize := 20
-	if params.PageSize != nil {
-		pageSize = *params.PageSize
-	}
-	items, total, err := s.products.Search(r.Context(), q, page, pageSize)
+func (s *Server) SearchProducts(ctx context.Context, request SearchProductsRequestObject) (SearchProductsResponseObject, error) {
+	filters := newSearchFilters(request.Params)
+
+	items, total, err := s.products.Search(ctx, filters.query, filters.page, filters.pageSize)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		if resp, handled := searchProductsError(err); handled {
+			return resp, nil
+		}
+		return nil, err
 	}
-	resp := ProductList{Items: presentProducts(items), Page: page, PageSize: pageSize, Total: total}
-	writeJSON(w, http.StatusOK, resp)
+
+	return okSearchProducts(items, filters.page, filters.pageSize, total), nil
 }

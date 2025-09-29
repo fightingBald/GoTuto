@@ -1,19 +1,27 @@
 package httpadapter
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	nethttpmiddleware "github.com/oapi-codegen/nethttp-middleware"
 )
 
-func NewRouter(si ServerInterface, validator func(http.Handler) http.Handler) http.Handler {
-	r := chi.NewRouter()
-	// 你可以在这儿挂日志、中间件、recover等
-	opts := ChiServerOptions{}
-	if validator != nil {
-		opts.Middlewares = []MiddlewareFunc{validator}
+// NewAPIHandler returns a chi-backed handler wired with the strict server and
+// OpenAPI request validator.
+func NewAPIHandler(server *Server, strictMiddlewares []StrictMiddlewareFunc, middlewares ...func(http.Handler) http.Handler) (http.Handler, error) {
+	swagger, err := GetSwagger()
+	if err != nil {
+		return nil, fmt.Errorf("load swagger spec: %w", err)
 	}
-	// 使用生成器的 HandlerWithOptions 挂载路由
-	r.Mount("/", HandlerWithOptions(si, opts))
-	return r
+
+	r := chi.NewRouter()
+	for _, mw := range middlewares {
+		r.Use(mw)
+	}
+	r.Use(nethttpmiddleware.OapiRequestValidator(swagger))
+
+	strict := NewStrictHTTPHandler(server, strictMiddlewares)
+	return HandlerFromMux(strict, r), nil
 }

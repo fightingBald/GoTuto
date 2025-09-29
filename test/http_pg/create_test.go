@@ -15,7 +15,6 @@ import (
 	productapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/product"
 	userapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/user"
 	"github.com/fightingBald/GoTuto/internal/testutil"
-	"github.com/go-chi/chi/v5"
 )
 
 // TestCreateProduct_Postgres validates POST /products on a real Postgres.
@@ -35,8 +34,10 @@ func TestCreateProduct_Postgres(t *testing.T) {
 	userSvc := userapp.NewService(userRepo)
 	server := appshttp.NewServer(productSvc, userSvc)
 
-	r := chi.NewRouter()
-	h := appshttp.HandlerFromMux(server, r)
+	h, err := appshttp.NewAPIHandler(server, nil)
+	if err != nil {
+		t.Fatalf("new api handler: %v", err)
+	}
 
 	ts := httptest.NewServer(h)
 	defer ts.Close()
