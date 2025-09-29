@@ -15,6 +15,10 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 	_ = json.NewEncoder(w).Encode(v)
 }
 
+func writeError(w http.ResponseWriter, status int, code, message string) {
+	writeJSON(w, status, errorBody{Code: code, Message: message})
+}
+
 type errorBody struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
@@ -22,15 +26,6 @@ type errorBody struct {
 		Field  *string `json:"field,omitempty"`
 		Reason *string `json:"reason,omitempty"`
 	} `json:"details,omitempty"`
-}
-
-func writeError(w http.ResponseWriter, status int, code, message string) {
-	writeJSON(w, status, errorBody{Code: code, Message: message})
-}
-
-func writeDomainError(w http.ResponseWriter, err error) {
-	status, code := classifyDomainError(err)
-	writeError(w, status, code, domainErrorMessage(status, err))
 }
 
 func classifyDomainError(err error) (int, string) {
@@ -54,4 +49,13 @@ func domainErrorMessage(status int, err error) string {
 		}
 	}
 	return err.Error()
+}
+
+func errorPayloadFromDomain(err error) (int, errorBody) {
+	status, code := classifyDomainError(err)
+	return status, errorBody{Code: code, Message: domainErrorMessage(status, err)}
+}
+
+func newErrorPayload(code, message string) errorBody {
+	return errorBody{Code: code, Message: message}
 }

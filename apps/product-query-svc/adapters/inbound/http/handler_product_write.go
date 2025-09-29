@@ -1,70 +1,99 @@
 package httpadapter
 
 import (
-	"encoding/json"
+	"context"
 	"net/http"
 
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/domain"
 )
 
-// DeleteProductByID implements OpenAPI operation: DELETE /products/{id}
-func (s *Server) DeleteProductByID(w http.ResponseWriter, r *http.Request, id int64) {
-	if id <= 0 {
-		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
-		return
+func (s *Server) CreateProduct(ctx context.Context, request CreateProductRequestObject) (CreateProductResponseObject, error) {
+	if request.Body == nil {
+		payload := newErrorPayload("INVALID_JSON", "invalid request body")
+		return CreateProduct400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
 	}
-	if err := s.products.Remove(r.Context(), id); err != nil {
-		writeDomainError(w, err)
-		return
-	}
-	w.WriteHeader(http.StatusNoContent)
-}
 
-// CreateProduct implements POST /products
-func (s *Server) CreateProduct(w http.ResponseWriter, r *http.Request) {
-	var in CreateProductJSONBody
-	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
-		writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid request body")
-		return
-	}
-	cents := amountToCents(in.Price)
-	p, err := domain.NewProduct(in.Name, cents, nil)
+	body := request.Body
+	cents := amountToCents(body.Price)
+	product, err := domain.NewProduct(body.Name, cents, nil)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		status, payload := errorPayloadFromDomain(err)
+		if status == http.StatusBadRequest {
+			return CreateProduct400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+		}
+		return nil, err
 	}
-	id, err := s.products.Create(r.Context(), p)
+
+	id, err := s.products.Create(ctx, product)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		status, payload := errorPayloadFromDomain(err)
+		if status == http.StatusBadRequest {
+			return CreateProduct400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+		}
+		return nil, err
 	}
-	created := *p
+
+	created := *product
 	created.ID = id
-	writeJSON(w, http.StatusCreated, presentProduct(&created))
+
+	return CreateProduct201JSONResponse(presentProduct(&created)), nil
 }
 
-// UpdateProduct implements OpenAPI operation: PUT /products/{id}
-func (s *Server) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64) {
-	if id <= 0 {
-		writeError(w, http.StatusBadRequest, "INVALID_ID", "id must be a positive integer")
-		return
+func (s *Server) UpdateProduct(ctx context.Context, request UpdateProductRequestObject) (UpdateProductResponseObject, error) {
+	if request.Id <= 0 {
+		payload := newErrorPayload("INVALID_ID", "id must be a positive integer")
+		return UpdateProduct400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
 	}
-	var in UpdateProductJSONBody
-	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
-		writeError(w, http.StatusBadRequest, "INVALID_JSON", "invalid request body")
-		return
+	if request.Body == nil {
+		payload := newErrorPayload("INVALID_JSON", "invalid request body")
+		return UpdateProduct400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
 	}
-	cents := amountToCents(in.Price)
-	p, err := domain.NewProduct(in.Name, cents, nil)
+
+	body := request.Body
+	cents := amountToCents(body.Price)
+	product, err := domain.NewProduct(body.Name, cents, nil)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		status, payload := errorPayloadFromDomain(err)
+		if status == http.StatusBadRequest {
+			return UpdateProduct400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+		}
+		return nil, err
 	}
-	p.ID = id
-	updated, err := s.products.Update(r.Context(), p)
+
+	product.ID = request.Id
+	updated, err := s.products.Update(ctx, product)
 	if err != nil {
-		writeDomainError(w, err)
-		return
+		status, payload := errorPayloadFromDomain(err)
+		switch status {
+		case http.StatusBadRequest:
+			return UpdateProduct400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+		case http.StatusNotFound:
+			return UpdateProduct404JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+		default:
+			return nil, err
+		}
 	}
-	writeJSON(w, http.StatusOK, presentProduct(updated))
+
+	return UpdateProduct200JSONResponse(presentProduct(updated)), nil
+}
+
+func (s *Server) DeleteProductByID(ctx context.Context, request DeleteProductByIDRequestObject) (DeleteProductByIDResponseObject, error) {
+	if request.Id <= 0 {
+		payload := newErrorPayload("INVALID_ID", "id must be a positive integer")
+		return DeleteProductByID400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+	}
+
+	if err := s.products.Remove(ctx, request.Id); err != nil {
+		status, payload := errorPayloadFromDomain(err)
+		switch status {
+		case http.StatusBadRequest:
+			return DeleteProductByID400JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+		case http.StatusNotFound:
+			return DeleteProductByID404JSONResponse{Code: payload.Code, Message: payload.Message, Details: payload.Details}, nil
+		default:
+			return nil, err
+		}
+	}
+
+	return DeleteProductByID204Response{}, nil
 }
