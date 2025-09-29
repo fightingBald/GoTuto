@@ -73,8 +73,9 @@ func main() {
 	r := chi.NewRouter()
 	// 注册健康检查
 	r.HandleFunc("/healthz", server.Health)
-	// 注册 OpenAPI 生成的 handler 到 chi Router
-	h := appshttp.HandlerFromMux(server, r)
+	// 注册 OpenAPI 生成的 strict handler 到 chi Router
+	strict := appshttp.NewStrictHTTPHandler(server, nil)
+	h := appshttp.HandlerFromMux(strict, r)
 
 	srv := &http.Server{
 		Addr:    *addr,

@@ -17,7 +17,8 @@ func NewHTTPHandler(productRepo outbound.ProductRepository, userRepo outbound.Us
 	userSvc := userapp.NewService(userRepo)
 	server := httpadapter.NewServer(productSvc, userSvc)
 	r := chi.NewRouter()
-	return httpadapter.HandlerFromMux(server, r)
+	strict := httpadapter.NewStrictHTTPHandler(server, nil)
+	return httpadapter.HandlerFromMux(strict, r)
 }
 
 // NewHTTPServer starts an httptest.Server for convenience.

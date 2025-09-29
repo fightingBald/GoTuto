@@ -58,7 +58,8 @@ func TestGetUserByID_Postgres(t *testing.T) {
 	server := appshttp.NewServer(productSvc, userSvc)
 
 	r := chi.NewRouter()
-	h := appshttp.HandlerFromMux(server, r)
+	strict := appshttp.NewStrictHTTPHandler(server, nil)
+	h := appshttp.HandlerFromMux(strict, r)
 
 	ts := httptest.NewServer(h)
 	defer ts.Close()
