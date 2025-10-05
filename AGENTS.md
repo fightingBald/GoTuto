@@ -4,7 +4,7 @@
 
 * **MUST 输出**：`UNIFIED_DIFF` 或完整文件内容；能直接落地。
 * **MUST 通过**：`go build ./...` 与 `go test ./...`。
-* **MUST NOT**：无关格式化改动、私自新增第三方依赖、修改生成代码。
+* **MUST NOT**：无关格式化改动、私自新增第三方依赖、修改生成代码,using hand-written SQL strings
 * **SHOULD**：保持行为兼容，除非任务明确允许破坏式变更。
 
 ---
