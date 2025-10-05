@@ -50,3 +50,28 @@ func presentUser(u *domain.User) User {
 		CreatedAt: &createdAt,
 	}
 }
+
+func presentComment(c *domain.Comment) Comment {
+	if c == nil {
+		return Comment{}
+	}
+	return Comment{
+		Id:        c.ID,
+		ProductId: c.ProductID,
+		UserId:    c.UserID,
+		Content:   c.Content,
+		CreatedAt: c.CreatedAt.UTC(),
+		UpdatedAt: c.UpdatedAt.UTC(),
+	}
+}
+
+func presentComments(items []domain.Comment) []Comment {
+	if len(items) == 0 {
+		return []Comment{}
+	}
+	out := make([]Comment, 0, len(items))
+	for i := range items {
+		out = append(out, presentComment(&items[i]))
+	}
+	return out
+}
