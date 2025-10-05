@@ -180,7 +180,7 @@ bash scripts/test-integration-docker.sh ./test -run Postgres
 - 使用 `docker run -P` 启动 postgres:16-alpine，随机映射宿主端口，避免与 Tilt 的 5432 冲突。
 - 通过 `migrate/migrate` 容器在同一网络命名空间内执行迁移。
 - 自动导出 `DATABASE_URL` 为宿主上的随机端口，并运行 go test。
-- 需要单独验证仓储层（含评论 CRUD）的 Docker 集成测试时，可运行 `go test -tags docker ./apps/product-query-svc/adapters/outbound/postgres -run TestCommentRepository_WithDocker -count=1`，确保本机 Docker 可用；若暂不具备条件，可设置 `SKIP_DOCKER_TESTS=1` 跳过。
+- 需要单独验证仓储层（含评论 CRUD）的 Docker 集成测试时，可运行 `make test-repo-docker`（依赖本机 Docker）；若暂不具备条件，可设置 `SKIP_DOCKER_TESTS=1 make test-repo-docker` 跳过实际容器启动。
 
 </details>
 

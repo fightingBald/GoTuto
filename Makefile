@@ -1,5 +1,5 @@
 # Makefile for common tasks
-.PHONY: gen build run fmt tidy migrate-up migrate-down migrate-create db-init
+.PHONY: gen build run fmt tidy migrate-up migrate-down migrate-create db-init test-repo-docker
 
 SERVICE_PKG=./backend/cmd/marketplace/product-query-svc
 BIN_DIR=bin
@@ -40,6 +40,9 @@ db-init:
 .PHONY: test-integration-docker
 test-integration-docker:
 	bash scripts/test-integration-docker.sh ./test -run Postgres
+
+test-repo-docker:
+	go test -tags docker ./apps/product-query-svc/adapters/outbound/postgres -run TestCommentRepository_WithDocker -count=1
 
 
 # Notes:
