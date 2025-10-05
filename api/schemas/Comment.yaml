@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  productId:
+    type: integer
+    format: int64
+  userId:
+    type: integer
+    format: int64
+  content:
+    type: string
+    minLength: 1
+    maxLength: 2048
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time
+required: [id, productId, userId, content, createdAt, updatedAt]

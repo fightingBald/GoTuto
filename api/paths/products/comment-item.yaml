@@ -1,0 +1,39 @@
+put:
+  tags: [Comments]
+  operationId: UpdateProductComment
+  parameters:
+    - $ref: '../../components/parameters/ProductID.yaml'
+    - $ref: '../../components/parameters/CommentID.yaml'
+    - $ref: '../../components/parameters/UserIDQuery.yaml'
+  requestBody:
+    $ref: '../../components/requestBodies/CommentUpdate.yaml'
+  responses:
+    '200':
+      description: Updated comment
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Comment'
+    '400':
+      $ref: '../../components/responses/Error.yaml'
+    '403':
+      $ref: '../../components/responses/Error.yaml'
+    '404':
+      $ref: '../../components/responses/Error.yaml'
+
+delete:
+  tags: [Comments]
+  operationId: DeleteProductComment
+  parameters:
+    - $ref: '../../components/parameters/ProductID.yaml'
+    - $ref: '../../components/parameters/CommentID.yaml'
+    - $ref: '../../components/parameters/UserIDQuery.yaml'
+  responses:
+    '204':
+      description: Deleted
+    '400':
+      $ref: '../../components/responses/Error.yaml'
+    '403':
+      $ref: '../../components/responses/Error.yaml'
+    '404':
+      $ref: '../../components/responses/Error.yaml'

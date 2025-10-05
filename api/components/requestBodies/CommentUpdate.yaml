@@ -1,0 +1,6 @@
+description: Comment update payload
+required: true
+content:
+  application/json:
+    schema:
+      $ref: '../../schemas/CommentUpdate.yaml'

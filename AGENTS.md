@@ -158,10 +158,9 @@
 
 **Allowed（必要时用于“高内聚低耦合”）**
 
-* `EXTRACT_FUNC`：从 handler 提取到 `presenters`/`application`
-* `MOVE_FILE`：把基础设施代码移入 `adapters/{backend}`
-* `INTRODUCE_PORT`：用 `ports` 接口替代直连适配器
-* `RENAME_SYMBOL`：统一命名规范
+* `EXTRACT_FUNC`：
+* `MOVE_FILE`
+* `RENAME_SYMBOL`：
 * `SPLIT_FILE`：大文件按层或关注点拆分
 
 **Prohibited**
