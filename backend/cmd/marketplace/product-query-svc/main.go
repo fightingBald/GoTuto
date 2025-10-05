@@ -13,6 +13,7 @@ import (
 	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
 	appsinmem "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/inmem"
 	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/postgres"
+	commentapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/comment"
 	productapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/product"
 	userapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/user"
 	"github.com/fightingBald/GoTuto/apps/product-query-svc/ports/outbound"
@@ -40,9 +41,10 @@ func main() {
 	log.Println("starting product-query-svc")
 
 	var (
-		repo     outbound.ProductRepository
-		userRepo outbound.UserRepository
-		pool     *pgxpool.Pool
+		repo        outbound.ProductRepository
+		userRepo    outbound.UserRepository
+		commentRepo outbound.CommentRepository
+		pool        *pgxpool.Pool
 	)
 
 	// If DSN provided, use Postgres wiring
@@ -58,17 +60,20 @@ func main() {
 
 		repo = appspg.NewProductRepository(pool)
 		userRepo = appspg.NewUserRepository(pool)
+		commentRepo = appspg.NewCommentRepository(pool)
 	} else {
 		store := appsinmem.NewInMemRepo()
 		repo = store
 		userRepo = store
+		commentRepo = store
 	}
 
 	// build service
 	productSvc := productapp.NewService(repo)
 	userSvc := userapp.NewService(userRepo)
+	commentSvc := commentapp.NewService(commentRepo, repo, userRepo)
 
-	server := appshttp.NewServer(productSvc, userSvc)
+	server := appshttp.NewServer(productSvc, userSvc, commentSvc)
 
 	apiHandler, err := appshttp.NewAPIHandler(server, nil)
 	if err != nil {

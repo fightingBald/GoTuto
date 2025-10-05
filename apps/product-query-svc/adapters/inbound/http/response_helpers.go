@@ -34,6 +34,8 @@ func classifyDomainError(err error) (int, string) {
 		return http.StatusBadRequest, "VALIDATION"
 	case errors.Is(err, domain.ErrNotFound):
 		return http.StatusNotFound, "NOT_FOUND"
+	case errors.Is(err, domain.ErrForbidden):
+		return http.StatusForbidden, "FORBIDDEN"
 	default:
 		return http.StatusInternalServerError, "INTERNAL"
 	}
@@ -189,4 +191,112 @@ func okSearchProducts(items []domain.Product, page, pageSize, total int) SearchP
 
 func okGetUser(user *domain.User) GetUserByIDResponseObject {
 	return GetUserByID200JSONResponse(presentUser(user))
+}
+
+func listCommentsError(err error) (ListProductCommentsResponseObject, bool) {
+	status, payload := errorPayloadFromDomain(err)
+	switch status {
+	case http.StatusBadRequest:
+		return ListProductComments400JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	case http.StatusNotFound:
+		return ListProductComments404JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	default:
+		return nil, false
+	}
+}
+
+func createCommentError(err error) (CreateProductCommentResponseObject, bool) {
+	status, payload := errorPayloadFromDomain(err)
+	switch status {
+	case http.StatusBadRequest:
+		return CreateProductComment400JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	case http.StatusNotFound:
+		return CreateProductComment404JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	default:
+		return nil, false
+	}
+}
+
+func updateCommentError(err error) (UpdateProductCommentResponseObject, bool) {
+	status, payload := errorPayloadFromDomain(err)
+	switch status {
+	case http.StatusBadRequest:
+		return UpdateProductComment400JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	case http.StatusForbidden:
+		return UpdateProductComment403JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	case http.StatusNotFound:
+		return UpdateProductComment404JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	default:
+		return nil, false
+	}
+}
+
+func deleteCommentError(err error) (DeleteProductCommentResponseObject, bool) {
+	status, payload := errorPayloadFromDomain(err)
+	switch status {
+	case http.StatusBadRequest:
+		return DeleteProductComment400JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	case http.StatusForbidden:
+		return DeleteProductComment403JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	case http.StatusNotFound:
+		return DeleteProductComment404JSONResponse{
+			Code:    payload.Code,
+			Message: payload.Message,
+			Details: payload.Details,
+		}, true
+	default:
+		return nil, false
+	}
+}
+
+func okListComments(items []domain.Comment) ListProductCommentsResponseObject {
+	return ListProductComments200JSONResponse(CommentList{Items: presentComments(items)})
+}
+
+func okCreateComment(comment *domain.Comment) CreateProductCommentResponseObject {
+	return CreateProductComment201JSONResponse(presentComment(comment))
+}
+
+func okUpdateComment(comment *domain.Comment) UpdateProductCommentResponseObject {
+	return UpdateProductComment200JSONResponse(presentComment(comment))
+}
+
+func okDeleteComment() DeleteProductCommentResponseObject {
+	return DeleteProductComment204Response{}
 }

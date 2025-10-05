@@ -1,0 +1,34 @@
+get:
+  tags: [Comments]
+  operationId: ListProductComments
+  parameters:
+    - $ref: '../../components/parameters/ProductID.yaml'
+  responses:
+    '200':
+      description: Comments for product
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CommentList'
+    '400':
+      $ref: '../../components/responses/Error.yaml'
+    '404':
+      $ref: '../../components/responses/Error.yaml'
+post:
+  tags: [Comments]
+  operationId: CreateProductComment
+  parameters:
+    - $ref: '../../components/parameters/ProductID.yaml'
+  requestBody:
+    $ref: '../../components/requestBodies/CommentCreate.yaml'
+  responses:
+    '201':
+      description: Created comment
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Comment'
+    '400':
+      $ref: '../../components/responses/Error.yaml'
+    '404':
+      $ref: '../../components/responses/Error.yaml'

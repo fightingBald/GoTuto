@@ -3,6 +3,7 @@
 [![Go CI](https://github.com/fightingBald/GoTuto/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/fightingBald/GoTuto/actions/workflows/go.yml)
 
 简短说明：本仓库包含一个示例后端服务 product-query-svc（支持 in-memory 与 Postgres），数据库迁移需通过 golang-migrate 执行（不再使用嵌入式迁移），以及用于本地开发的 Tilt + kind 配置与最小 Helm chart（已补全）。
+服务目前提供商品 CRUD 及评论功能，评论支持多用户查看、作者更新/删除，并通过 OpenAPI 严格校验暴露接口。
 
 ---
 
@@ -23,7 +24,9 @@
 │   └── product-query-svc/             # 应用层与适配器
 │       ├── domain/                    # 领域模型与领域错误
 │       ├── ports/                     # 端口（接口），抽象仓储与服务
-│       ├── app/                       # 应用服务实现（业务编排）
+│       ├── application/               # 应用服务实现（业务编排）
+│       │   ├── product/               # 商品相关用例
+│       │   └── comment/               # 商品评论用例
 │       └── adapters/
 │           ├── inbound/http/          # OpenAPI 严格服务 + 路由装配 + 轻量 handler
 │           └── outbound/
@@ -125,6 +128,35 @@ echo; \
 curl -i http://localhost:8080/products/$ID  # 期望 404
 ```
 
+7) POST /products/{id}/comments（新增评论，需提供已有用户 ID）
+
+```sh
+COMMENT_ID=$(curl -s -X POST http://localhost:8080/products/1/comments \
+  -H 'Content-Type: application/json' \
+  -d '{"userId":1,"content":"Great product!"}' | jq -r '.id'); \
+echo "comment id=$COMMENT_ID"
+```
+
+8) GET /products/{id}/comments（查看评论列表，默认按创建时间倒序）
+
+```sh
+curl -s http://localhost:8080/products/1/comments | jq
+```
+
+9) PUT /products/{id}/comments/{commentId}（更新评论内容，`userId` 需放在查询参数且与原作者一致）
+
+```sh
+curl -s -X PUT "http://localhost:8080/products/1/comments/${COMMENT_ID}?userId=1" \
+  -H 'Content-Type: application/json' \
+  -d '{"userId":1,"content":"Updated feedback"}' | jq
+```
+
+10) DELETE /products/{id}/comments/{commentId}（删除评论，同样需要 `userId` 查询参数）
+
+```sh
+curl -i -X DELETE "http://localhost:8080/products/1/comments/${COMMENT_ID}?userId=1"
+```
+
 </details>
 
 <details>
@@ -148,6 +180,7 @@ bash scripts/test-integration-docker.sh ./test -run Postgres
 - 使用 `docker run -P` 启动 postgres:16-alpine，随机映射宿主端口，避免与 Tilt 的 5432 冲突。
 - 通过 `migrate/migrate` 容器在同一网络命名空间内执行迁移。
 - 自动导出 `DATABASE_URL` 为宿主上的随机端口，并运行 go test。
+- 需要单独验证仓储层（含评论 CRUD）的 Docker 集成测试时，可运行 `go test -tags docker ./apps/product-query-svc/adapters/outbound/postgres -run TestCommentRepository_WithDocker -count=1`，确保本机 Docker 可用；若暂不具备条件，可设置 `SKIP_DOCKER_TESTS=1` 跳过。
 
 </details>
 

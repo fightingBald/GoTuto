@@ -1,0 +1,7 @@
+name: userId
+in: query
+required: true
+schema:
+  type: integer
+  format: int64
+  minimum: 1

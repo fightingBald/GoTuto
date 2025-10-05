@@ -50,3 +50,17 @@ func newProductFromUpdateBody(id int64, body *UpdateProductJSONRequestBody) (*do
 	product.ID = id
 	return product, nil
 }
+
+func commentCreateInput(body *CreateProductCommentJSONRequestBody) (int64, string, error) {
+	if body == nil {
+		return 0, "", domain.ValidationError("invalid request body")
+	}
+	return body.UserId, body.Content, nil
+}
+
+func commentUpdateInput(body *UpdateProductCommentJSONRequestBody) (int64, string, error) {
+	if body == nil {
+		return 0, "", domain.ValidationError("invalid request body")
+	}
+	return body.UserId, body.Content, nil
+}

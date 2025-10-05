@@ -23,6 +23,21 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// Comment defines model for Comment.
+type Comment struct {
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdAt"`
+	Id        int64     `json:"id"`
+	ProductId int64     `json:"productId"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	UserId    int64     `json:"userId"`
+}
+
+// CommentList defines model for CommentList.
+type CommentList struct {
+	Items []Comment `json:"items"`
+}
+
 // Product defines model for Product.
 type Product struct {
 	Id    int64   `json:"id"`
@@ -65,11 +80,39 @@ type UpdateProductJSONBody struct {
 	Price float32 `json:"price"`
 }
 
+// CreateProductCommentJSONBody defines parameters for CreateProductComment.
+type CreateProductCommentJSONBody struct {
+	Content string `json:"content"`
+	UserId  int64  `json:"userId"`
+}
+
+// DeleteProductCommentParams defines parameters for DeleteProductComment.
+type DeleteProductCommentParams struct {
+	UserId int64 `form:"userId" json:"userId"`
+}
+
+// UpdateProductCommentJSONBody defines parameters for UpdateProductComment.
+type UpdateProductCommentJSONBody struct {
+	Content string `json:"content"`
+	UserId  int64  `json:"userId"`
+}
+
+// UpdateProductCommentParams defines parameters for UpdateProductComment.
+type UpdateProductCommentParams struct {
+	UserId int64 `form:"userId" json:"userId"`
+}
+
 // CreateProductJSONRequestBody defines body for CreateProduct for application/json ContentType.
 type CreateProductJSONRequestBody CreateProductJSONBody
 
 // UpdateProductJSONRequestBody defines body for UpdateProduct for application/json ContentType.
 type UpdateProductJSONRequestBody UpdateProductJSONBody
+
+// CreateProductCommentJSONRequestBody defines body for CreateProductComment for application/json ContentType.
+type CreateProductCommentJSONRequestBody CreateProductCommentJSONBody
+
+// UpdateProductCommentJSONRequestBody defines body for UpdateProductComment for application/json ContentType.
+type UpdateProductCommentJSONRequestBody UpdateProductCommentJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -88,6 +131,18 @@ type ServerInterface interface {
 
 	// (PUT /products/{id})
 	UpdateProduct(w http.ResponseWriter, r *http.Request, id int64)
+
+	// (GET /products/{productId}/comments)
+	ListProductComments(w http.ResponseWriter, r *http.Request, productId int64)
+
+	// (POST /products/{productId}/comments)
+	CreateProductComment(w http.ResponseWriter, r *http.Request, productId int64)
+
+	// (DELETE /products/{productId}/comments/{commentId})
+	DeleteProductComment(w http.ResponseWriter, r *http.Request, productId int64, commentId int64, params DeleteProductCommentParams)
+
+	// (PUT /products/{productId}/comments/{commentId})
+	UpdateProductComment(w http.ResponseWriter, r *http.Request, productId int64, commentId int64, params UpdateProductCommentParams)
 
 	// (GET /users/{id})
 	GetUserByID(w http.ResponseWriter, r *http.Request, id int64)
@@ -119,6 +174,26 @@ func (_ Unimplemented) GetProductByID(w http.ResponseWriter, r *http.Request, id
 
 // (PUT /products/{id})
 func (_ Unimplemented) UpdateProduct(w http.ResponseWriter, r *http.Request, id int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (GET /products/{productId}/comments)
+func (_ Unimplemented) ListProductComments(w http.ResponseWriter, r *http.Request, productId int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (POST /products/{productId}/comments)
+func (_ Unimplemented) CreateProductComment(w http.ResponseWriter, r *http.Request, productId int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (DELETE /products/{productId}/comments/{commentId})
+func (_ Unimplemented) DeleteProductComment(w http.ResponseWriter, r *http.Request, productId int64, commentId int64, params DeleteProductCommentParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// (PUT /products/{productId}/comments/{commentId})
+func (_ Unimplemented) UpdateProductComment(w http.ResponseWriter, r *http.Request, productId int64, commentId int64, params UpdateProductCommentParams) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -259,6 +334,160 @@ func (siw *ServerInterfaceWrapper) UpdateProduct(w http.ResponseWriter, r *http.
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.UpdateProduct(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListProductComments operation middleware
+func (siw *ServerInterfaceWrapper) ListProductComments(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "productId" -------------
+	var productId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "productId", chi.URLParam(r, "productId"), &productId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "productId", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListProductComments(w, r, productId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreateProductComment operation middleware
+func (siw *ServerInterfaceWrapper) CreateProductComment(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "productId" -------------
+	var productId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "productId", chi.URLParam(r, "productId"), &productId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "productId", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreateProductComment(w, r, productId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteProductComment operation middleware
+func (siw *ServerInterfaceWrapper) DeleteProductComment(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "productId" -------------
+	var productId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "productId", chi.URLParam(r, "productId"), &productId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "productId", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "commentId" -------------
+	var commentId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "commentId", chi.URLParam(r, "commentId"), &commentId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "commentId", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteProductCommentParams
+
+	// ------------- Required query parameter "userId" -------------
+
+	if paramValue := r.URL.Query().Get("userId"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "userId"})
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "userId", r.URL.Query(), &params.UserId)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "userId", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteProductComment(w, r, productId, commentId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdateProductComment operation middleware
+func (siw *ServerInterfaceWrapper) UpdateProductComment(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "productId" -------------
+	var productId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "productId", chi.URLParam(r, "productId"), &productId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "productId", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "commentId" -------------
+	var commentId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "commentId", chi.URLParam(r, "commentId"), &commentId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "commentId", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params UpdateProductCommentParams
+
+	// ------------- Required query parameter "userId" -------------
+
+	if paramValue := r.URL.Query().Get("userId"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "userId"})
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "userId", r.URL.Query(), &params.UserId)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "userId", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateProductComment(w, r, productId, commentId, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -420,6 +649,18 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	})
 	r.Group(func(r chi.Router) {
 		r.Put(options.BaseURL+"/products/{id}", wrapper.UpdateProduct)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/products/{productId}/comments", wrapper.ListProductComments)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/products/{productId}/comments", wrapper.CreateProductComment)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/products/{productId}/comments/{commentId}", wrapper.DeleteProductComment)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/products/{productId}/comments/{commentId}", wrapper.UpdateProductComment)
 	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/users/{id}", wrapper.GetUserByID)
@@ -641,6 +882,239 @@ func (response UpdateProduct404JSONResponse) VisitUpdateProductResponse(w http.R
 	return json.NewEncoder(w).Encode(response)
 }
 
+type ListProductCommentsRequestObject struct {
+	ProductId int64 `json:"productId"`
+}
+
+type ListProductCommentsResponseObject interface {
+	VisitListProductCommentsResponse(w http.ResponseWriter) error
+}
+
+type ListProductComments200JSONResponse CommentList
+
+func (response ListProductComments200JSONResponse) VisitListProductCommentsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type ListProductComments400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response ListProductComments400JSONResponse) VisitListProductCommentsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type ListProductComments404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response ListProductComments404JSONResponse) VisitListProductCommentsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateProductCommentRequestObject struct {
+	ProductId int64 `json:"productId"`
+	Body      *CreateProductCommentJSONRequestBody
+}
+
+type CreateProductCommentResponseObject interface {
+	VisitCreateProductCommentResponse(w http.ResponseWriter) error
+}
+
+type CreateProductComment201JSONResponse Comment
+
+func (response CreateProductComment201JSONResponse) VisitCreateProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateProductComment400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response CreateProductComment400JSONResponse) VisitCreateProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateProductComment404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response CreateProductComment404JSONResponse) VisitCreateProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteProductCommentRequestObject struct {
+	ProductId int64 `json:"productId"`
+	CommentId int64 `json:"commentId"`
+	Params    DeleteProductCommentParams
+}
+
+type DeleteProductCommentResponseObject interface {
+	VisitDeleteProductCommentResponse(w http.ResponseWriter) error
+}
+
+type DeleteProductComment204Response struct {
+}
+
+func (response DeleteProductComment204Response) VisitDeleteProductCommentResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type DeleteProductComment400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response DeleteProductComment400JSONResponse) VisitDeleteProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteProductComment403JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response DeleteProductComment403JSONResponse) VisitDeleteProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteProductComment404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response DeleteProductComment404JSONResponse) VisitDeleteProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProductCommentRequestObject struct {
+	ProductId int64 `json:"productId"`
+	CommentId int64 `json:"commentId"`
+	Params    UpdateProductCommentParams
+	Body      *UpdateProductCommentJSONRequestBody
+}
+
+type UpdateProductCommentResponseObject interface {
+	VisitUpdateProductCommentResponse(w http.ResponseWriter) error
+}
+
+type UpdateProductComment200JSONResponse Comment
+
+func (response UpdateProductComment200JSONResponse) VisitUpdateProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProductComment400JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response UpdateProductComment400JSONResponse) VisitUpdateProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProductComment403JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response UpdateProductComment403JSONResponse) VisitUpdateProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateProductComment404JSONResponse struct {
+	Code    string `json:"code"`
+	Details *[]struct {
+		Field  *string `json:"field,omitempty"`
+		Reason *string `json:"reason,omitempty"`
+	} `json:"details,omitempty"`
+	Message string `json:"message"`
+}
+
+func (response UpdateProductComment404JSONResponse) VisitUpdateProductCommentResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type GetUserByIDRequestObject struct {
 	Id int64 `json:"id"`
 }
@@ -707,6 +1181,18 @@ type StrictServerInterface interface {
 
 	// (PUT /products/{id})
 	UpdateProduct(ctx context.Context, request UpdateProductRequestObject) (UpdateProductResponseObject, error)
+
+	// (GET /products/{productId}/comments)
+	ListProductComments(ctx context.Context, request ListProductCommentsRequestObject) (ListProductCommentsResponseObject, error)
+
+	// (POST /products/{productId}/comments)
+	CreateProductComment(ctx context.Context, request CreateProductCommentRequestObject) (CreateProductCommentResponseObject, error)
+
+	// (DELETE /products/{productId}/comments/{commentId})
+	DeleteProductComment(ctx context.Context, request DeleteProductCommentRequestObject) (DeleteProductCommentResponseObject, error)
+
+	// (PUT /products/{productId}/comments/{commentId})
+	UpdateProductComment(ctx context.Context, request UpdateProductCommentRequestObject) (UpdateProductCommentResponseObject, error)
 
 	// (GET /users/{id})
 	GetUserByID(ctx context.Context, request GetUserByIDRequestObject) (GetUserByIDResponseObject, error)
@@ -883,6 +1369,128 @@ func (sh *strictHandler) UpdateProduct(w http.ResponseWriter, r *http.Request, i
 	}
 }
 
+// ListProductComments operation middleware
+func (sh *strictHandler) ListProductComments(w http.ResponseWriter, r *http.Request, productId int64) {
+	var request ListProductCommentsRequestObject
+
+	request.ProductId = productId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.ListProductComments(ctx, request.(ListProductCommentsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListProductComments")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(ListProductCommentsResponseObject); ok {
+		if err := validResponse.VisitListProductCommentsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateProductComment operation middleware
+func (sh *strictHandler) CreateProductComment(w http.ResponseWriter, r *http.Request, productId int64) {
+	var request CreateProductCommentRequestObject
+
+	request.ProductId = productId
+
+	var body CreateProductCommentJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateProductComment(ctx, request.(CreateProductCommentRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateProductComment")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CreateProductCommentResponseObject); ok {
+		if err := validResponse.VisitCreateProductCommentResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteProductComment operation middleware
+func (sh *strictHandler) DeleteProductComment(w http.ResponseWriter, r *http.Request, productId int64, commentId int64, params DeleteProductCommentParams) {
+	var request DeleteProductCommentRequestObject
+
+	request.ProductId = productId
+	request.CommentId = commentId
+	request.Params = params
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteProductComment(ctx, request.(DeleteProductCommentRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteProductComment")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteProductCommentResponseObject); ok {
+		if err := validResponse.VisitDeleteProductCommentResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateProductComment operation middleware
+func (sh *strictHandler) UpdateProductComment(w http.ResponseWriter, r *http.Request, productId int64, commentId int64, params UpdateProductCommentParams) {
+	var request UpdateProductCommentRequestObject
+
+	request.ProductId = productId
+	request.CommentId = commentId
+	request.Params = params
+
+	var body UpdateProductCommentJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateProductComment(ctx, request.(UpdateProductCommentRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateProductComment")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateProductCommentResponseObject); ok {
+		if err := validResponse.VisitUpdateProductCommentResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // GetUserByID operation middleware
 func (sh *strictHandler) GetUserByID(w http.ResponseWriter, r *http.Request, id int64) {
 	var request GetUserByIDRequestObject
@@ -912,23 +1520,28 @@ func (sh *strictHandler) GetUserByID(w http.ResponseWriter, r *http.Request, id 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xYS2/jNhD+KwLboxorWbcH3XbrojCwRV0Ee1oEASOObW7FR8jRoq6h/16Q1NOigm7W",
-	"MZq2p8QczvP7ZjTSkRRKaCVBoiX5kWhqqAAE43/1svtecL9eORmXJCea4p6kRFIBJCeckZQYeKy4AUZy",
-	"NBWkxBZ7ENRpbJURFN09iT8sSUoEl1xUguTXKcGDhiCCHRhS1+mM9w3dQef/sQJz6APQTjZ0yWBLqxK9",
-	"h2d7u+V/PunRy6Neb7KUCPpH4zbLnhnEb3PeH0duBZfvQe5wT/I3nXWLhssdqZ11Bw1YfKcYh1N8R7L7",
-	"jVGsKvBHAxQh3JQIEt2/VOuSFxS5kotPVkl31gfxrYEtyck3i972Iki7vyfWfWgMbGG4dkZJTpoLSeFu",
-	"cCUTTQ+lolN6haysVtJGMmrO738yRpmzZxGsRqL3gqR173FtdJzpJjffbEZpMNiAwVm0SU5Z0oJ/dMxq",
-	"8b6+Cdzqfk/wT4k2vICGJ4GDWXdLVuKhoWBf4I+hob27Vv2uU1EPn6BAZ7jJ6D23sawQxPifL2CIs964",
-	"o8bQg0+j6f9pXfSgV6dSVEjLmOg0Zx9n2s6SQYMHC7EKfLBgQuMPeeBOE23UlpeQGMDKSGDJwyHBPSRv",
-	"N+srX9VhsTzfgb3FERMYRfgOuUfBAGW/yvLQTtcJyiAoL0fq4SQd0uXm+2VEdYaAMy6/lpBPUK2NuC9H",
-	"rOjjPpwQr1BsyIQ+TQZIeTnm5Fh1y6FkUV0DtJkV02wmAZ4yV4C1Y/LO1MKH3t9/Kvl/3zSJPyQm+V0u",
-	"7C+N+D88B9uw/5+HF5+HTp/LrfLIciyd7BdqfgfUJS0gWYFQrsgkJZ/B2IDI9VV2lbmIlQZJNSc5eeOP",
-	"Ur/ZewwWOnAwzEkVuO1A8rvTmpGchB5tuTrcMw9zRB+tm4u/uYeeLns32fVL7aaxvS5EwRLdN+Uyy+Yz",
-	"bCJdPLGT+ucG3VmH+Kat85077cq+sEBNsXdudhAp/q0Xd8rp6BXuYzy2/spi7o2jTp+p6t/Pvkrbj5n6",
-	"bgJ29lJg+4kdAdydJ2qbdB1wIcSPnNVhfJYQnn1jyFf+vNF+d1ivzoT6ehUr+3I6yUMA7Cz1cCaWL1HS",
-	"NN4vPwNeqnLZJafTLZe7Es46nF4QGl1FoPmg2eg5clZkLvVIuijooWLsdaDuZlxlHVTtgJtrULcpvsLu",
-	"9GvvfGtWFsw/ECEXtYenPzvOfI/znx8TKlkiqKQ7ECAxAcm04tLvHs13yU3/wIy+BNCiUJVE9xJgOHym",
-	"ZcxIiKu+q/8KAAD//yYnwMOkFgAA",
+	"H4sIAAAAAAAC/+xaW2/bthf/KgL//0ctVhJvGPTW1sMQoMNSBH0qgoCRjh124iUUVdQz9N0HXnSzKNtx",
+	"Zc1Z+xSHl8Nzzu/ceMQNSjgVnAFTOYo3SGCJKSiQ5r9m7qGZeHjHKQWmbhZ6CWEoRgKrJxQihimgWO8y",
+	"8ykKkYTngkhIUaxkASHKkyegWG9cckmxQjEiTP0yRyGihBFaUBRfhkitBdgpWIFEZRkO8DLIBJni9Fu8",
+	"gvr85wLkumFA6Ln2kSkscZEpc8LRp92Rv3eeaOa9p15FIaL4qzs2io5lQvK0SIbBF25+CvV/GNLEc0cF",
+	"lLD3wFbqCcXXNfVcScJWO4h/zEHeLD4YwgPHFHrJmIKWlhTk6i1PCWz7YGeucsN3ErACu5IpYEr/xEJk",
+	"JMGKcDb7nHOmxxqm/i9hiWL0v1lDe2Zn679b1A1rKeSJJEITRTFyC4JEryCcBQKvM4776uhq2CvDR5Ge",
+	"UAZHfYcMhVlxlATOH06EQpe6RwK34AAUjG3lgrPcY1du/OE3KbkcXQpL1cO9mQiq440zuj2atEPHpCXJ",
+	"BUhVu0TNHMVfK9++iua/hm1nv+w5e4iMniB9ozrOqdH/SRGqQ2dvC0m9jrztvGEr9B223lrdi3hxEecQ",
+	"+mXbAj7ZfNgOznXwqrTZVk6bufuaNn/8DInSfDho3pPcAw9RQLs/XuCsmro7DkuJ131BDFEfU84XPAwd",
+	"ioiN6x2ruryK9hqVkCQBl2lscI/qVaygj0NwmOOq7TskGlPNlZJ6ag5txRJvfJbdqjz6s4ornPmmvMiF",
+	"VWXUKlcsBZ8GdBa2ZUw7bujRQEi+JBkEElQhGaTB4zpQTxC8ub25sLbeDhl7/V4CTv9k2brK4T2UgWKS",
+	"dbbbkbAThH6eHx5CBo78VoPcYWoVx406fErfdskfAfjsArC/TBsTqOMl7Ql2gADnlUn8BeQr1G5dz20z",
+	"nrZjecNWCgqTrKvy7tYlgSz17pWAXXXYj0c9BrdzD4U876afgWhmWG/W7xL+v1cP+K8FPfmmY/ulHH/H",
+	"lUzF9o+KZvKKRu8nbMkNskRleu4PLP8CJTKcQLAAyrWSUYi+gMwtIpcX0UWkOeYCGBYExejaDIWm42Uw",
+	"mLl8buMkt7atQTK3ZR3fkfXRylbb/Z31kKF3GgyzAzsP29f7q+jyVN0IbyfFqj8QjVPOo2hYQsfpbEcX",
+	"wuQNvMo14reVnu/1aK32WQ5YJk/6mBV4lH9npuvNYae9/cnPW7NkNtR1LMMjt5p+8TftNmGmvO+BHZ0K",
+	"bBOxPYDr8YAvg9oDJkJ8Q9LShs8MbO7rQr4w42732/XNYiTUbxY+tc/7kdwykI6iD01ifgqVhn5/+R3U",
+	"VJqLpoxOd4StMhg1OJ0QGlF4oLF3kCaPjIrMVClpUtCtxtLXgXo3xtVtgnLmPqbmgzlOB+JK79Xaccyj",
+	"+dQ3if+2OwHD32ryYMnlGWNaY2A8eX9JWDUrTgPZWI699TVwglqzbuIM15pJ0+c5XyPY69izTf1e4vDC",
+	"5mRWc2xt2rwJOZpE+4P7v1NqXZ9vINlbEnwfFjFyPKteBkyX3XYVKmPHs+szDolFrmGvLnNDlxFtAK/w",
+	"JmJafMPXkCIHeYZJS3Nt4GnGNgOvTcw7qACzNKCY4RWYRzTAUsGJLT/dA6nbpjngbXjiJOEFU4EEJQl8",
+	"wZmPiOWrT6F++uIe8exmpba/8r78JwAA//+6mIfu9SgAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

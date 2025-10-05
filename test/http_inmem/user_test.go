@@ -12,7 +12,7 @@ import (
 
 func TestGetUserByID_InMem(t *testing.T) {
 	store := appsinmem.NewInMemRepo()
-	ts := testutil.NewHTTPServer(store, store)
+	ts := testutil.NewHTTPServer(store, store, store)
 	t.Cleanup(ts.Close)
 
 	resp, err := http.Get(ts.URL + "/users/1")

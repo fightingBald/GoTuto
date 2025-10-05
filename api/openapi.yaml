@@ -7,6 +7,8 @@ tags:
     description: Product query and management endpoints
   - name: Users
     description: User account retrieval endpoints
+  - name: Comments
+    description: Product comment management endpoints
 
 paths:
   /products/{id}:
@@ -15,6 +17,10 @@ paths:
     $ref: './paths/products/search.yaml'
   /products:
     $ref: './paths/products/collection.yaml'
+  /products/{productId}/comments:
+    $ref: './paths/products/comments.yaml'
+  /products/{productId}/comments/{commentId}:
+    $ref: './paths/products/comment-item.yaml'
   /users/{id}:
     $ref: './paths/users/item.yaml'
 
@@ -28,6 +34,14 @@ components:
       $ref: './schemas/ProductCreate.yaml'
     ProductList:
       $ref: './schemas/ProductList.yaml'
+    Comment:
+      $ref: './schemas/Comment.yaml'
+    CommentCreate:
+      $ref: './schemas/CommentCreate.yaml'
+    CommentUpdate:
+      $ref: './schemas/CommentUpdate.yaml'
+    CommentList:
+      $ref: './schemas/CommentList.yaml'
     User:
       $ref: './schemas/User.yaml'
     Error:
