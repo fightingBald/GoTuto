@@ -19,6 +19,7 @@ func (s *Server) ListProductComments(ctx context.Context, request ListProductCom
 
 func (s *Server) CreateProductComment(ctx context.Context, request CreateProductCommentRequestObject) (CreateProductCommentResponseObject, error) {
 	userID, content, err := commentCreateInput(request.Body)
+
 	if err != nil {
 		if resp, handled := createCommentError(err); handled {
 			return resp, nil

@@ -14,7 +14,7 @@ import (
 func TestHTTP_InMem_Product(t *testing.T) {
 	t.Run("search returns items", func(t *testing.T) {
 		store := appsinmem.NewInMemRepo()
-		ts := testutil.NewHTTPServer(store, store)
+		ts := testutil.NewHTTPServer(store, store, store)
 		defer ts.Close()
 
 		resp, err := http.Get(ts.URL + "/products/search?q=wid&page=1&pageSize=10")
@@ -36,7 +36,7 @@ func TestHTTP_InMem_Product(t *testing.T) {
 
 	t.Run("get id=1 returns product", func(t *testing.T) {
 		store := appsinmem.NewInMemRepo()
-		ts := testutil.NewHTTPServer(store, store)
+		ts := testutil.NewHTTPServer(store, store, store)
 		defer ts.Close()
 
 		resp, err := http.Get(ts.URL + "/products/1")
@@ -58,7 +58,7 @@ func TestHTTP_InMem_Product(t *testing.T) {
 
 	t.Run("update id=1 returns updated product", func(t *testing.T) {
 		store := appsinmem.NewInMemRepo()
-		ts := testutil.NewHTTPServer(store, store)
+		ts := testutil.NewHTTPServer(store, store, store)
 		defer ts.Close()
 
 		body := `{"name":"Updated Widget","price":15.25}`
@@ -83,7 +83,7 @@ func TestHTTP_InMem_Product(t *testing.T) {
 
 	t.Run("search with short q returns 400", func(t *testing.T) {
 		store := appsinmem.NewInMemRepo()
-		ts := testutil.NewHTTPServer(store, store)
+		ts := testutil.NewHTTPServer(store, store, store)
 		defer ts.Close()
 
 		resp, err := http.Get(ts.URL + "/products/search?q=ab")

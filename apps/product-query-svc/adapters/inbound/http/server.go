@@ -10,10 +10,11 @@ import (
 type Server struct {
 	products inbound.ProductUseCases
 	users    inbound.UserQueries
+	comments inbound.CommentUseCases
 }
 
-func NewServer(products inbound.ProductUseCases, users inbound.UserQueries) *Server {
-	return &Server{products: products, users: users}
+func NewServer(products inbound.ProductUseCases, users inbound.UserQueries, comments inbound.CommentUseCases) *Server {
+	return &Server{products: products, users: users, comments: comments}
 }
 
 var _ StrictServerInterface = (*Server)(nil)

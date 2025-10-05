@@ -10,6 +10,7 @@ import (
 
 	appshttp "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/inbound/http"
 	appspg "github.com/fightingBald/GoTuto/apps/product-query-svc/adapters/outbound/postgres"
+	commentapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/comment"
 	productapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/product"
 	userapp "github.com/fightingBald/GoTuto/apps/product-query-svc/application/user"
 	"github.com/fightingBald/GoTuto/internal/testutil"
@@ -31,7 +32,9 @@ func TestSearchProducts_Postgres(t *testing.T) {
 	userRepo := appspg.NewUserRepository(pool)
 	productSvc := productapp.NewService(productRepo)
 	userSvc := userapp.NewService(userRepo)
-	server := appshttp.NewServer(productSvc, userSvc)
+	commentRepo := appspg.NewCommentRepository(pool)
+	commentSvc := commentapp.NewService(commentRepo, productRepo, userRepo)
+	server := appshttp.NewServer(productSvc, userSvc, commentSvc)
 
 	h, err := appshttp.NewAPIHandler(server, nil)
 	if err != nil {
