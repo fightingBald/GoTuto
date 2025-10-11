@@ -18,7 +18,7 @@ resources:
 env:
   HTTP_ADDRESS: ":8080"
   # App listen address; DATABASE_URL now comes from .Values.database.secret when enabled
-  DATABASE_URL: "postgres://app:app_password@postgres.marketplace-dev.svc.cluster.local:5432/productdb?sslmode=disable" # fallback only
+  DATABASE_URL: "postgres://app:app_password@postgres.gopractice-dev.svc.cluster.local:5432/productdb?sslmode=disable" # fallback only
 
 podAnnotations: {}
 replicaCount: 1
@@ -37,4 +37,4 @@ database:
     key: DATABASE_URL
     create: false
   # If create=true, a Secret will be created with this URL as stringData.DATABASE_URL
-  url: "postgres://app:app_password@postgres.marketplace-dev.svc.cluster.local:5432/productdb?sslmode=disable"
+  url: "postgres://app:app_password@postgres.gopractice-dev.svc.cluster.local:5432/productdb?sslmode=disable"

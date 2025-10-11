@@ -6,7 +6,7 @@
 # Many Tilt installs don't provide that ext; omit the load to avoid startup errors.
 
 # Settings
-namespace = 'marketplace-dev'
+namespace = 'gopractice-dev'
 svc_name = 'product-query-svc'
 # Starlark (Tiltfile) 不支持 Python f-strings，使用字符串连接
 docker_ref = svc_name + ':dev'

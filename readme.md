@@ -33,7 +33,7 @@
 │               ├── inmem/             # 内存仓储实现（开发/测试）
 │               └── postgres/          # Postgres 仓储与迁移文件
 ├── backend/
-│   └── cmd/marketplace/product-query-svc/  # 可执行入口（main.go），装配路由/依赖
+│   └── cmd/product-query-svc/  # 可执行入口（main.go），装配路由/依赖
 ├── charts/product-query-svc/          # 最小 Helm Chart（含迁移 Job 与 ConfigMap）
 ├── k8s/                               # 直接应用的 Kubernetes 清单（Service/Deployment/Postgres）
 ├── kind/                              # kind 本地集群配置
@@ -55,7 +55,7 @@
 
 ## HTTP 适配器设计（Strict Server）
 
-- **代码生成统一使用 `oapi-codegen strict-server`**：`api/oapi-config.yaml` 只保留严格服务输出，避免手写 handler 接口。每次变更 OpenAPI 需执行 `go generate ./api` 重新生成 `marketplaceapi.gen.go`。
+- **代码生成统一使用 `oapi-codegen strict-server`**：`api/oapi-config.yaml` 只保留严格服务输出，避免手写 handler 接口。每次变更 OpenAPI 需执行 `go generate ./api` 重新生成 `gopracticeapi.gen.go`。
 - **请求校验前移到 OpenAPI**：所有参数/请求体验证（`minimum`/`maxLength`/`enum` 等）写在 `api` 目录的 schema/parameter 中，由 `github.com/oapi-codegen/nethttp-middleware` 提供的 `OapiRequestValidator` 中间件统一拦截。
 - **Handler 职责“三件套”**（`apps/product-query-svc/adapters/inbound/http/handler_*.go`）：
   1. 从生成的强类型 `RequestObject` 中取出入参（无需重复校验）；
@@ -209,9 +209,9 @@ curl -s http://localhost:8080/products/1 | jq
 - Pod/日志排查
 
 ```sh
-kubectl -n marketplace-dev get pods
-kubectl -n marketplace-dev logs deploy/product-query-svc
-kubectl -n marketplace-dev logs statefulset/postgres
+kubectl -n -dev get pods
+kubectl -n -dev logs deploy/product-query-svc
+kubectl -n -dev logs statefulset/postgres
 ```
 
 ---
@@ -227,7 +227,7 @@ kubectl -n marketplace-dev logs statefulset/postgres
 1. 启动 Postgres（示例）：
 
 ```sh
-docker run --name marketplace-postgres \
+docker run --name -postgres \
   -e POSTGRES_USER=app \
   -e POSTGRES_PASSWORD=app_password \
   -e POSTGRES_DB=productdb \
@@ -245,14 +245,14 @@ export LOG_LEVEL=debug
 1. 运行服务（开发）：
 
 ```sh
-cd backend/cmd/marketplace/product-query-svc
+cd backend/cmd/product-query-svc
 go run .
 ```
 
 或构建后运行：
 
 ```sh
-go build -o bin/product-query-svc ./backend/cmd/marketplace/product-query-svc
+go build -o bin/product-query-svc ./backend/cmd/product-query-svc
 ./bin/product-query-svc
 ```
 
@@ -313,7 +313,7 @@ psql "postgres://app:app_password@localhost:5432/productdb"
   - 如需修改连接串，可在 Tiltfile 顶部调整 `MIGRATE_URL`。
 
 - 在 K8s/Helm 中执行（集群内）
-  - 可选：用 Helm hook 或 Job 在集群内运行 `migrate/migrate`，`DATABASE_URL` 使用集群内 Service（例如 `postgres.marketplace-dev.svc.cluster.local`）。需要的话可以补充该 Job。
+  - 可选：用 Helm hook 或 Job 在集群内运行 `migrate/migrate`，`DATABASE_URL` 使用集群内 Service（例如 `postgres.-dev.svc.cluster.local`）。需要的话可以补充该 Job。
 
 常见避坑：
 
@@ -362,7 +362,7 @@ Helm 迁移 Job：
 docker build -t product-query-svc:dev .
 ```
 
-注：Dockerfile 默认构建 backend/cmd/marketplace/product-query-svc 的二进制，用于镜像/部署。
+注：Dockerfile 默认构建 backend/cmd/product-query-svc 的二进制，用于镜像/部署。
 
 ---
 
@@ -380,7 +380,7 @@ go generate ./api
 # 或者根据 generate.go 的 //go:generate 指定路径
 ```
 
-- 生成后的 `adapters/inbound/http/marketplaceapi.gen.go` **禁止手动修改**；需要调整校验或字段时改 OpenAPI 资源并重新生成。
+- 生成后的 `adapters/inbound/http/api.gen.go` **禁止手动修改**；需要调整校验或字段时改 OpenAPI 资源并重新生成。
 - HTTP handler 只能依赖生成的 `StrictServerInterface`，其实现位于 `handler_*.go`，必须配合 `response_helpers.go` 和 `request_mappers.go` 使用。
 - `NewAPIHandler` 会自动加载最新的 Swagger 并注册 `OapiRequestValidator` 中间件，生产/测试入口都应通过该函数获取路由。
 
@@ -431,7 +431,7 @@ go generate ./api
 <details>
 <summary>批次 5 — 后端入口 / wiring / router</summary>
 
- - 相关文件：backend/cmd/marketplace/product-query-svc、apps/product-query-svc/adapters/inbound/http/
+ - 相关文件：backend/cmd/product-query-svc、apps/product-query-svc/adapters/inbound/http/
 - 建议 commit message："chore: add service main and HTTP wiring (router & handlers)"
 
 </details>
@@ -460,6 +460,6 @@ go generate ./api
 
 - "FATAL: database \"app\" does not exist"：确认 Postgres 启动时环境变量 POSTGRES_DB 与服务的 DATABASE_URL 中数据库名一致（示例使用 productdb）；或手动创建数据库。
 - Docker 构建报 "go.mod: unknown directive: tool"：请使用与 go.mod 中 toolchain 对齐的 Go 版本（本项目使用 1.24）。
-- Lens 中看不到资源：确认 Lens 使用的 kubeconfig 与 kubectl 当前上下文一致，并且查看正确命名空间（marketplace-dev）。
+- Lens 中看不到资源：确认 Lens 使用的 kubeconfig 与 kubectl 当前上下文一致，并且查看正确命名空间（-dev）。
 
 </details>
