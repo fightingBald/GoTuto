@@ -38,18 +38,18 @@
 
 ## 2) REPOSITORY LAYOUT & MODULES
 
-| Path                                                           | Purpose                                                   |
-| -------------------------------------------------------------- | --------------------------------------------------------- |
-| `backend/cmd/marketplace/product-query-svc`                    | 进程入口与依赖注入（路由、仓库、配置）。                                      |
-| `apps/product-query-svc/domain`                                | 领域聚合与不变式（`Product`, `Comment`, `User`）。无 http/sql/env 依赖。 |
-| `apps/product-query-svc/application`                           | 用例编排（实现入站端口），只依赖 `ports` 与 `domain`。                      |
-| `apps/product-query-svc/adapters`                              | 入站 HTTP handlers；出站持久化实现。禁止写业务规则。                         |
+| Path                                               | Purpose                                                   |
+| -------------------------------------------------- | --------------------------------------------------------- |
+| `backend/cmd/product-query-svc`                    | 进程入口与依赖注入（路由、仓库、配置）。                                      |
+| `apps/product-query-svc/domain`                    | 领域聚合与不变式（`Product`, `Comment`, `User`）。无 http/sql/env 依赖。 |
+| `apps/product-query-svc/application`               | 用例编排（实现入站端口），只依赖 `ports` 与 `domain`。                      |
+| `apps/product-query-svc/adapters`                  | 入站 HTTP handlers；出站持久化实现。禁止写业务规则。                         |
 | `apps/product-query-svc/adapters/outbound/postgres/migrations` | SQL 迁移（使用 `migrate` 工具）。                                  |
-| `apps/product-query-svc/api/openapi.yaml`                      | OpenAPI 单一事实源。                                            |
-| `apps/product-query-svc/api/gen`                               | oapi-codegen 生成物（**禁止手改**）。                               |
-| `test`                                                         | 端到端与集成测试（内存/PG 双路径）。                                      |
-| `scripts`, `Makefile`                                          | 开发脚本、构建、DB 设置、集成流程。                                       |
-| `charts`, `k8s`, `kind`                                        | 部署清单，配置变化时同步。                                             |
+| `apps/product-query-svc/api/openapi.yaml`          | OpenAPI 单一事实源。                                            |
+| `apps/product-query-svc/api/gen`                   | oapi-codegen 生成物（**禁止手改**）。                               |
+| `test`                                             | 端到端与集成测试（内存/PG 双路径）。                                      |
+| `scripts`, `Makefile`                              | 开发脚本、构建、DB 设置、集成流程。                                       |
+| `charts`, `k8s`, `kind`                            | 部署清单，配置变化时同步。                                             |
 
 **分层约定**
 

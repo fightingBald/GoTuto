@@ -41,7 +41,7 @@ Domain
   apps/product-query-svc/domain/product.go (实体/校验)
 
 Composition Root（组装根）
-  backend/cmd/marketplace/product-query-svc/main.go
+  backend/cmd/gopractice/product-query-svc/main.go
   - 读取配置，选择 inmem 或 postgres 作为 ProductRepository 的实现
   - 构造 productapp.Service，并作为 ports/inbound.ProductUseCases 注入 HTTP 适配器
   - 启动 HTTP 服务器
